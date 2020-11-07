@@ -1,0 +1,40 @@
+<% if (data != null) { %>
+
+    <% switch (data.status) {
+        case '在席': %>
+        <img class="status_img" src="/images/pin_zaiseki.png">
+        <% ;break; 
+        case '休暇': %>
+        <img class="status_img" src="/images/pin_yasumi.png">
+        <% ;break; 
+        case '帰宅': %>
+        <img class="status_img" src="/images/pin_kitaku.png">
+        <% ;break; 
+        case '客先': %>
+        <img class="status_img" src="/images/pin_kyakusaki.png">
+        <% ;break; 
+        case '社内': %>
+        <img class="status_img" src="/images/pin_shanai.png">
+        <% ;break; 
+        case '出張': %>
+        <img class="status_img" src="/images/pin_shuccho.png">
+        <% ;break; 
+        case '研修': %>
+        <img class="status_img" src="/images/pin_kenshu.png">
+        <% ;break; 
+        default: %>
+        <img class="status_img" src="/images/pin_sonota.png">
+        <% ;break; 
+    } %>
+    <p class="p_name"><%= data.name %></p>
+    <!-- <p class="tooltip"><%= data.status %>：<%= data.ikisaki %></p> -->
+    <div style="display: none;">
+        <p class="p_information"><%= data.information %></p>
+        <p class="p_status"><%= data.status %></p>
+        <p class="p_ikisaki"><%= data.ikisaki %></p>
+        <p class="p_time"><%= data.time %></p>
+        <p class="p_memo"><%= data.memo %></p>
+        <p class="id"><%= data.id %></p>
+    </div>
+
+<% } %>

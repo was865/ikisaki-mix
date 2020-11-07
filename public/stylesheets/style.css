@@ -1,0 +1,1272 @@
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+body {
+  width: 100%;
+  margin: 0;
+  font-family: "Hiragino Kaku Gothic ProN";
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #464646;
+}
+
+/* header部分 */
+
+header {
+  height: 65px;
+  width: 100%;
+  background-color: rgba(34, 40, 52, 0.9);
+  position :fixed;
+  z-index: 10;
+}
+
+.logo {
+  width: 200px;
+  margin: 15px 20px;
+}
+.header-right {
+  float: right;
+  height: 65px;
+  background-color: rgba(255, 255, 255, 0);
+  transition:all 0.5s;
+}
+.header-right:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.header-left {
+  float: left;
+}
+.header-left h1 {
+  font-family: "BIZ UDPゴシック","BIZ UDPGothic"; font-weight: bold;
+  color: #f6f6f6ee;
+  font-size: 30px;
+  line-height: 65px;
+  letter-spacing: 5px;
+}
+.header-left span {
+  display: inline-block;
+  width: 65px;
+  padding:0 20px;
+  margin-right: 5px;
+  transition:all 0.5s;
+}
+.header-left h1 span:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor : pointer;
+}
+.downlist {
+  position: fixed;
+  width: 248px;
+  background-color: rgba(52, 77, 82, 0.8);
+  display: none;
+}
+.downlist > li {
+  font-family: "BIZ UDPゴシック","BIZ UDPGothic";
+  color: #f6f6f6ee;
+  font-size: 20px;
+  line-height: 43.5px;
+  letter-spacing: 3px;
+  text-align: left;
+}
+.downlist > li:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor : pointer;
+}
+
+.downlist > li a {
+  color: #f6f6f6ee;
+  text-decoration: none;
+}
+
+
+#searchbox-input-wrapper {
+  text-align: center;
+  width: 100%;
+}
+#searchbox {
+  font-family: ヒラギノ角ゴ Pro W3,FontAwesome;
+  margin-top: 13.5px;
+  margin-left: 250px;
+  height: 38px;
+  width: 28%;
+  border-radius: 22px;
+  box-sizing: border-box;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  padding: 0 10px;
+  display: inline-block;
+}
+#pageChange {
+  font-size: 20px;
+	cursor: pointer;	
+}
+#pageChange i {
+	padding-left: 15px;
+	padding-right: 15px;
+	color: #e8e9ea;
+	transition: .3s;
+}
+#pageChange i:hover {
+  opacity: 0.8;
+}
+
+#edit-group {
+  text-align: center;
+  position: fixed;
+  top:379px;
+  right:35px;
+  width: 112px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 22px;
+  background-color: #169ddb;
+  color:#e9eaeb;
+  font-family: "UD Digi Kyokasho N-R";
+  z-index: 50;
+  font-size: 17px;
+  transition: .15s;
+  cursor: pointer;
+}
+#edit-group:hover {
+  opacity: 0.8;
+}
+
+.color_example {
+  position: fixed;
+  top:100px;
+  right:35px;
+  padding: 10px;
+  border-radius: 22px;
+  background-color: rgba(253, 253, 253, 0.281);
+  z-index: 50;
+  font-size: 19px;
+  transition: .15s;
+}
+.color_example:hover {
+  font-size: 22px;
+  padding: 12px;
+}
+
+.color_example p {
+  display: block;
+  font-family: "UD Digi Kyokasho N-R";
+  padding: 3px;
+  text-align: right;
+  color:#e9eaeb;
+  cursor: pointer;
+}
+.color_example i {
+  margin-left: 10px;
+}
+
+/*モーダル*/
+.signup-modal-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display:none;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%) ;
+  background-color: #e6ecf0;
+  padding: 30px 0 40px;
+  border-radius: 10px;
+  width: 450px;
+  height: auto;
+  text-align: center;
+}
+
+.fa-times {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: rgba(128, 128, 128, 0.46);
+  cursor: pointer;
+}
+.fa-times:hover {
+  color: rgba(0, 0, 0, 0.603);
+}
+
+.div_create_name{
+  position: relative;
+  display: inline-block;
+}
+
+#newadmin_check_btn {
+  position: absolute;
+  right: 0px;
+  cursor: pointer;	
+}
+#newadmin_check_btn i {
+  padding-left: 15px;
+  padding-right: 15px;
+  line-height: 43.24px;
+  color: rgb(150, 150, 150);
+  transition: .5s;
+}
+
+
+.btn_kyakusaki_delete, .btn_kyakusaki_minus,
+.btn_shanai_delete, .btn_shanai_minus,
+.btn_department_delete, .btn_department_minus {
+  display: inline-block;
+  font-size: 15px;
+  padding: 12px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn_kyakusaki_delete:hover,
+.btn_shanai_delete:hover,
+.btn_department_delete:hover {
+  background-color: #ff3b3b;
+}
+.btn_kyakusaki_minus:hover, 
+.btn_shanai_minus:hover,
+.btn_department_minus:hover {
+  background-color: #ff3b3b;
+}
+#btn_kyakusaki_add, #btn_department_add {
+  display: block;
+  position: relative;
+  text-align: center;
+  left: 50%;
+  transform: translate(-50%);
+  width: 36px;
+  height: 36px;
+  font-size: 15px;
+  line-height: 36px;
+  border-radius: 5px;
+  background-color: #40a3ff;
+  color: #ffffff;
+  cursor: pointer;
+}
+#btn_shanai_add {
+  display: block;
+  position: relative;
+  text-align: center;
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 5px;
+  width: 36px;
+  height: 36px;
+  font-size: 15px;
+  line-height: 36px;
+  border-radius: 5px;
+  background-color: #40a3ff;
+  color: #ffffff;
+  cursor: pointer;
+}
+#btn_kyakusaki_add:hover,
+#btn_shanai_add:hover,
+#btn_department_add:hover {
+  background-color: #0084ff;
+}
+
+#adduser-form, #addkyakusaki-form, #addshanai-form, #userinfo-form, #editing-form, #adddepartment-form {
+  width: 100%;
+}
+
+#adduser-form h2, #addkyakusaki-form h2, #userinfo-form h2,#editing-form h2, #adddepartment-form h2 {
+  color: #5f5d60;
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+}
+#addshanai-form h2 {
+  color: #5f5d60;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+#adduser-form input, #adduser-form select, #addkyakusaki-form input, #adddepartment-form input, 
+#userinfo-form input, #userinfo-form select,
+#editing-form input, #editing-form select, #editing-form textarea {
+  width: 320px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  padding: 12px 12px;
+  border: 1px solid #d0d5d8;
+  border-radius: 5px;
+}
+#addshanai-form input {
+  width: 320px;
+  margin-bottom: 0px;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #d0d5d8;
+  border-radius: 5px;
+}
+
+#btn_newuser,  #btn_newkyakusaki, #btn_newshanai, #btn_newdepartment, #btn_newuserinfo, #btn_editing {
+  display: inline-block;
+  padding: 14px 140px;
+  background-color: #56bed8;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  margin: 20px auto;
+  cursor: pointer;
+  text-decoration: none;
+  transition: .3s;
+}
+#btn_newkyakusaki:hover, #btn_newshanai:hover, #btn_newdepartment:hover, #btn_editing:hover {
+  background-color: #35abc9;
+}
+
+
+/* editページ */
+
+#btn_post {
+  margin-top: 15px;
+  width: 78%;
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  padding: 8px 10px 5px 10px;
+  text-decoration: none;
+  color: #ffffff;
+  background: #e7853e;
+  border-bottom: solid 4px #ad7006;
+  border-radius: 15px 15px 0 0;
+  transition: .4s;
+}
+#btn_post i{
+  margin-right: 10px;
+}
+#btn_post:hover {
+  background: #39a85a;
+  border-bottom: solid 4px #088d0e;
+  color: #FFF;
+}
+
+#btn_post:active {
+  position: relative;
+  top: 4px;
+  border-bottom: none;
+}
+
+#scroll-form-delete {
+  height: 392px;
+}
+
+.btn-massage {
+  display: inline-block;
+  margin: 220px 0 120px 0;
+  min-width: 200px;
+  text-align: center;
+  background-color: rgb(231, 37, 37);
+  font-size: 20px;
+  color: #FFF;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px;
+  position: relative;
+  transition: .9s;
+  border: 1px solid #FFF;
+}
+.btn-massage i{
+  margin-right: 15px;
+}
+
+.btn-massage span {
+  display: block;
+  position: absolute;
+  background-color: #d9385f;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 34px;
+  font-size: 14px;
+  line-height: 34px;
+  border-radius: 0 0 8px 0;
+  z-index: -1;
+  transition: .5s;
+}
+
+.btn-massage:hover  {
+  border-radius: 8px 0 0;
+}
+
+.btn-massage:hover span {
+  transform: translateY(48px);
+}
+
+/* forms */
+
+.index-form {
+  position: relative;
+  width: 85%;
+  left:50%;
+  transform: translate(-53%);
+  min-height: 400px;
+  transition: .4s;
+}
+
+.main_index {
+  top:100px;
+  position: relative;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  height: 100%;
+}
+
+.main_edit {
+  background-size: cover;
+  color: white;
+  text-align: center;
+  height: 1100px;
+}
+
+.login_info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  padding-bottom: 450px;
+  transform: translate(-50%, -50%) ;
+  font: 19px "Lucida Grande", bold,Helvetica, Arial, sans-serif;
+}
+
+#edit_name {
+  font-family: ＭＳ Ｐ明朝 ;
+  font-size:19px;
+  font-weight:bolder;
+  padding:4px;
+  letter-spacing:3px;
+  display: block;
+  position: relative;
+}
+#edit_name span {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+#edit_name span:hover {
+  opacity: 0.8;
+}
+.table_edit {
+  margin: 15px auto 30px auto;
+  font-size: 17px;
+  width: 180px;
+}
+.table_edit select, .table_edit #information, .table_edit #email {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "UD Digi Kyokasho N-R";
+  width: 100%;
+  height:30px; 
+  padding:5px; 
+  position: relative;
+  background: #f8f8f8;
+  border-radius: 6px;
+  vertical-align:bottom; 
+  display:inline-block; 
+  border:1px solid #d3d3d3;
+}
+.table_edit textarea {
+  font-size: 16px;
+  font-weight: 400;
+  padding: 8px;
+  font-family: "UD Digi Kyokasho N-R";
+  border-radius: 6px;
+  border: none;
+  width: 100%;
+}
+.table_edit tr th {
+  background-color: rgb(38, 142, 202);
+  float: center;
+  color: #fff;
+  text-align: center;
+  padding:5px 10px;
+  border-radius: 6px;
+  border:1px solid rgb(51, 142, 194);
+}
+
+.table_index {
+  border-collapse: collapse;
+  border-spacing: 5px;
+  margin-left:auto;
+  margin-right:auto;
+  width: 100%;
+  height: 100%;
+}
+.table_index tr {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #fff;
+  color: #000;
+}
+.table_index th,.table_index td{
+  border-bottom: 1px solid #eee;
+}
+.table_index th {
+  padding: 10px;
+  font-size: 22px;
+  font-weight: 400;
+  font-family: "UD Digi Kyokasho NP-B";
+  width:auto;
+  color:white;
+  font-size: 18px;
+  text-align: center;
+  background-color: rgb(22, 157, 219);
+  border-radius: 33px 33px 0 0;
+}
+.table_name {
+  font-weight: bolder;
+}
+.table_name:hover {
+  cursor: pointer;
+  border: 2px solid #1ca3e256;
+}
+
+.table_index td{
+  font-family: "UD Digi Kyokasho NP-R";
+  font-size: 17px;
+  text-align: center;
+  border-left: 1px solid #c3c3c3;
+  border-bottom: 1px solid #c3c3c3;
+  border-top:none;
+  box-shadow: 0px -3px 8px 1px #eee inset;
+  padding: 0px 10px;
+  position:relative;
+}
+.tooltip {
+  width: 250px;
+  padding: 12px 8px;
+  height: 52.73px;
+  font-size: 15px;
+  background-color:rgba(83, 85, 85, 0.486);
+  color:#fff;
+  position: absolute;
+  left: -25px;
+  top: 52.73px;
+  border-radius: 20px;
+  z-index: 1;
+  text-shadow: 0 1px 0 #000;
+}
+
+
+.table_index tbody:hover td {
+  color: transparent;
+  text-shadow: 0 0 3px #aaa;
+  background:#eee
+}
+.table_index tbody:hover tr:hover td {
+  color: #444;
+  text-shadow: 0 1px 0 #fff;
+  background:#fff;
+}
+  /* status色分け */
+.status_zaiseki {
+  margin-right: 10px;
+  color: #f9c92e;
+}
+.status_kyuuka {
+  margin-right: 10px;
+  color: #c00f15;
+}
+.status_kitaku {
+  margin-right: 10px;
+  color: #505050;
+}
+.status_kyakusaki {
+  margin-right: 10px;
+  color: #ee4f83;
+}
+.status_shanai {
+  margin-right: 10px;
+  color: #3ad413;
+}
+.status_shucchou {
+  margin-right: 10px;
+  color: #41b1e1;
+}
+.status_kennshuu {
+  margin-right: 10px;
+  color: #c34bff;
+}
+.status_sonota {
+  margin-right: 10px;
+  color: #ff9f4f;
+}
+
+
+.text_add {
+  width: 100%;
+  height: 55%;
+  font-family: "UD Digi Kyokasho NP-R";
+  font-size: 16px;
+  text-align: center;
+  border:none;
+  padding: 0;
+}
+.select_add {
+  width: 100%;
+  height: 55%;
+  font-family: "UD Digi Kyokasho NP-R";
+  font-size: 16px;
+  text-align: center;
+  border:none;
+  padding: 0 5px;
+}
+.placeholder_select {
+  color: #959595;
+}
+.placeholder_select option {
+  color: black;
+}
+
+.memo_add {
+  width: 100%;
+  height: 55%;
+  font-family: "UD Digi Kyokasho NP-R";
+  font-size: 16px;
+  border:none;
+  padding: 0;
+}
+
+.hide {
+  display: none;
+}
+
+.error {
+  color:red;
+}
+
+span.login_name {
+  font-weight: bold;
+}
+
+
+.editing_name {
+  font-size:15px;
+  float: center;
+  padding-top:130px;
+}
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.btn,
+a.btn,
+button.btn {
+  opacity: 0.6;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  position: relative;
+  display: inline-block;
+  padding: 4px 20px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 2px;
+  color: #212529;
+  border-radius: 5px;
+}
+
+/*背景*/
+.btn-wrap {
+  margin: 10px 0;
+}
+
+a.btn-switch {
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 100vh;
+  background: #fbfbfc;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#fbfbfc),
+    to(#dcddde)
+  );
+  background: -webkit-linear-gradient(top, #fbfbfc 0%, #dcddde 100%);
+  background: linear-gradient(180deg, #fbfbfc 0%, #dcddde 100%);
+  -webkit-box-shadow: -1px -5px 6px rgba(0, 0, 0, 0.2), 3px 3px 5px white,
+    0 10px 10px rgba(0, 0, 0, 0.1), inset 0 -4px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: -1px -5px 6px rgba(0, 0, 0, 0.2), 3px 3px 5px white,
+    0 10px 10px rgba(0, 0, 0, 0.1), inset 0 -4px 5px rgba(0, 0, 0, 0.1);
+}
+
+a.btn-switch span {
+  display: inline-block;
+
+  -webkit-transition: all 0.1s;
+
+  transition: all 0.1s;
+}
+
+a.btn-switch:hover {
+  -webkit-box-shadow: -1px -5px 6px rgba(0, 0, 0, 0.2), 3px 3px 5px white,
+    0 10px 10px rgba(0, 0, 0, 0.1), inset 0 -4px 5px rgba(0, 0, 0, 0.1),
+    inset 0 3px 3px rgba(0, 0, 0, 0.18);
+  box-shadow: -1px -5px 6px rgba(0, 0, 0, 0.2), 3px 3px 5px white,
+    0 10px 10px rgba(0, 0, 0, 0.1), inset 0 -4px 5px rgba(0, 0, 0, 0.1),
+    inset 0 3px 3px rgba(0, 0, 0, 0.18);
+    opacity: 1;
+}
+
+a.btn-switch:hover span {
+  -webkit-transform: scale(0.96);
+  transform: scale(0.96);
+}
+
+a.btn-switch:active span {
+  -webkit-transform: scale(0.9);
+  transform: scale(0.9);
+}
+
+/* 管理者権限switch */
+.c-switch-check {
+  display: none;
+}
+.c-switch-label {
+  position: relative;
+  display: inline-block;
+  top: 4.8px;
+  width: 43px;
+  height: 23px;
+  margin-left: 8px;
+  border-radius: calc(23px / 2);
+  background: #cccccc;
+  transition: background 200ms;
+  cursor: pointer;
+}
+.c-switch-label::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: block;
+  width: calc(23px - 4px);
+  height: calc(23px - 4px);
+  border-radius: calc((23px - 4px) / 2);
+  background: #ffffff;
+  transform: translateX(0);
+  transition: transform 200ms;
+}
+.c-switch-check:checked + .c-switch-label {
+  background: #59da48;
+}
+.c-switch-check:checked + .c-switch-label::before {
+  transform: translateX(calc((43px - 4px) - (23px - 4px)));
+}
+
+
+.backhome {
+  font-size: 19px;
+  margin-top: 15px;
+  position: relative;
+  display: inline-block;
+  color: rgba(55, 230, 221, 0.877);
+  text-decoration: none;
+}
+.backhome:hover {
+  cursor: pointer;
+  text-decoration: none;
+}
+.backhome::after {
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  content: '';
+  width: 100%;
+  height: 2px;
+  background: rgb(29, 136, 131);
+  opacity: 0;
+  visibility: hidden;
+  transition: .3s;
+}
+.backhome:hover::after {
+  bottom: -4px;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 連絡事項 */
+/* スマート　囲み枠　2 */
+.kakomi-smart2 {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 2%;
+  width: 20%; /* ボックス幅 */
+  margin: 2em auto;
+  padding: 3em 1em .8em;
+  height: 300px;
+  z-index: 50;
+  border-style: solid;
+  border-width: 5px 0 0 0;
+  border-color: #907b6e; /* 枠の色 */
+  background-color: #ede4cd; /* 背景色 */
+  color: #666; /* テキスト色 */
+  box-shadow: 0 0 3px #999; /* 影の色 */
+ }
+ .title-smart2 {
+  position: absolute;
+  top: 8px;
+  left: 15px;
+  background-color: #ede4cd; /* タイトル背景色 */
+  color: #907b6e; /* タイトル色 */
+  font-size: 1.1em;
+  font-weight: bold;
+  border-style: none none double;
+  border-color: #907b6e; /*タイトル下線 */
+  border-width: 3px;
+ }
+ .contact_text {
+   background-color: #ede4cd;
+   border: none;
+   width:90%;
+   height: 90%;
+   padding: 10px;
+   font-size: 19px;
+   font-family: "UD Digi Kyokasho NP-R";
+ }
+
+ .contact_icon {
+  position: fixed;
+  bottom: 32px;
+  right: 2.5%;
+  z-index: 60;
+  font-size:30px;
+  color: #169ddb; 
+  cursor: pointer;
+ }
+ .contact_icon:hover {
+  opacity: 0.7;
+ }
+
+
+.space {
+margin-top:100px;
+}
+
+
+@media only screen and (max-width: 1200px) { 
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* .mobile-hide {
+  display:none;
+} */
+
+header {
+  height: 100px;
+  width: 100%;
+}
+.logo {
+  width: 310px;
+  margin: 22.875px;
+}
+.header-right {
+  float: right;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0);
+  transition:all 0.5s;
+}
+.header-right:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.header-left {
+  float: left;
+}
+.header-left h1 {
+  font-family: "游教科書体","YuKyokasho"; font-weight: bold;
+  color: #f6f6f6ee;
+  line-height: 100px;
+  font-size: 40px;
+  letter-spacing: 5px;
+}
+.header-left span {
+  display: inline-block;
+  width: 100px;
+  padding:0 30px;
+  margin-right: 10px;
+  transition:all 0.5s;
+}
+.downlist {
+  position: fixed;
+  width: 100vw;
+  background-color: rgba(52, 77, 82, 0.8);
+  display: none;
+  z-index:20;
+}
+.downlist > li {
+  font-family: ヒラギノ角ゴ Pro W3;
+  color: #f6f6f6ee;
+  font-size: 38px;
+  font-weight: bolder;
+  line-height: 100px;
+  letter-spacing: 5px;
+  text-align: center;
+}
+
+#searchbox-input-wrapper {
+  text-align: left;
+  width: 100%;
+  z-index: 10;
+}
+#searchbox {
+  font-family: ヒラギノ角ゴ Pro W3,FontAwesome;
+  display: inline-block;
+  margin-top: 10px;
+  left: 0;
+  height: 75px;
+  width: 95%;
+  margin-left:2.5%;
+  border-radius: 22px;
+  box-sizing: border-box;
+  font-size: 30px;
+  border: none;
+  outline: none;
+  padding: 0 12px;
+}
+.color_example {
+  display: none;
+}
+
+/*モーダル*/
+.hide {
+  display: none;
+}
+
+.signup-modal-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display:none;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%) ;
+  background-color: #e6ecf0;
+  padding: 50px 0 40px;
+  border-radius: 10px;
+  width: 90%;
+  height: auto;
+  text-align: center;
+}
+
+.fa-times {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  color: rgba(128, 128, 128, 0.46);
+  cursor: pointer;
+}
+
+#adduser-form, #addkyakusaki-form, #addshanai-form, #userinfo-form, #editing-form {
+  width: 100%;
+}
+
+#adduser-form h2, #addkyakusaki-form h2, #addshanai-form h2, #userinfo-form h2, #editing-form h2 {
+  color: #5f5d60;
+  letter-spacing: 1px;
+  margin-bottom: 50px;
+  font-size:40px;
+}
+
+#adduser-form input, #addkyakusaki-form input, #addshanai-form input, 
+#userinfo-form input, #userinfo-form select,
+#editing-form input, #editing-form select, #editing-form textarea {
+  width: 80%;
+  margin-bottom: 40px;
+  font-size: 35px;
+  padding: 12px 12px;
+  border: 1px solid #d0d5d8;
+  border-radius: 5px;
+}
+
+#btn_newuser,  #btn_newkyakusaki, #btn_newshanai, #btn_newuserinfo, #btn_editing {
+  display: inline-block;
+  font-size: 35px;
+  padding: 14px 140px;
+  background-color: #56bed8;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  margin: 10px auto;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.main_index {
+  position: absolute;
+  margin-top:95px;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  height: 100%;
+}
+.index-form {
+  position: relative;
+  width: 98%;
+  left:50%;
+  transform: translate(-50%);
+}
+.table_index th{
+  font-family: "UD Digi Kyokasho NK-B";
+  border-radius: 0;
+  font-size: 37px;
+  width: 17%;
+}
+.table_name {
+  font-weight: bolder;
+}
+.table_index td {
+  height: 130px;
+  font-family: "UD Digi Kyokasho N-R";
+  font-size: 37px;
+  padding:0 5px;
+}
+.text_add,.select_add,.memo_add{
+  font-family: "UD Digi Kyokasho N-R";
+  font-size: 28px;
+  padding:0 1px;
+}
+
+.editing_name {
+  font-size:33px;
+  float: center;
+  padding-top:130px;
+  padding-bottom:8px;
+}
+#edit_name {
+  font-family: ＭＳ Ｐ明朝 ;
+  font-size:42px;
+  font-weight:bolder;
+  padding:4px;
+  letter-spacing:5px;
+  position: relative;
+}
+#edit_name span {
+  font-size: 1.1em;
+  position: absolute;
+  right: 50px;
+  cursor: pointer;
+}
+/* #edit_name span:hover {
+  opacity: 1;
+} */
+.table_edit {
+  width: 95%;
+  font-size: 40px;
+}
+.table_edit th {
+  font-size:40px;
+  width: 100%;
+}
+.table_edit select, .table_edit #information, .table_edit #email {
+  font-size: 40px;
+  font-weight: 400;
+  font-family: "UD Digi Kyokasho N-R";
+  font-weight: 400;
+  height:80px;
+}
+
+.table_edit textarea{
+  height:200px;
+  font-size:40px;
+  width: 100%;
+}
+.backhome {
+  margin:50px;
+  font-size: 40px;
+}
+.btn,
+a.btn,
+button.btn {
+  font-size: 34px;
+}
+.space {
+  margin-top:0;
+}
+
+.btn-massage {
+  display: inline-block;
+  margin: 220px 0 120px 0;
+  min-width: 220px;
+  text-align: center;
+  background-color: rgb(231, 37, 37);
+  font-size: 40px;
+  color: #FFF;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 15px 70px 15px 70px;
+  position: relative;
+  transition: .9s;
+  border: 1px solid #FFF;
+}
+
+.btn-massage:hover span {
+  transform: translateY(88px);
+}
+.btn-massage span {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  font-size: 25px;
+  line-height: 50px;
+  border-radius: 0 0 8px 0;
+  z-index: -1;
+  transition: .5s;
+}
+#btn_post {
+  margin-top: 15px;
+  width: 60%;
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  padding: 20px 10px 20px 10px;
+  text-decoration: none;
+  color: #ffffff;
+  background: #e7853e;
+  border-bottom: solid 4px #ad7006;
+  border-radius: 15px 15px 0 0;
+  transition: .4s;
+}
+#btn_post i{
+  margin-right: 20px;
+}
+#btn_post:hover {
+  background: #43c76a;
+  border-bottom: solid 4px #08990f;
+  color: #FFF;
+}
+
+#btn_post:active {
+  position: relative;
+  top: 4px;
+  border-bottom: none;
+}
+
+#edit-group {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%) ;
+  width: 350px;
+  height: 115px;
+  border-radius: 50px;
+  border: 5px solid #a6cde4;
+  background-color: #169ddb;
+  color:#e9eaeb;
+  font-family: "UD Digi Kyokasho N-R";
+  font-weight: bolder;
+  z-index: 50;
+  font-size: 45px;
+}
+
+#edit-group p {
+  line-height: 115px;
+}
+/* 連絡事項 */
+/* スマート　囲み枠　2 */
+.kakomi-smart2 {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 3.8%;
+  width: 65%; /* ボックス幅 */
+  margin: 2em auto;
+  padding: 3em 1em .8em;
+  height: 800px;
+  z-index: 50;
+  border-style: solid;
+  border-width: 10px 0 0 0;
+  border-color: #907b6e; /* 枠の色 */
+  background-color: #ede4cd; /* 背景色 */
+  color: #666; /* テキスト色 */
+  box-shadow: 0 0 3px #999; /* 影の色 */
+ }
+ .title-smart2 {
+  position: absolute;
+  top: 2.5%;
+  left: 4%;
+  background-color: #ede4cd; /* タイトル背景色 */
+  color: #907b6e; /* タイトル色 */
+  font-size: 2.5em;
+  font-weight: bold;
+  border-style: none none double;
+  border-color: #907b6e; /*タイトル下線 */
+  border-width: 6px;
+ }
+ .contact_text {
+   background-color: #ede4cd;
+   border: none;
+   margin-top: 10%;
+   margin-left: 3%;
+   width: 90%;
+   height: 75%;
+   padding: 10px;
+   font-size: 2.4em;
+   font-family: "UD Digi Kyokasho NP-R";
+ }
+
+ .contact_icon {
+  position: fixed;
+  bottom: 32px;
+  right: 5.8%;
+  z-index: 60;
+  font-size: 80px;
+  color: #4edfe9;
+ }
+ .contact_icon:hover {
+  opacity: 1;
+  cursor: pointer;
+ }
+
+}

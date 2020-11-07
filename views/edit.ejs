@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title><%= title %></title>
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.3.0/font-awesome-animation.min.css" integrity="sha512-Po8rrCwchD03Wo+2ibHFielZ8luDAVoCyE9i6iFMPyn9+V1tIhGk5wl8iKC9/JfDah5Oe9nV8QzE8HHgjgzp3g==" crossorigin="anonymous" />
+	</head>
+
+<body>
+	<header>
+		<div class="header-right">
+			<a href="/"><img class="logo" src="https://msi-net.co.jp/main/wp-content/uploads/2020/01/logo.png"></a>
+		</div>
+		<div class="header-left">
+			<h1><span><i class="fa fa-bars" aria-hidden="true"></i></span><%- subtitle %></h1>
+			<ul class="downlist">
+				<li id="create_user" class="admin_only"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span><a href="#">社員新規登録</a></li>
+				<li id="create_kyakusaki" class="admin_only mobile-hide"><span><i class="fas fa-handshake"></i></span><a href="#">客先管理＆新規</a></li>
+				<li id="create_shanai" class="admin_only mobile-hide"><span><i class="fa fa-building" aria-hidden="true"></i></span><a href="#">社内管理＆新規</a></li>
+				<li id="create_department" class="admin_only mobile-hide"><span><i class="fas fa-users" aria-hidden="true"></i></span>部署管理＆新規</li>
+				<li id="change_userinfo"><span><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span><a href="#">基本情報変更</a></li>
+				<li id="logout"><span><i class="fas fa-sign-out-alt"></i></span><a href="/logout">ログアウト</a></li>
+			</ul>
+</div>
+	</header>
+
+		<!-- モーダル部分　社員新規登録 -->
+	<div class="signup-modal-wrapper admin_only" id="signup-modal">
+		<div class="modal">
+		  <div id="close-modal">
+			<i class="fa fa-2x fa-times"></i>
+		  </div>
+		  <div id="adduser-form">
+			<h2>社員新規登録</h2>
+			<form name="form_newuser" method="POST" action="/newuser">
+				<input id="create_department" name="department" class="form-control" type="text" placeholder="部署名">
+				<div class="div_create_name">
+					<input id="create_name" name="name" class="form-control" type="text" placeholder="名前"><a id="newadmin_check_btn"><i class="fas fa-user"></i></a>
+				</div>
+				<input type="hidden" id="newadmin_check_body" name="newadmin_check_body" value="0">
+
+				<input id="create_information" name="information" class="form-control" type="text" placeholder="内線番号（省略可）">
+				<input id="create_email" name="email" class="form-control" type="text" placeholder="メールアドレス（省略可）">
+				<input id="create_password" name="password" class="form-control" type="password" placeholder="パスワード">
+				<input id="tmp_password" class="form-control" type="password" placeholder="パスワードを確認">
+				<a href="javascript:form_newuser.submit()" id="btn_newuser">新規登録</a>
+			</form>
+		  </div>
+		</div>
+	</div>
+	<!-- モーダルここまで　社員新規登録 -->
+		
+	<!-- モーダル部分 客先管理-->
+	<div class="signup-modal-wrapper admin_only" id="addkyakusaki-modal">
+		<div class="modal">
+			<div id="close-modal2">
+			<i class="fa fa-2x fa-times"></i>
+			</div>
+			<div id="addkyakusaki-form">
+			<h2>客先管理＆新規登録</h2>
+			<form id="form_newkyakusaki" name="form_newkyakusaki" method="POST" action="/newkyakusaki">
+				<% var i;for (i in datakyakusaki) {  %>
+					<div>
+						<input name="kyakusaki" type="text" value="<%= datakyakusaki[i].attributes.kyakusaki %>"><span><i class="far fa-trash-alt btn_kyakusaki_delete"></i></span>
+						<input type="hidden" name="id" value="<%= datakyakusaki[i].attributes.id %>">
+					</div>
+				<% } %>
+				<input name="cnt" value="<%= i %>" type="hidden">
+
+				<!-- クローン用区域 -->
+				<div id="clonearea_newkyakusaki">
+					
+				</div>
+				<!-- クローン用区域 ここまで　-->
+
+				<!-- クローン要素 -->
+				<div class="clone_newkyakusaki hide" id="clone_newkyakusaki">
+					<input class="form-control input_newkyakusaki" type="text" placeholder="新客先を追加"><span><i class="fa fa-minus btn_kyakusaki_minus" aria-hidden="true"></i></span>
+				</div>
+				<!-- クローン要素 ここまで-->
+
+				<span id="btn_kyakusaki_add">+</span>
+				
+				<a href="javascript:form_newkyakusaki.submit()" id="btn_newkyakusaki">登録</a>
+			</form>
+			</div>
+		</div>
+	</div>
+	<!-- モーダルここまで　客先管理 -->
+
+	<div class="signup-modal-wrapper admin_only" id="addshanai-modal">
+		<div class="modal">
+			<div id="close-modal3">
+			<i class="fa fa-2x fa-times"></i>
+			</div>
+			<div id="addshanai-form">
+			<h2>社内所在地管理＆新規登録</h2>
+			<form id="form_newshanai" name="form_newshanai" method="POST" action="/newshanai">
+				<% var n;for (n in datashanai) {  %>
+					<div>
+						<input name="shanai" type="text" value="<%= datashanai[n].attributes.shanai %>"><span><i class="far fa-trash-alt btn_shanai_delete"></i></span>
+						<input type="hidden" name="id" value="<%= datashanai[n].attributes.id %>">
+					</div>
+				<% } %>
+				<input name="cnt_shanai" value="<%= n %>" type="hidden">
+
+				<!-- クローン用区域 -->
+				<div id="clonearea_newshanai">
+					
+				</div>
+				<!-- クローン用区域 ここまで　-->
+
+				<!-- クローン要素 -->
+				<div class="clone_newshanai hide" id="clone_newshanai">
+					<input class="form-control input_newshanai" type="text" placeholder="新社内ポジションを追加"><span><i class="fa fa-minus btn_shanai_minus" aria-hidden="true"></i></span>
+				</div>
+				<!-- クローン要素 ここまで-->
+
+				<span id="btn_shanai_add">+</span>
+
+				<a href="javascript:form_newshanai.submit()" id="btn_newshanai">登録</a>
+			</form>
+			</div>
+		</div>
+	</div>
+	<!-- モーダルここまで -->
+
+	<!-- モーダル部分　社員情報管理 -->
+	<div class="signup-modal-wrapper" id="userinfo-modal">
+		<div class="modal">
+		<div id="close-modal4">
+			<i class="fa fa-2x fa-times"></i>
+		</div>
+		<div id="userinfo-form">
+			<h2>基本情報変更</h2>
+			<form name="form_newuserinfo" method="POST" action="/newuserinfo">
+			<input id="userinfo_name" name="userinfo_name" class="form-control" type="text" placeholder="名前" value="<%= login.name %>">
+			<select name="userinfo_department" class="form-control" id="userinfo_department" value="<%= login.department %>">
+				<% datadepartment.forEach ( (element)=> {  %>
+					<option value="<%= element.attributes.department %>"
+						<% if (element.attributes.department == login.department) { %>
+							selected
+						<% } %> 
+						><%= element.attributes.department %></option>
+				<% }); %>
+			</select>
+			<input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
+			<input id="userinfo_email" name="userinfo_email" class="form-control" type="text" placeholder="メールアドレス（省略可）" value="<%= login.email %>">
+			<input id="userinfo_newpassword" name="userinfo_newpassword" class="form-control" type="password" placeholder="新しいパスワード（入力しない場合無変更）">
+			<input id="userinfo_newpassword_tmp" class="form-control" type="password" placeholder="新しいパスワードを確認">
+			<a href="javascript:form_newuserinfo.submit()" id="btn_newuserinfo">変更</a>
+			</form>
+		</div>
+		</div>
+	</div>
+	<!-- モーダルここまで　社員情報管理 -->
+
+	<!-- モーダル部分 部署管理-->
+	<div class="signup-modal-wrapper admin_only" id="adddepartment-modal">
+		<div class="modal">
+		<div id="close-modal5">
+			<i class="fa fa-2x fa-times"></i>
+		</div>
+		<div id="adddepartment-form">
+			<h2>部署管理＆新規登録</h2>
+			<form id="form_newdepartment" name="form_newdepartment" method="POST" action="/newdepartment">
+				<% var i;for (i in datadepartment) {  %>
+					<div>
+						<input name="department" type="text" value="<%= datadepartment[i].attributes.department %>"><span><i class="far fa-trash-alt btn_department_delete"></i></span>
+						<input type="hidden" name="id" value="<%= datadepartment[i].attributes.id %>">
+					</div>
+				<% } %>
+				<input name="cnt" value="<%= i %>" type="hidden">
+
+				<!-- クローン用区域 -->
+				<div id="clonearea_newdepartment">
+					
+				</div>
+				<!-- クローン用区域 ここまで　-->
+
+				<!-- クローン要素 -->
+				<div class="clone_newdepartment hide" id="clone_newdepartment">
+					<input class="form-control input_newdepartment" type="text" placeholder="新部署を追加"><span><i class="fa fa-minus btn_department_minus" aria-hidden="true"></i></span>
+				</div>
+				<!-- クローン要素 ここまで-->
+
+				<span id="btn_department_add">+</span>
+			
+			<a href="javascript:form_newdepartment.submit()" id="btn_newdepartment">登録</a>
+			</form>
+		</div>
+		</div>
+	</div>
+	<!-- モーダルここまで　部署管理 -->
+
+	<!-- 編集テーブル -->
+	<div role="main" class="main_edit">
+		<form name="form_edit" method="POST" action="/edit/<%= content.id %>">
+			<table class="table_edit">
+				<p class="editing_name"><span>ログイン中のユーザー：<span><%= login.name %><i class="fas fa-user-shield admin_only" style="margin-left: 5px;"></i></span></span><br><%- greeting %></p>
+				<tr><th>名前</th></tr>
+				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.name %>"><%= content.name %><span><i class="fas fa-ellipsis-h"></i></span></td></tr>
+				<tr id="department_tr"><th style="background-color: #e7853e; border: none;">部署</th></tr>
+				<% if (login.admin != 1 || login.id == content.id ){ %>
+					<tr><td><input type="hidden" name="department" id="department" value="<%= content.department %>" >
+						<%= content.department %></td></tr>
+				<% } else if (login.id != content.id) { %>
+					<tr><td><select name="department" id="department" value="<%= content.department %>">
+						<% datadepartment.forEach ( (element)=> {  %>
+							<option value="<%= element.attributes.department %>"
+								<% if (element.attributes.department == content.department) { %>
+									selected
+								<% } %> 
+								><%= element.attributes.department %></option>
+						<% }); %>
+					</select></td></tr>
+				<% } %>
+				<tr id="information_tr"><th style="background-color:#e7853e; border: none;">情報</th></tr>
+				<% if (login.admin != 1 || login.id == content.id ){ %>
+					<tr><td><input type="hidden" name="information" id="information" value="<%= content.information %>" >
+						<%= content.information %></td></tr>
+				<% } else if (login.id != content.id) { %>
+				<tr><td><input name="information" id="information" value="<%= content.information %>"></td></tr>
+				<% } %>
+				<tr id="email_tr"><th style="background-color: #e7853e; border: none;">メールアドレス</th></tr>
+				<% if (login.admin != 1 || login.id == content.id ){ %>
+					<tr><td><input type="hidden" name="email" id="email" value="<%= content.email %>" >
+						<%= content.email %></td></tr>
+				<% } else if (login.id != content.id) { %>
+				<tr><td><input name="email" id="email" value="<%= content.email %>"></td></tr>
+				<% } %>
+				<tr><th>状態</th></tr>
+				<tr><td><select name="status" id="status" >
+					<option value=""></option>
+					<% datastatus.forEach ( (element)=> { %>
+						<option value="<%= element.attributes.status %>" 
+							<% if (content.status == element.attributes.status){ %>
+								selected
+							<% } %> ><%= element.attributes.status %>
+						</option>
+					<% }); %></select>
+				</td></tr>
+
+				<tr class="table_ikisaki"><th id="th_ikisaki">行先</th></tr>
+				<tr class="table_ikisaki"><td><select name="ikisaki" id="ikisaki">
+
+				<% if (content.status == "休暇") { %>
+					<option value="全休" 
+						<% if (content.ikisaki == "全休"){ %>
+							selected
+						<% } %>>全休
+					</option>
+					<option value="ＡＭ半休" 
+						<% if (content.ikisaki == "ＡＭ半休"){ %>
+							selected 
+						<% } %>>ＡＭ半休
+					</option>
+					<option value="ＰＭ半休"
+						<% if (content.ikisaki == "ＰＭ半休"){ %>
+							selected 
+						<% } %>>ＰＭ半休
+					</option>
+				<% } else if (content.status == "客先"){ %>
+					<% datakyakusaki.forEach ( (element)=> { %>
+						<option value="<%= element.attributes.kyakusaki %>" 
+							<% if (content.ikisaki == element.attributes.kyakusaki){ %>
+								selected
+							<% } %> ><%= element.attributes.kyakusaki %>
+						</option>
+					<% });  %>
+				<% } else if (content.status == "社内"){ %>
+					<% datashanai.forEach ( (element)=> { %>
+						<option value="<%= element.attributes.shanai %>" 
+							<% if (content.ikisaki == element.attributes.shanai){ %>
+								selected
+							<% } %> ><%= element.attributes.shanai %>
+						</option>
+					<% });  %>
+				<% } %></select>
+			</td></tr>
+				
+
+			<tr class="table_yoteijikoku"><th>予定時刻</th></tr>
+				<tr class="table_yoteijikoku"><td><select type="text" name="time">
+					<option value="~ 8:30"
+						<% if (content.time == "~ 8:30"){ %>
+							selected 
+						<% } %> >~ 8:30
+					</option>
+					<option value="~ 9:00"
+						<% if (content.time == "~ 9:00"){ %>
+							selected 
+						<% } %> >~ 9:00
+					</option>
+					<option value="~ 9:30"
+						<% if (content.time == "~ 9:30"){ %>
+							selected 
+						<% } %> >~ 9:30
+					</option>
+					<option value="~ 10:00"
+						<% if (content.time == "~ 10:00"){ %>
+							selected 
+						<% } %> >~ 10:00
+					</option>
+					<option value="~ 10:30"
+						<% if (content.time == "~ 10:30"){ %>
+							selected 
+						<% } %> >~ 10:30
+					</option>
+					<option value="~ 11:00"
+						<% if (content.time == "~ 11:00"){ %>
+							selected 
+						<% } %> >~ 11:00
+					</option>
+					<option value="~ 11:30"
+						<% if (content.time == "~ 11:30"){ %>
+							selected 
+						<% } %> >~ 11:30
+					</option>
+					<option value="~ 12:00"
+						<% if (content.time == "~ 12:00"){ %>
+							selected 
+						<% } %> >~ 12:00
+					</option>
+					<option value="~ 12:30"
+						<% if (content.time == "~ 12:30"){ %>
+							selected 
+						<% } %> >~ 12:30
+					</option>
+					<option value="~ 13:00"
+						<% if (content.time == "~ 13:00"){ %>
+							selected 
+						<% } %> >~ 13:00
+					</option>
+					<option value="~ 13:30"
+						<% if (content.time == "~ 13:30"){ %>
+							selected 
+						<% } %> >~ 13:30
+					</option>
+					<option value="~ 14:00"
+						<% if (content.time == "~ 14:00"){ %>
+							selected 
+						<% } %> >~ 14:00
+					</option>
+					<option value="~ 14:30"
+						<% if (content.time == "~ 14:30"){ %>
+							selected 
+						<% } %> >~ 14:30
+					</option>
+					<option value="~ 15:00"
+						<% if (content.time == "~ 15:00"){ %>
+							selected 
+						<% } %> >~ 15:00
+					</option>
+					<option value="~ 15:30"
+						<% if (content.time == "~ 15:30"){ %>
+							selected 
+						<% } %> >~ 15:30
+					</option>
+					<option value="~ 16:00"
+						<% if (content.time == "~ 16:00"){ %>
+							selected 
+						<% } %> >~ 16:00
+					</option>
+					<option value="~ 16:30"
+						<% if (content.time == "~ 16:30"){ %>
+							selected 
+						<% } %> >~ 16:30
+					</option>
+					<option value="~ 17:00"
+						<% if (content.time == "~ 17:00"){ %>
+							selected 
+						<% } %> >~ 17:00
+					</option>
+					<option value="~ 17:30"
+						<% if (content.time == "~ 17:30"){ %>
+							selected 
+						<% } %> >~ 17:30
+					</option>
+					<option value="~ 18:00"
+						<% if (content.time == "~ 18:00"){ %>
+							selected 
+						<% } %> >~ 18:00
+					</option>
+					<option value="~ 18:30"
+						<% if (content.time == "~ 18:30"){ %>
+							selected 
+						<% } %> >~ 18:30
+					</option>
+					<option value="~ 19:00"
+						<% if (content.time == "~ 19:00"){ %>
+							selected 
+						<% } %> >~ 19:00
+					</option>
+					<option value="~ 19:30"
+						<% if (content.time == "~ 19:30"){ %>
+							selected 
+						<% } %> >~ 19:30
+					</option>
+					<option value="~ 20:00"
+						<% if (content.time == "~ 20:00"){ %>
+							selected 
+						<% } %> >~ 20:00
+					</option>
+					<option value="~ 20:30"
+						<% if (content.time == "~ 20:30"){ %>
+							selected 
+						<% } %> >~ 20:30
+					</option>
+					<option value="~ 21:00"
+						<% if (content.time == "~ 21:00"){ %>
+							selected 
+						<% } %> >~ 21:00
+					</option>
+					<option value="~ 21:30"
+						<% if (content.time == "~ 21:30"){ %>
+							selected 
+						<% } %> >~ 21:30
+					</option>
+					<option value="~ 22:00"
+						<% if (content.time == "~ 22:00"){ %>
+							selected 
+						<% } %> >~ 22:00
+					</option>
+					<option value="22:00 ~"
+						<% if (content.time == "22:00 ~"){ %>
+							selected 
+						<% } %> >22:00 ~
+					</option>
+					<option value="不帰"
+						<% if (content.time == "不帰"){ %>
+							selected 
+						<% } %> >不帰
+					</option></select>
+
+				</td></tr>
+				<tr><th>メモ</th></tr>
+				<tr><td><textarea name="memo"><%= content.memo %></textarea></td></tr>
+				<tr class="admin_only"><th>
+					管理者権限
+					<input type="checkbox" class="c-switch-check" id="check">
+					<label class="c-switch-label" for="check"></label>
+					<input type="hidden" name="admin" id="admin" value="<%= content.admin %>">
+				</th></tr>
+				<tr><td>
+					<a href="javascript:form_edit.submit()" id="btn_post" class="faa-parent animated-hover"><i class="fas fa-pencil-alt"></i>更新</a>
+				</td></tr>
+
+				<input type="hidden" name="id" value="<%= content.id %>">
+			</table>
+		</form>
+		<p><a href="/" class="backhome faa-parent animated-hover"><i class="fas fa-angle-double-right faa-passing"></i> 一覧に戻る</a></p>
+
+		<% if (login.admin == 1){ %>
+			<p></p>
+		<% } else { %>
+			<p class="space"><br></p>
+		<% } %>
+
+	<form method="POST" action="/edit/<%= content.id %>/delete" name="form_delete" id="scroll-form-delete" class="admin_only">
+		<input type="hidden" name="id" value="<%= content.id %>">
+		<div id="delete_content">
+			<a href="javascript:form_delete.submit()" class="btn-massage faa-parent animated-hover" id="btn_delete"><i class="fas fa-user-times faa-flash"></i>
+			  DELETE
+			  <span>"<%= content.name %>"の情報が削除されます</span>
+			</a>
+		</div>
+	</form>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(function() {
+
+			console.log('使用中ユーザー管理者権限: <%= login.admin %>');
+			if ('<%= login.admin %>' != 1){
+				$('.admin_only').remove();
+				$('.main_edit').height('100%');
+			}else {
+				$('body').css('background-image','url(https://recruit.msi-net.co.jp/main/wp-content/uploads/2019/12/mainvisual-002.jpg)');
+			}
+
+			//管理者権限BOXチェック
+			console.log('編集するユーザー管理者権限: <%= content.admin %>');
+			if ('<%= content.admin %>' == 1){
+				$('#check').prop('checked', true);
+			} else {
+				$('#check').prop('checked', false);
+			}
+
+
+			if ($('#status').val() == '' || $('#status').val() == '在席' || $('#status').val() == '帰宅') {
+				$('.table_ikisaki').addClass('hide');
+				$('.table_yoteijikoku').addClass('hide');
+			} else if ($('#status').val() == '出張' ||　$('#status').val() == '研修' ||　$('#status').val() == 'その他') {
+				$('.table_ikisaki').addClass('hide');
+			} else if ($('#status').val() == '休暇') {
+				$('.table_yoteijikoku').addClass('hide');
+				$('#th_ikisaki').text('期間');
+			}
+
+			$('#status').change(function() {
+
+				var val = $(this).val();
+
+				switch (val) {
+					case '休暇':
+						var selectContent_kyuuka = '<option value="全休">全休</option>' +
+								'<option value="ＡＭ半休">ＡＭ半休</option>' + 
+								'<option value="ＰＭ半休">ＰＭ半休</option>';
+						$('#ikisaki').html(selectContent_kyuuka);
+						$('#th_ikisaki').text('期間');
+						$('.table_ikisaki').removeClass('hide');
+						$('.table_yoteijikoku').addClass('hide');
+						break;
+					case '客先':
+						var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.attributes.kyakusaki %>"><%= element.attributes.kyakusaki %></option><%  }) %>';
+						$('#ikisaki').html(selectContent_kyakusaki);
+						$('#th_ikisaki').text('行先');
+						$('.table_ikisaki').removeClass('hide');
+						$('.table_yoteijikoku').removeClass('hide');
+						break;
+					case '社内':
+						var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.attributes.shanai %>"><%= element.attributes.shanai %></option><%  }) %>';
+						$('#ikisaki').html(selectContent_shanai);
+						$('#th_ikisaki').text('行先');
+						$('.table_ikisaki').removeClass('hide');
+						$('.table_yoteijikoku').removeClass('hide');
+						break;
+					case '':
+					case '在席':
+					case '帰宅':
+						$('.table_ikisaki').addClass('hide');
+						$('.table_yoteijikoku').addClass('hide');
+						break;
+					default:
+						$('#th_ikisaki').text('行先');
+						$('.table_ikisaki').addClass('hide');
+						$('.table_yoteijikoku').removeClass('hide');
+						break;
+				}
+
+			})
+
+
+			$('#btn_delete').click(function(){
+				if ('<%= content.name %>' == '<%= login.name %>'){
+					if (!confirm('\nあなたの関連データはすべて削除されます。\nよろしいですか？\n\n※アカウント削除後、ログアウトするまで操作可能です。')) {
+						return false;
+					} else {
+						return true;
+					}
+				} else {
+					if (!confirm('\n<%= content.department %>〝<%= content.name %>″の関連データはすべて削除されます。\n\nよろしいですか？')) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+			});
+
+			var deleteBtn = $('#delete_content');    
+				deleteBtn.hide();
+      
+			var ua = navigator.userAgent;
+			if ((ua.indexOf('iPhone') >  0 || ua.indexOf('Android') >  0) && ua.indexOf('Mobile') >  0) {
+				// スマートフォン用処理
+				$('#scroll-form-delete').hide();
+				$('.admin_only').remove();
+
+			} 
+			// else if (ua.indexOf('ipad') > 0 || ua.indexOf('macintosh') > 0 || ua.indexOf('Android') >  0) {
+            //   // タブレット用処理(効かない)
+            // $('#scroll-form-delete').hide();
+            // $(window).on('scroll', function () {
+            //     var doch = $(document).innerHeight(); //ページ全体の高さ
+            //     var winh = $(window).innerHeight(); //ウィンドウの高さ
+            //     var bottom = doch - winh; //ページ全体の高さ - ウィンドウの高さ = ページの最下部位置
+            //     if (bottom -200 <= $(window).scrollTop()) {
+            //       console.log(doch);
+            //       console.log(winh);
+            //     //一番下までスクロールした時に実行
+            //       deleteBtn.fadeIn();
+            //     } else {
+            //       deleteBtn.fadeOut();
+            //     }
+            //   });
+            // } 
+			else {
+				// PC用処理
+				$(window).on('scroll', function() {
+					var doch = $(document).innerHeight(); //ページ全体の高さ
+					var winh = $(window).innerHeight(); //ウィンドウの高さ
+					var bottom = doch - winh; //ページ全体の高さ - ウィンドウの高さ = ページの最下部位置
+					if (bottom -50 <= $(window).scrollTop()) {
+					console.log(doch);
+					console.log(winh);
+					//一番下までスクロールした時に実行
+					deleteBtn.fadeIn();
+					} else {
+					deleteBtn.fadeOut();
+					}
+
+				});
+
+				if ($('#admin').length > 0) { 　//もしadminのチェックボックスが存在していれば
+					$('#btn_post').click(function(){
+						if ($('#check').prop('checked') == true){
+							$('#admin').val('1');
+						} else if ($('#check').prop('checked') == false) {
+							$('#admin').val('0');
+						}
+						console.log("$('#admin').val()は：" + $('#admin').val());
+
+						if ($('#admin').val() != '<%= content.admin %>'){
+							if ($('#admin').val() == 1){
+								if ('<%= content.name %>' == '<%= login.name %>'){
+									if(!confirm('\n管理者権限を回収します。\nよろしいですか？')){
+										$('#check').prop('checked', false);
+										return false;
+									} else {
+										return true;
+									}
+								} else {
+									if(!confirm('\n<%= content.department %>＂<%= content.name %>＂に管理者権限を付与します。\n\nよろしいですか？')){
+										$('#check').prop('checked', false);
+										return false;
+									} else {
+										return true;
+									}
+								}
+							} else {
+								if ('<%= content.name %>' == '<%= login.name %>'){
+									if(!confirm('\nあなたは管理者権限を失います。\nよろしいですか？\n\n※管理者権限はログアウトするまで有効です。')){
+										$('#check').prop('checked', true);
+										return false;
+									} else {
+										return true;
+									}
+								} else if('<%= content.name %>' != '<%= login.name %>') {
+									if(!confirm('\n<%= content.department %>＂<%= content.name %>＂は管理者権限を失います。\nよろしいですか？')){
+										$('#check').prop('checked', true);
+										return false;
+									} else {
+										return true;
+									}
+								}
+							}
+						}
+
+						return true;
+					});
+				}
+			}
+
+		// 新規登録モーダル
+		$('#create_user').click(function() {
+			$('#signup-modal').fadeIn();
+		});
+		$('#close-modal').click(function() {
+			$('#signup-modal').fadeOut();
+		});
+		// admin判定
+		$('#newadmin_check_btn').click(function(){
+			if ($(this).hasClass('Isadmin')){
+				$(this).removeClass('Isadmin').children('i').attr('class','fas fa-user');
+				$('#adduser-form h2').text('社員新規登録');
+				$('#create_name').attr('placeholder','名前');
+				$('#btn_newuser').css({
+					'background-color': '#56bed8'
+				});
+				
+				$('#newadmin_check_body').val('0');
+				console.log('新規管理者判定: ' + $('#newadmin_check_body').val());
+			} else {
+				$(this).addClass('Isadmin').children('i').attr('class','fas fa-user-shield');
+				$('#adduser-form h2').text('管理者新規登録');
+				$('#create_name').attr('placeholder','名前 (admin)')
+				$('#btn_newuser').css({
+					'background-color': '#ff9f4f'
+				});
+
+				$('#newadmin_check_body').val('1');
+				console.log('新規管理者判定: ' + $('#newadmin_check_body').val());
+			}
+		});
+
+		$('#newadmin_check_btn i').hover(function(){
+			if ($('#newadmin_check_btn').hasClass('Isadmin')){
+				$(this).css('color', '#e7853e');
+			}else {
+				$(this).css('color', '#33b4d4');
+			}
+		},function(){
+			if ($('#newadmin_check_btn').hasClass('Isadmin')){
+				$(this).css('color', '#ff9f4f');
+			}else {
+				$(this).css('color', '');
+			}
+		});
+
+		$('#btn_newuser').hover(function(){
+			if ($('#newadmin_check_btn').hasClass('Isadmin')){
+				$(this).css('background-color', '#e7853e');
+			}else {
+				$(this).css('background-color', '#33b4d4');
+			}
+		},function(){
+			if ($('#newadmin_check_btn').hasClass('Isadmin')){
+				$(this).css('background-color', '#ff9f4f');
+			}else {
+				$(this).css('background-color', '');
+			}
+		});
+
+
+		// 新規客先登録モーダル
+		$('#create_kyakusaki').click(function() {
+			$('#form_newkyakusaki').children().children('input[name="kyakusaki"]').parent().show();
+			$('#addkyakusaki-modal').fadeIn();
+		});
+		$('#close-modal2').click(function() {
+			$('#addkyakusaki-modal').fadeOut();
+		});
+
+		// 新規社内登録モーダル
+		$('#create_shanai').click(function() {
+			$('#form_newshanai').children().children('input[name="shanai"]').parent().show();
+			$('#addshanai-modal').fadeIn();
+		});
+		$('#close-modal3').click(function(){
+			$('#addshanai-modal').fadeOut();
+		});
+
+		//部署管理モーダル
+		$('#create_department').click(function() {
+			$('#form_newdepartment').children().children('input[name="department"]').parent().show();
+			$('#adddepartment-modal').fadeIn();
+		});
+		$('#close-modal5').click(function() {
+			$('#adddepartment-modal').fadeOut();
+		});
+
+		// 基本情報変更モーダル
+		$('#change_userinfo').click(function() {
+			$('#userinfo-modal').fadeIn();
+		});
+		$('#close-modal4').click(function(){
+			$('#userinfo-modal').fadeOut();
+			$('#userinfo_newpassword').val('').attr('placeholder','新しいパスワード（入力しない場合無変更）');
+			$('#userinfo_newpassword_tmp').val('').attr('placeholder','新しいパスワードを確認').hide();
+		});
+
+
+		// 社員新規入力passwordチェック
+		$('#btn_newuser').click(function(){
+			if ($('#create_name').val() == '' || $('#create_department').val() == '' || $('#create_password').val() == '' || $('#tmp_password').val() == '') {
+				alert('\n名前、所属、パスワードは必ず入力してください！');
+				return false;
+			} else if ($('#create_password').val() != $('#tmp_password').val()) {
+				$('#create_password').val('');
+				$('#tmp_password').val('');
+				$('#create_password').attr('placeholder','入力が一致しません。');
+				$('#tmp_password').attr('placeholder','パスワードを確認してください。');
+				return false;
+			} else {
+				return true;
+			}
+		});
+
+		// 基本情報変更passwordチェック
+		$('#userinfo_newpassword_tmp').hide();
+		$('#userinfo_newpassword').keypress(function(){
+			$('#userinfo_newpassword_tmp').show();
+		});
+		$('#btn_newuserinfo').click(function(){
+			if ($('#userinfo_name').val() == '' || $('#userinfo_department').val() == '') {
+				alert('\n名前と所属は必ず入力してください！');
+				return false;
+			} else if ($('#userinfo_newpassword').val() == '' && $('#userinfo_newpassword_tmp').val() == '') {
+				alert('\n情報変更できました！\n\nログインし直してください。');
+				return true;
+			} else if ($('#userinfo_newpassword').val() != $('#userinfo_newpassword_tmp').val()) {
+				$('#userinfo_newpassword').val('');
+				$('#userinfo_newpassword_tmp').val('');
+				$('#userinfo_newpassword').attr('placeholder','入力が一致しません。');
+				$('#userinfo_newpassword_tmp').attr('placeholder','パスワードを確認してください。');
+				return false;
+			} else {
+				alert('\n情報変更できました！\n\nログインし直してください。');
+				return true;
+			}
+		});
+
+		//客先追加INPUTBOXをclone
+		var minCount = 1;
+		var maxCount = 7;
+
+		$('#btn_kyakusaki_add').on('click', function(){
+			var inputCount = $('div.clone_newkyakusaki').length;
+			if (inputCount < maxCount){
+				$('div#clone_newkyakusaki')
+				.clone(true)
+				.removeAttr('id')
+				.removeClass('hide')
+				.children('input').attr('name','newkyakusaki')
+				.end()
+				.appendTo('#clonearea_newkyakusaki')
+			}
+		});
+		$('#btn_kyakusaki_add').hover(function(){
+			$(this).animate({fontSize: '25px'},0);
+		},function(){
+			$(this).animate({fontSize: '15px'},100);
+		});
+
+		$('.btn_kyakusaki_minus').on('click', function(){
+
+			var inputCount = $('div.clone_newkyakusaki').length;
+			if (inputCount > minCount){
+				$(this).parent('span').parent('div').remove();
+			}
+			
+		});
+
+		$('.btn_kyakusaki_delete').on('click', function(){
+			$(this).parent().parent().children('input[name="kyakusaki"]').end().slideUp();
+		});
+		$('.btn_kyakusaki_delete').hover(function(){
+			$(this).animate({fontSize: '15px'},0);
+		},function(){
+			$(this).animate({fontSize: '15px'},100);
+		});
+
+		$('#btn_newkyakusaki').on('click', function(){
+			var data = '';
+			$('#form_newkyakusaki').children().children('input[name="kyakusaki"]').parent().each(function(){
+				if ($(this).is(':hidden')){
+					data += $(this).children('input[name="kyakusaki"]').val() + '，';
+					$(this).children('input[name="kyakusaki"]').val('');
+				}
+			})
+			if (data != ''){
+				if(!confirm('\n"' + data.slice(0,-1) + '"は削除されます。\nよろしいですか？')){
+					window.location.href = '/';
+					return false;
+				} else {
+					return true;
+				}
+			}
+		})
+
+		//社内追加INPUTBOXをclone
+		var minCount_shanai = 1;
+		var maxCount_shanai = 5;
+
+		$('#btn_shanai_add').on('click', function(){
+			var inputCount = $('div.clone_newshanai').length;
+			if (inputCount <= maxCount_shanai){
+				$('div#clone_newshanai')
+				.clone(true)
+				.removeAttr('id')
+				.removeClass('hide')
+				.children('input').attr('name','newshanai')
+				.end()
+				.appendTo('#clonearea_newshanai')
+			}
+		});
+		$('#btn_shanai_add').hover(function(){
+			$(this).animate({fontSize: '25px'},0);
+		},function(){
+			$(this).animate({fontSize: '15px'},100);
+		});
+
+		$('.btn_shanai_minus').on('click', function(){
+			var inputCount = $('div.clone_newshanai').length;
+			if (inputCount > minCount_shanai){
+				$(this).parent('span').parent('div').remove();
+			}
+		});
+
+		$('.btn_shanai_delete').on('click', function(){
+			$(this).parent().parent().children('input[name="shanai"]').end().slideUp();
+		});
+		$('#btn_newshanai').on('click', function(){
+			var data = '';
+			$('#form_newshanai').children().children('input[name="shanai"]').parent().each(function(){
+				if ($(this).is(':hidden')){
+					data += $(this).children('input[name="shanai"]').val() + '，';
+					$(this).children('input[name="shanai"]').val('');
+				}
+			})
+			if (data != ''){
+				if(!confirm('\n"' + data.slice(0,-1) + '"は削除されます。\nよろしいですか？')){
+					window.location.href = '/';
+					return false;
+				} else {
+					return true;
+				}
+			}
+		});
+
+		//部署追加INPUTBOXをclone
+		var minCount = 1;
+		var maxCount = 7;
+
+		$('#btn_department_add').on('click', function(){
+			var inputCount = $('div.clone_newdepartment').length;
+			if (inputCount < maxCount){
+				$('div#clone_newdepartment')
+				.clone(true)
+				.removeAttr('id')
+				.removeClass('hide')
+				.children('input').attr('name','newdepartment')
+				.end()
+				.appendTo('#clonearea_newdepartment')
+			}
+		});
+		$('#btn_department_add').hover(function(){
+			$(this).animate({fontSize: '25px'},0);
+		},function(){
+			$(this).animate({fontSize: '15px'},100);
+		});
+
+		$('.btn_department_minus').on('click', function(){
+
+			var inputCount = $('div.clone_newdepartment').length;
+			if (inputCount > minCount){
+				$(this).parent('span').parent('div').remove();
+			}
+			
+		});
+
+		$('.btn_department_delete').on('click', function(){
+			$(this).parent().parent().children('input[name="department"]').end().slideUp();
+		});
+		$('.btn_department_delete').hover(function(){
+			$(this).animate({fontSize: '15px'},0);
+		},function(){
+			$(this).animate({fontSize: '15px'},100);
+		});
+
+		$('#btn_newdepartment').on('click', function(){
+			var data = '';
+			$('#form_newdepartment').children().children('input[name="department"]').parent().each(function(){
+				if ($(this).is(':hidden')){
+					data += $(this).children('input[name="department"]').val() + '，';
+					$(this).children('input[name="department"]').val('');
+				}
+			})
+			if (data != ''){
+				if(!confirm('\n"' + data.slice(0,-1) + '"は削除されます。\nよろしいですか？')){
+					window.location.href = '/';
+					return false;
+				} else {
+					return true;
+				}
+			}
+		});
+
+
+		$('.header-left h1 span').click(function(){
+		if ($('ul').hasClass('open')) {
+			$(this).html('<i class="fa fa-bars" aria-hidden="true"></i>');
+			$('ul').slideUp().removeClass('open');
+		} else {
+			$('ul').slideDown().addClass('open');
+			$(this).html('<i class="fa fa-chevron-down" aria-hidden="true"></i>');
+			
+		}
+		});
+
+		//新規入力チェック
+		$('#btn_newuser').click(function(){
+			if ($('#create_name').val() == '' || $('#create_department').val() == '' || $('#create_password').val() == '' || $('#tmp_password').val() == '') {
+				alert('\nすべての項目を入力してください！');
+				return false;
+			} else if ($('#create_password').val() !== $('#tmp_password').val()) {
+				$('#create_password').val('');
+				$('#tmp_password').val('');
+				$('#create_password').attr('placeholder','入力が一致しません。');
+				$('#tmp_password').attr('placeholder','パスワードを確認してください。');
+				return false;
+			} else {
+				return true;
+			}
+		});
+
+		//編集tr td整理
+		$('#department').parent().parent('tr').hide();
+		$('#department_tr').hide();
+		$('#information').parent().parent('tr').hide();
+		$('#information_tr').hide();
+		$('#email').parent().parent('tr').hide();
+		$('#email_tr').hide();
+
+		$('#edit_name span').click(function(){
+			if ($('.opened').length == 0) {
+				$('#department').parent().parent('tr').show().addClass('opened');
+				$('#department_tr').show().addClass('opened');
+				$('#information').parent().parent('tr').show().addClass('opened');
+				$('#information_tr').show().addClass('opened');
+				$('#email').parent().parent('tr').show().addClass('opened');
+				$('#email_tr').show().addClass('opened');
+				$('#edit_name span').css('color','#e7853e');
+			} else {
+				$('.opened').hide().removeClass('opened');
+				$('#edit_name span').css('color','');
+			}
+		})
+
+
+				// var deleteBtn = $('#delete_content');    
+				// deleteBtn.hide();
+				// //スクロールが100に達したらボタン表示
+				// $(window).scroll(function () {
+				// 	if ($(this).scrollTop() > 100) {
+				// 		deleteBtn.fadeIn();
+				// 	} else {
+				// 		deleteBtn.fadeOut();
+				// 	}
+				// });
+
+		}); 
+
+
+		
+
+	</script>
+</body>
+</html>
