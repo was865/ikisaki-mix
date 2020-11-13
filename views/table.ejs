@@ -10,12 +10,13 @@
 <!-- CSS -->
 <link rel="stylesheet" type="text/css" 	href="css/site_globaldc10.css?114823713" />
 <link rel="stylesheet" type="text/css" href="css/index7e17.css?4246631859" id="pagesheet" />
+<link rel="stylesheet" type="text/css" href="css/node_add.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.2.1/font-awesome-animation.min.css">
 </head>
 <body>
 
 	<!-- 非表示 -->
-	<span id="r02"></span>
 	<span id="r07"></span>
 	<span id="r10"></span>
 	<span id="r14"></span>
@@ -37,7 +38,6 @@
 	<span id="f2_4_10"></span>
 	<span id="f2_4_12"></span>
 	<span id="f1_1_1"></span>
-	<span id="f1_3_2"></span>
 	<span id="f1_3_4"></span>
 	
 	<span id="soumu_1_1"></span>
@@ -45,6 +45,7 @@
 	<span id="soumu_1_4"></span>
 	<span id="soumu_3_2"></span>
 
+	<span id="cog"><i class="fas fa-cog admin_only"></i></span>
 	<!--  <span id="yonezawa_1_1"></span> -->
 	<span id="yonezawa_3_3"></span>
 
@@ -60,17 +61,36 @@
 				<!-- group -->
 				<div class="shadow grpelem" id="u456">
 					<!-- simple frame -->
-					<span id="sho_1_1"></span>
+					<span id="sho_1_1" class="seatspan">
+						<div class="status_icon">
+							<% var data = usertableMap.get("sho_1_1"); %>
+							<%- include table_data_item %>
+						</div>
+					</span>
 				</div>
 				<div class="shadow grpelem" id="u459">
 					<!-- simple frame -->
-					<span id="sho_1_2"></span>
+					<span id="sho_1_2" class="seatspan">
+						<div class="status_icon">
+							<% var data = usertableMap.get("sho_1_2"); %>
+							<%- include table_data_item %>
+						</div>
+					</span>
+				</div>
+				<div class="shadow grpelem" id="u459-1">
+					<!-- simple frame -->
+					<span id="sho_1_3" class="seatspan">
+						<div class="status_icon">
+							<% var data = usertableMap.get("sho_1_3"); %>
+							<%- include table_data_item %>
+						</div>
+					</span>
 				</div>
 			</div>
 		</div>
 
 		<!-- 総務 -->
-		<div class="grpelem" id="pu114">
+		<div class="grpelem list2" id="pu114">
 			<!-- inclusion -->
 			<div class="shadow" id="u114">
 				<!-- simple frame -->
@@ -93,7 +113,12 @@
 					<!-- group -->
 					<div class="shadow colelem" id="u246">
 						<!-- simple frame -->
-						<span id="soumu_1_3"></span>
+						<span id="soumu_1_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("soumu_1_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 
@@ -101,34 +126,69 @@
 					<!-- group -->
 					<div class="shadow grpelem" id="u563-1">
 						<!-- simple frame -->
-						<span id="soumu_2_1"></span>
+						<span id="soumu_2_1" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("soumu_2_1"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u563-2">
 						<!-- simple frame -->
-						<span id="soumu_2_2"></span>
+						<span id="soumu_2_2" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("soumu_2_2"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u563">
 						<!-- simple frame -->
-						<span id="soumu_2_3"></span>
+						<span id="soumu_2_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("soumu_2_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u566">
 						<!-- simple frame -->
-						<span id="soumu_2_4"></span>
+						<span id="soumu_2_4" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("soumu_2_4"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 				<div class="clearfix colelem" id="pu575">
 					<!-- group -->
 					<div class="shadow grpelem" id="u575">
 						<!-- simple frame -->
-						<span id="soumu_3_1"></span>
+						<span id="soumu_3_1" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("soumu_3_1"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u569">
 						<!-- simple frame -->
-						<span id="soumu_3_3"></span>
+						<span id="soumu_3_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("soumu_3_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u569-2">
 						<!-- simple frame -->
-						<span id="soumu_3_4"></span>
+						<span id="soumu_3_4" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("soumu_3_4"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -144,11 +204,21 @@
 				<!-- group -->
 				<div class="shadow grpelem" id="u633">
 					<!-- simple frame -->
-					<span id="ko_1_1"></span>
+					<span id="ko_1_1" class="seatspan">
+						<div class="status_icon">
+							<% var data = usertableMap.get("ko_1_1"); %>
+							<%- include table_data_item %>
+						</div>
+					</span>
 				</div>
 				<div class="shadow grpelem" id="u636">
 					<!-- simple frame -->
-					<span id="aizu_1_1"></span>
+					<span id="aizu_1_1" class="seatspan">
+						<div class="status_icon">
+							<% var data = usertableMap.get("aizu_1_1"); %>
+							<%- include table_data_item %>
+						</div>
+					</span>
 				</div>
 			</div>
 		</div>
@@ -174,80 +244,159 @@
 					<!-- group -->
 					<div class="shadow grpelem" id="u520">
 						<!-- simple frame -->
-						<span id="f1_1_6"></span>
+						<span id="f1_1_6" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_1_6"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 
 					<!--<div class="shadow grpelem" id="u521">-->
 					<!-- simple frame -->
-					<!--<span id="s139" ></span> -->
+					<!--<span id="s139" class="seatspan"></span> -->
 					<!--</div> -->
 
 					<div class="shadow grpelem" id="u522">
 						<!-- simple frame -->
-						<span id="f1_1_2" ></span>
+						<span id="f1_1_2" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_1_2"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u523">
 						<!-- simple frame -->
-						<span id="f1_1_3"></span>
+						<span id="f1_1_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_1_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u526">
 						<!-- simple frame -->
-						<span id="f1_1_4"></span>
+						<span id="f1_1_4" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_1_4"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u538">
 						<!-- simple frame -->
-						<span id="f1_1_5"></span>
+						<span id="f1_1_5" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_1_5"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 				<div class="clearfix colelem" id="pu507">
 					<!-- group -->
 					<div class="shadow grpelem" id="u507">
 						<!-- simple frame -->
-						<span id="f1_2_1"></span>
+						<span id="f1_2_1" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_2_1"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u510">
 						<!-- simple frame -->
-						<span id="f1_2_2"></span>
+						<span id="f1_2_2" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_2_2"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u529">
 						<!-- simple frame -->
-						<span id="f1_2_3"></span>
+						<span id="f1_2_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_2_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u532">
 						<!-- simple frame -->
-						<span id="f1_2_4"></span>
+						<span id="f1_2_4" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_2_4"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u544">
 						<!-- simple frame -->
-						<span id="f1_2_5"></span>
+						<span id="f1_2_5" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_2_5"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u547">
 						<!-- simple frame -->
-						<span id="f1_2_6"></span>
+						<span id="f1_2_6" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_2_6"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 				<div class="clearfix colelem" id="pu513">
 					<!-- group -->
 					<div class="shadow grpelem" id="u513">
 						<!-- simple frame -->
-						<span id="f1_3_1">
+						<span id="f1_3_1" class="seatspan">
 							<div class="status_icon">
 								<% var data = usertableMap.get('f1_3_1'); %>
 								<%- include table_data_item %>
 							</div>
 						</span>
 					</div>
+					<div class="shadow grpelem" id="u513-1">
+						<!-- simple frame -->
+						<span id="f1_3_2" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_3_2"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
+					</div>
 					<div class="shadow grpelem" id="u535">
 						<!-- simple frame -->
-						<span id="f1_3_3"></span>
+						<span id="f1_3_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_3_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u5351">
 						<!-- simple frame -->
-						<span id="f1_3_5"></span>
+						<span id="f1_3_5" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_3_5"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u5352">
 						<!-- simple frame -->
-						<span id="f1_3_6"></span>
+						<span id="f1_3_6" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f1_3_6"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -264,30 +413,60 @@
 					<!-- group -->
 					<div class="shadow grpelem" id="u57901">
 						<!-- simple frame -->
-						<span id="yonezawa_1_1"></span>
+						<span id="yonezawa_1_1" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("yonezawa_1_1"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u579">
 						<!-- simple frame -->
-						<span id="yonezawa_1_2"></span>
+						<span id="yonezawa_1_2" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("yonezawa_1_2"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u582">
 						<!-- simple frame -->
-						<span id="yonezawa_1_3"></span>
+						<span id="yonezawa_1_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("yonezawa_1_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 				<div class="clearfix colelem" id="pu585">
 					<!-- group -->
 					<div class="shadow grpelem" id="u585">
 						<!-- simple frame -->
-						<span id="yonezawa_2_1"></span>
+						<span id="yonezawa_2_1" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("yonezawa_2_1"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u595">
 						<!-- simple frame -->
-						<span id="yonezawa_2_2"></span>
+						<span id="yonezawa_2_2" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("yonezawa_2_2"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u603">
 						<!-- simple frame -->
-						<span id="yonezawa_2_3"></span>
+						<span id="yonezawa_2_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("yonezawa_2_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 
 
@@ -296,11 +475,21 @@
 					<!-- group -->
 					<div class="shadow grpelem" id="u591">
 						<!-- simple frame -->
-						<span id="yonezawa_3_1"></span>
+						<span id="yonezawa_3_1" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("yonezawa_3_1"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					<div class="shadow grpelem" id="u619">
 						<!-- simple frame -->
-						<span id="yonezawa_3_2"></span>
+						<span id="yonezawa_3_2" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("yonezawa_3_2"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -321,44 +510,75 @@
 					</div>
 					<div class="clearfix colelem" id="pu300">
 						<!-- group -->
-						<div class="shadow grpelem" id="u300-1">
-							<!-- simple frame -->
-							<span id="f2_0_1"></span>
-						</div>
 						<div class="shadow grpelem" id="u300">
 							<!-- simple frame -->
-							<span id="f2_1_1"></span>
+							<span id="f2_1_1" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_1"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u306">
 							<!-- simple frame -->
-							<span id="f2_1_2"></span>
+							<span id="f2_1_2" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_2"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="clearfix colelem" id="pu292">
 						<!-- group -->
 						<div class="shadow grpelem" id="u292">
 							<!-- simple frame -->
-							<span id="f2_2_1"></span>
+							<span id="f2_2_1" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_1"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u294">
 							<!-- simple frame -->
-							<span id="f2_2_2"></span>
+							<span id="f2_2_2" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_2"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="clearfix colelem" id="pu115">
 						<!-- group -->
 						<div class="shadow grpelem" id="u115">
 							<!-- simple frame -->
-							<span id="f2_3_1"></span>
+							<span id="f2_3_1" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_1"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u280">
 							<!-- simple frame -->
-							<span id="f2_3_2"></span>
+							<span id="f2_3_2" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_2"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="shadow colelem" id="u287">
 						<!-- simple frame -->
-						<span id="f2_4_1"></span>
+						<span id="f2_4_1" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f2_4_1"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 				<!-- 会議室前（食堂側）の島 -->
@@ -373,38 +593,73 @@
 						<div class="shadow grpelem" id="u310">
 							<!-- simple frame -->
 
-							<span id="f2_1_3"></span>
+							<span id="f2_1_3" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_3"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u313">
 							<!-- simple frame -->
-							<span id="f2_1_4"></span>
+							<span id="f2_1_4" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_4"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="clearfix colelem" id="pu316">
 						<!-- group -->
 						<div class="shadow grpelem" id="u316">
 							<!-- simple frame -->
-							<span id="f2_2_3"></span>
+							<span id="f2_2_3" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_3"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u319">
 							<!-- simple frame -->
-							<span id="f2_2_4"></span>
+							<span id="f2_2_4" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_4"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="clearfix colelem" id="pu322">
 						<!-- group -->
 						<div class="shadow grpelem" id="u322">
 							<!-- simple frame -->
-							<span id="f2_3_3"></span>
+							<span id="f2_3_3" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_3"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u325">
 							<!-- simple frame -->
-							<span id="f2_3_4"></span>
+							<span id="f2_3_4" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_4"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="shadow colelem" id="u328">
 						<!-- simple frame -->
-						<span id="f2_4_3"></span>
+						<span id="f2_4_3" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f2_4_3"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 				<div class="clearfix grpelem" id="pu124">
@@ -416,11 +671,16 @@
 						<!-- group -->
 						<div class="shadow grpelem" id="u338">
 							<!-- simple frame -->
-							<span id="f2_1_5"></span>
+							<span id="f2_1_5" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_5"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u341">
 							<!-- simple frame -->
-							<span id="f2_1_6">
+							<span id="f2_1_6" class="seatspan">
 								<div class="status_icon">
 									<% var data = usertableMap.get('f2_1_6'); %>
 									<%- include table_data_item %>
@@ -429,7 +689,7 @@
 						</div>
 						<div class="shadow grpelem" id="u341-1">
 							<!-- simple frame -->
-							<span id="f2_1_7">
+							<span id="f2_1_7" class="seatspan">
 								<div class="status_icon">
 									<% var data = usertableMap.get('f2_1_7'); %>
 									<%- include table_data_item %>
@@ -438,7 +698,7 @@
 						</div>
 						<div class="shadow grpelem" id="u341-2">
 							<!-- simple frame -->
-							<span id="f2_1_8">
+							<span id="f2_1_8" class="seatspan">
 								<div class="status_icon">
 									<% var data = usertableMap.get('f2_1_8'); %>
 									<%- include table_data_item %>
@@ -447,20 +707,40 @@
 						</div>
 						<div class="shadow grpelem" id="u341-3">
 							<!-- simple frame -->
-							<span id="f2_1_9"></span>
+							<span id="f2_1_9" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_9"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u341-4">
 							<!-- simple frame -->
-							<span id="f2_1_10"></span>
+							<span id="f2_1_10" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_10"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						
 						<div class="shadow grpelem" id="u341-5">
 							<!-- simple frame -->
-							<span id="f2_1_11"></span>
+							<span id="f2_1_11" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_11"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u341-6">
 							<!-- simple frame -->
-							<span id="f2_1_12"></span>
+							<span id="f2_1_12" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_1_12"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 
 						
@@ -469,27 +749,52 @@
 						<!-- group -->
 						<div class="shadow grpelem" id="u344">
 							<!-- simple frame -->
-							<span id="f2_2_5"></span>
+							<span id="f2_2_5" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_5"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u347">
 							<!-- simple frame -->
-							<span id="f2_2_6"></span>
+							<span id="f2_2_6" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_6"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="clearfix colelem" id="pu350">
 						<!-- group -->
 						<div class="shadow grpelem" id="u350">
 							<!-- simple frame -->
-							<span id="f2_3_5"></span>
+							<span id="f2_3_5" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_5"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow grpelem" id="u353">
 							<!-- simple frame -->
-							<span id="f2_3_6"></span>
+							<span id="f2_3_6" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_6"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="shadow colelem" id="u356">
 						<!-- simple frame -->
-						<span id="f2_4_5"></span>
+						<span id="f2_4_5" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f2_4_5"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 				</div>
 				<div class="clearfix grpelem" id="pu125">
@@ -502,7 +807,7 @@
 						<div class="shadow grpelem" id="u372">
 							<!-- simple frame -->
 
-							<span id="f2_2_7">
+							<span id="f2_2_7" class="seatspan">
 								<div class="status_icon">
 									<% var data = usertableMap.get('f2_2_7'); %>
 									<%- include table_data_item %>
@@ -512,7 +817,12 @@
 						<div class="shadow grpelem" id="u375">
 							<!-- simple frame -->
 
-							<span id="f2_2_8"></span>
+							<span id="f2_2_8" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_8"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 
 					</div>
@@ -520,7 +830,7 @@
 						<!-- group -->
 						<div class="shadow grpelem" id="u378">
 							<!-- simple frame -->
-							<span id="f2_3_7">
+							<span id="f2_3_7" class="seatspan">
 								<div class="status_icon">
 									<% var data = usertableMap.get('f2_3_7'); %>
 									<%- include table_data_item %>
@@ -529,7 +839,7 @@
 						</div>
 						<div class="shadow grpelem" id="u381">
 							<!-- simple frame -->
-							<span id="f2_3_8">
+							<span id="f2_3_8" class="seatspan">
 								<div class="status_icon">
 									<% var data = usertableMap.get('f2_3_8'); %>
 									<%- include table_data_item %>
@@ -539,7 +849,7 @@
 					</div>
 					<div class="shadow colelem" id="u384">
 						<!-- simple frame -->
-						<span id="f2_4_7">
+						<span id="f2_4_7" class="seatspan">
 							<div class="status_icon">
 								<% var data = usertableMap.get('f2_4_7'); %>
 								<%- include table_data_item %>
@@ -560,11 +870,21 @@
 						<!-- group -->
 						<div class="shadow colelem" id="u409">
 							<!-- simple frame -->
-							<span id="f2_2_9"></span>
+							<span id="f2_2_9" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_9"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow colelem" id="u410">
 							<!-- simple frame -->
-							<span id="f2_2_10"></span>
+							<span id="f2_2_10" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_10"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 
@@ -572,18 +892,33 @@
 						<!-- group -->
 						<div class="shadow colelem" id="u429">
 							<!-- simple frame -->
-							<span id="f2_3_9"></span>
+							<span id="f2_3_9" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_9"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 						<div class="shadow colelem" id="u420">
 							<!-- simple frame -->
-							<span id="f2_3_10"></span>
+							<span id="f2_3_10" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_10"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 
 					<div class="shadow colelem" id="u412">
 						<!-- simple frame -->
 
-						<span id="f2_4_9"></span>
+						<span id="f2_4_9" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f2_4_9"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 
 					</div>
 				</div>
@@ -599,7 +934,7 @@
 						<!-- group -->
 						<div class="shadow grpelem" id="u433">
 							<!-- simple frame -->
-							<span id="f2_2_11">
+							<span id="f2_2_11" class="seatspan">
 								<div class="status_icon">
 									<% var data = usertableMap.get('f2_2_11'); %>
 									<%- include table_data_item %>
@@ -608,7 +943,12 @@
 						</div>
 						<div class="shadow grpelem" id="u4331">
 							<!-- simple frame -->
-							<span id="f2_2_12"></span>
+							<span id="f2_2_12" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_2_12"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 
 					</div>
@@ -617,7 +957,7 @@
 						<!-- group -->
 						<div class="shadow grpelem" id="u434">
 							<!-- simple frame -->
-							<span id="f2_3_11">
+							<span id="f2_3_11" class="seatspan">
 								<div class="status_icon">
 									<% var data = usertableMap.get('f2_3_11'); %>
 									<%- include table_data_item %>
@@ -626,12 +966,22 @@
 						</div>
 						<div class="shadow grpelem" id="u437">
 							<!-- simple frame -->
-							<span id="f2_3_12"></span>
+							<span id="f2_3_12" class="seatspan">
+								<div class="status_icon">
+									<% var data = usertableMap.get("f2_3_12"); %>
+									<%- include table_data_item %>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div class="shadow colelem" id="u440">
 						<!-- simple frame -->
-						<span id="f2_4_11"></span>
+						<span id="f2_4_11" class="seatspan">
+							<div class="status_icon">
+								<% var data = usertableMap.get("f2_4_11"); %>
+								<%- include table_data_item %>
+							</div>
+						</span>
 					</div>
 					
 					
@@ -649,6 +999,12 @@
 					<div id="u86_clip">
 						<img class="position_content" id="u86_img" src="images/header.png"
 							alt="" width="960" height="139" />
+						<div class="setting_display">
+							<p id="setting_info"><span style="color: red;">※</span> ポジションを変更するには、入れ替えたいポジションをクリックしてください。<br><span style="margin-left: 18px;"></span>右の ”<span style="color: red; font-weight: 1000;"> ⇄ </span>” アイコンをクリックすることで入れ替えが実行されます。</p>
+							<input type="text" class="setting_input_display" id="setting_input1_display" value="" disabled>
+							<input type="text" class="setting_input_display" id="setting_input2_display" value="" disabled>
+							<a id="change_code" href="javascript:form_positionSet.submit()"><i class="fas fa-exchange-alt"></i></a>
+						</div>
 					</div>
 				</div>
 				<div class="grpelem" id="u767">
@@ -657,7 +1013,7 @@
 				</div>
 				<div class="grpelem" id="u768">
 					<!-- custom html -->
-					<span id="seatname"></span>
+					<p id="seatname"></p>
 				</div>
 				<div class="grpelem" id="u769">
 					<!-- custom html -->
@@ -673,8 +1029,12 @@
 				</div>
 				<div class="grpelem" id="u774">
 					<select name="ikisaki" id="ikisaki" style="max-width: 125px;"></select>
+					<!-- custom html -->
+					<span id="destination"></span>
 				</div>
 				<div class="grpelem" id="u776">
+					<!-- custom html -->
+					<span id="arrival"></span>				
 					<select name="time" id="time">
 						<option value=""></option>
 						<option value="~ 8:30">~ 8:30</option>
@@ -724,7 +1084,7 @@
 
 				<div class="grpelem" id="u786">
 					<!-- simple frame -->
-					<p style="line-height: 31px; margin-left: 5px;"></p>
+					<p style="line-height: 31px; margin-left: 5px; height: 31px; width: 98px;"></p>
 				</div>
 				<div class="rounded-corners clearfix grpelem" id="u791">
 					<!-- group -->
@@ -770,7 +1130,7 @@
 
 				<div class="grpelem" id="u802">
 					<!-- simple frame -->
-					<input type="text" name="memo" id="memo" value="" style="margin-left: 5px;margin-top: 5px;"></input>
+					<textarea type="text" name="memo" id="memo" value="" style="margin: 2px auto auto 5px; width: 126px; height: 64px;"></textarea>
 				</div>
 				</form>
 
@@ -781,7 +1141,7 @@
 				<form id="form_contact" name="form_contact" method="POST" action="/table/contact">
 				<div class="grpelem" id="u828">
 					<!-- simple frame -->
-					<input type="text" name="msg" id="msg" value="<%= msg %>" style="margin-left: 5px;margin-top: 5px;"></input>
+					<textarea type="text" name="msg" id="msg" style="margin: 2px auto auto 5px; width: 157px; height: 63px;"><%= msg %></textarea>
 					<a href="javascript:form_contact.submit()" class="btn btn-radius-solid" id="btn_contact">更新<i class="fas fa-angle-right fa-position-right"></i></a>
 					<a id="pageChange" href="/"><i class="fas fa-table"></i></a>
 				</div>
@@ -827,6 +1187,11 @@
 					 <p class="tooltip">内615</p> 
 					<span id="r01"></span>
 				</div>
+				<div class="clearfix grpelem" id="u653-4-1">
+					<!-- content -->
+					<p style="font-size: small;">リラクゼーション</p>
+					<span id="r02"></span>
+				</div>				
 				<div class="clearfix grpelem room" id="u654-4">
 					<!-- content -->
 					<p>会議室1</p>
@@ -857,6 +1222,15 @@
 					<!-- image -->
 					<img class="block" id="u823_img" src="images/status2.png" alt=""
 						width="162" height="94" />
+					<form id="form_positionSet" name="form_positionSet" method="POST" action="/table/positionSet">
+						<input type="hidden" id="setting_position1_submit" name="setting_position1_submit" value="">
+						<input type="hidden" id="setting_id1_submit" name="setting_id1_submit" value="">
+						<input type="hidden" id="setting_position2_submit" name="setting_position2_submit" value="">
+						<input type="hidden" id="setting_id2_submit" name="setting_id2_submit" value="">
+						<div id="btn_redo" class='btn_redo'>
+							<a>選びなおす</a>
+						</div>
+					</form>
 				</div>
 			</div>
 			<div class="clearfix colelem" id="pu477">
@@ -956,7 +1330,12 @@
 			</div>
 		</div>
 
-		<div id="p_login"></div>
+		<div id="p_login">
+			<p style="font-size: 0.9em;"><i class="fas fa-user-shield admin_only" style="color: #939393;"></i>＂<%= login.name %>
+				<% if(login.email.length) {%>
+					[<%= login.email %>]<% } %>＂でログインしています。
+				<span style="margin-left: 20px;">最後の更新：<%= maxUpdatetime_display_fromNow %>。</span><span style="margin-left: 20px;">更新時刻：<%= maxUpdatetime_display %>。</span></p>
+		</div>
 
 		<div class="verticalspacer"></div>
 	</div>
@@ -966,14 +1345,25 @@
 <script>
 	$(function() {
 
+		if ('<%= login.admin %>' != 1){
+			$('.admin_only').remove();
+		}
+		// $('.seatspan').each(function() {
+		// 	var seatId = $(this).attr('id');
+		// }); 
+
 		$('#u795-4').hide();
 		$('#u797-4').hide();
 		$('#u799-4').hide();
 		$('#status').hide();
 		$('#ikisaki').hide();
 		$('#time').hide();
-
+		$('.setting_display').hide();
+	
 		$('#btn_update').hide();
+
+		$('#btn_redo').hide();
+		$('.none_img').hide();
 
 		$('.status_icon').click(function(){
 
@@ -984,11 +1374,22 @@
 			if ($(this).hasClass('editing-group')){
 				$(this).removeClass('editing-group').css('color', '');
 				$('.append_area').remove();
-				$('.editing-group').each(function(index, content){
-					$('#form_update').append('<div class="append_area"><input name="name" type="hidden" value="' + $(content).children('.p_name').text() + '">' + '<input name="id" type="hidden" value="' + $(content).children().children('.id').text() + '"></div>');
-					editingNames = editingNames + $(content).children('.p_name').text() + "，";
-				})
-				$('#u786 p').text(editingNames.slice(0,-1));
+				$('.editing-group').each(function(){
+					$('#form_update').append('<div class="append_area"><input name="name" type="hidden" value="' + $(this).children('.p_name').text() + '">' + '<input name="id" type="hidden" value="' + $(this).children().children('.p_id').text() + '"></div>');
+					editingNames = editingNames + $(this).children('.p_name').text() + ",";
+				});
+				if (editingNames.length > 8) {
+					$('#u786 p').text(editingNames.slice(0,7) + '...');
+				} else {
+					$('#u786 p').text(editingNames.slice(0,-1));
+				}
+				if ($('.editing-group').length > 1) {
+					$('#u791').hide(); //情報ラベル
+					$('#u793').hide(); //情報欄
+				} else {
+					$('#u791').show(); //情報ラベル
+					$('#u793').show(); //情報欄
+				}
 				$('#u793 p').text($('.editing-group:last').children().children('.p_information').text());
 				$('#u770 select').val($('.editing-group:last').children().children('.p_status').text());
 				switch ($('#u770 select').val()) {
@@ -1039,7 +1440,7 @@
 				}
 				$('#u774 select').val($('.editing-group:last').children().children('.p_ikisaki').text());
 				$('#u776 select').val($('.editing-group:last').children().children('.p_time').text());
-				$('#u802 input').val($('.editing-group:last').children().children('.p_memo').text());
+				$('#u802 textarea').val($('.editing-group:last').children().children('.p_memo').text());
 
 				if ($('.editing-group').length) {
 					$('#btn_update').show();
@@ -1101,13 +1502,24 @@
 				}
 				$('#u774 select').val($(this).children().children('.p_ikisaki').text());
 				$('#u776 select').val($(this).children().children('.p_time').text());
-				$('#u802 input').val($(this).children().children('.p_memo').text());
+				$('#u802 textarea').val($(this).children().children('.p_memo').text());
 				$('.append_area').remove();
 				$('.editing-group').each(function(){
-					$('#form_update').append('<div class="append_area"><input name="name" type="hidden" value="' + $(this).children('.p_name').text() + '">' + '<input name="id" type="hidden" value="' + $(this).children().children('.id').text() + '"></div>');
-					editingNames = editingNames + $(this).children('.p_name').text() + "，";
+					$('#form_update').append('<div class="append_area"><input name="name" type="hidden" value="' + $(this).children('.p_name').text() + '">' + '<input name="id" type="hidden" value="' + $(this).children().children('.p_id').text() + '"></div>');
+					editingNames = editingNames + $(this).children('.p_name').text() + ",";
 				});
-				$('#u786 p').text(editingNames.slice(0,-1));
+				if (editingNames.length > 8) {
+					$('#u786 p').text(editingNames.slice(0,7) + '...');
+				} else {
+					$('#u786 p').text(editingNames.slice(0,-1));
+				}
+				if ($('.editing-group').length > 1) {
+					$('#u791').hide(); //情報ラベル
+					$('#u793').hide(); //情報欄
+				} else {
+					$('#u791').show(); //情報ラベル
+					$('#u793').show(); //情報欄
+				}
 			}
 		});
 
@@ -1175,6 +1587,122 @@
 			$(this).children('.tooltip').hide();
 		})
 	});
+
+		var setting = 0;
+		$('#cog').click(function(){ 
+			if (setting == 0){
+				setting = 1;
+				$('#u795-4').hide();
+				$('#u797-4').hide();
+				$('#u799-4').hide();
+				$('#u784').hide(); //氏名ラベル
+				$('#u786').hide(); //氏名欄
+				$('#u791').hide(); //情報ラベル
+				$('#u793').hide(); //情報欄
+				$('#u800').hide(); //メモラベル
+				$('#u802').hide(); //メモ欄
+				$('#u828').hide(); //メモラベル
+				$('#u833').hide(); //メモ欄
+				$('#u823_img').css("visibility", "hidden"); //status2img
+				$('#status').hide();
+				$('#ikisaki').hide();
+				$('#time').hide();
+				$('#btn_update').hide();
+				$('#u786 p').text('');
+				$('#u793 p').text('');
+				$('#u770 select').val('');
+				$('#u774 select').val('');
+				$('#u776 select').val('');
+				$('#u802 textarea').val('');
+				$('.status_icon').css('color', '');
+
+				$('.status_icon').unbind('click');
+				$('#cog').css('color','#3f3f3f');
+				$('.status_img').attr('src','/images/pin_kitaku.png');
+				$('.setting_display').show();
+				$('.none_img').show();
+				$('#change_code').hide();
+
+				var last_position;
+				var first_position;
+				var last_id;
+				var first_id;
+				var last_name;
+				var first_name;
+
+				$('.status_icon').on('click', function(){
+					if ($(this).hasClass('moving')){
+						$(this).removeClass('moving').children('.status_img').attr('src','/images/pin_kitaku.png').end().css('color', '');
+						$(this).children('.none_img').css('color','');
+					} else {
+						$(this).addClass('moving').children('.status_img').attr('src','/images/pin_yasumi.png').end().css('color', 'white');
+						$(this).children('.none_img').css('color','#f53131');
+						if ($('.moving').length >= 2){
+							last_position = $(this).children().children('.p_position').text();
+							first_position = $('.moving').not(this).children().children('.p_position').text();
+							last_id = $(this).children().children('.p_id').text();
+							first_id = $('.moving').not(this).children().children('.p_id').text();
+							last_name = $(this).children('.p_name').text();
+							first_name = $('.moving').not(this).children('.p_name').text();
+
+							$('#setting_input1_display').val(first_name);
+							$('#setting_input2_display').val(last_name);
+							if (last_position.length && first_position.length){
+								$('#setting_position1_submit').val(first_position);
+								$('#setting_position2_submit').val(last_position);
+							} else{
+								first_position = $('.moving').not(this).parent('span').attr('id');
+								last_position = $(this).parent('span').attr('id');
+								$('#setting_position1_submit').val(first_position);
+								$('#setting_position2_submit').val(last_position);
+							}
+							$('#setting_id1_submit').val(first_id);
+							$('#setting_id2_submit').val(last_id);
+
+							$('#change_code').show();
+							$('#btn_redo').show();
+							$('.status_icon').css('pointer-events', 'none');
+						} 
+					}
+				});
+
+				$('#btn_redo').click(function(){
+					$('.status_icon').removeClass('moving').css('cursor','pointer')
+					.children('.status_img').attr('src','/images/pin_kitaku.png');
+					last_position = '';
+					first_position = '';
+					last_id = '';
+					first_id = '';
+					last_name = '';
+					first_name = '';
+
+					$('#change_code').hide();
+					$('#btn_redo').hide();
+					$('.status_icon').css('pointer-events', 'auto');
+					$('#setting_input1_display').val('');
+					$('#setting_input2_display').val('');
+					$('#setting_position1_submit').val('');
+					$('#setting_position2_submit').val('');
+					$('#setting_id1_submit').val('');
+					$('#setting_id2_submit').val('');
+					$('.status_icon').css('color', '');
+					$('.none_img').css('color','');
+				});
+
+				$('#change_code').click(function(){
+					if (!confirm('\n〝' + first_name + '″ポジションコード：' + first_position + '\n〝' + last_name + '″ポジションコード：' + last_position + '  を入れ替えます。\n\n   よろしいですか？')) {
+						return false;
+					} else {
+						return true;
+					}
+				})
+	
+			} else if (setting == 1){
+				setting = 0;
+				window.location.reload();
+			}
+		})
+
 </script>
 </body>
 

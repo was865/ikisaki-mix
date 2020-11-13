@@ -26,7 +26,7 @@
 			</div>
 			<div id="searchbox-input-wrapper">
 				<form method="POST" action="/">
-					<input id="searchbox" name="find" type="search" autocomplete="off" spellcheck="false" aria-live="polite" autofocus="" placeholder="&#xf002; <%= finding %>"><a id="pageChange" href="/table"><i class="fas fa-table"></i></a>
+					<input id="searchbox" name="find" type="search" autocomplete="off" spellcheck="false" aria-live="polite" autofocus="" placeholder="&#xf002; <%= finding %>"><a id="pageChange" class="mobile-hide" href="/table"><i class="fas fa-table"></i></a>
 				</form>
 			</div>
 	</header>
@@ -72,12 +72,13 @@
 					<input id="create_name" name="name" class="form-control" type="text" placeholder="名前"><a id="newadmin_check_btn"><i class="fas fa-user"></i></a>
 				</div>
 				<input type="hidden" id="newadmin_check_body" name="newadmin_check_body" value="0">
-
+				<input id="create_position" name="position" class="form-control" type="text" placeholder="社内ポジション（省略可）">
 				<input id="create_information" name="information" class="form-control" type="text" placeholder="内線番号（省略可）">
 				<input id="create_email" name="email" class="form-control" type="text" placeholder="メールアドレス（省略可）">
 				<input id="create_password" name="password" class="form-control" type="password" placeholder="パスワード">
 				<input id="tmp_password" class="form-control" type="password" placeholder="パスワードを確認">
 				<a href="javascript:form_newuser.submit()" id="btn_newuser">新規登録</a>
+				<p id="form_newuser_info" style="font-size: 0.8em;"><span style="color: red;">※</span>氏名欄のアイコンをクリックすると管理者を登録できます。</p>
 			</form>
 		  </div>
 		</div>
@@ -216,11 +217,13 @@
 						><%= element.attributes.department %></option>
 				<% }); %>
 			  </select>
+			  <input id="userinfo_position" name="userinfo_position" class="form-control" type="text" placeholder="社内ポジション（省略可）" value="<%= login.position %>">
 			  <input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
 			  <input id="userinfo_email" name="userinfo_email" class="form-control" type="text" placeholder="メールアドレス（省略可）" value="<%= login.email %>">
 			  <input id="userinfo_newpassword" name="userinfo_newpassword" class="form-control" type="password" placeholder="新しいパスワード（入力しない場合無変更）">
 			  <input id="userinfo_newpassword_tmp" class="form-control" type="password" placeholder="新しいパスワードを確認">
 			  <a href="javascript:form_newuserinfo.submit()" id="btn_newuserinfo">変更</a>
+			  <p style="font-size: 0.9em;"><span style="color: red;">※</span>変更後自動的にログアウトされます。</p>
 			</form>
 		  </div>
 		</div>
@@ -596,7 +599,7 @@
 		$('#close-modal').click(function() {
 			$('#signup-modal').fadeOut();
 		});
-		// admin判定
+		// admin登録判定
 		$('#newadmin_check_btn').click(function(){
 			if ($(this).hasClass('Isadmin')){
 				$(this).removeClass('Isadmin').children('i').attr('class','fas fa-user');
@@ -605,6 +608,7 @@
 				$('#btn_newuser').css({
 					'background-color': '#56bed8'
 				});
+				$('#form_newuser_info').html('<span style="color: red;">※</span>氏名欄のアイコンをクリックすると管理者を登録できます。');
 				
 				$('#newadmin_check_body').val('0');
 				console.log('新規管理者判定: ' + $('#newadmin_check_body').val());
@@ -615,6 +619,7 @@
 				$('#btn_newuser').css({
 					'background-color': '#ff9f4f'
 				});
+				$('#form_newuser_info').html('<span style="color: red;">※</span>再度アイコンをクリックすると社員登録に戻ります。');
 
 				$('#newadmin_check_body').val('1');
 				console.log('新規管理者判定: ' + $('#newadmin_check_body').val());

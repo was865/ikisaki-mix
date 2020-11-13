@@ -138,14 +138,18 @@ router.get("/", function(req, res, next) {
  
   var usertabledata = new Array();
   var usertableMap = new Map();
+  var updatedTimes = new Array();
 
   new Userdata().fetchAll().then((collection) => {
     var content = collection.toArray();
     content.forEach(element => {
+
       var d1 = moment(new Date(element.attributes.updated_at));
       d1.locale("ja");
       d1.tz("Asia/Tokyo");
       var dstr = d1.fromNow();
+
+      updatedTimes.push(element.attributes.updated_at);
 
       usertabledata.push({
         id: element.attributes.id,
@@ -161,6 +165,15 @@ router.get("/", function(req, res, next) {
       });
       usertableMap.set(element.attributes.position, element.attributes);
     });
+    
+    var maxUpdatetime = Math.max.apply(null,updatedTimes);
+
+    var maxUpdatetime_display = new Date(maxUpdatetime).toFormat("YYYY年M月D日 HH24時MI分SS秒");
+
+    var maxUpdatetime_data = moment(new Date(maxUpdatetime));
+    maxUpdatetime_data.locale("ja");
+    maxUpdatetime_data.tz("Asia/Tokyo");
+    var maxUpdatetime_display_fromNow = maxUpdatetime_data.fromNow();
 
     var data = {
       usertabledata: usertabledata,
@@ -169,7 +182,10 @@ router.get("/", function(req, res, next) {
       datashanai: datashanai,
       msg: datacontact,
       datadepartment: datadepartment,
-      usertableMap: usertableMap
+      usertableMap: usertableMap,
+      maxUpdatetime_display: maxUpdatetime_display,
+      maxUpdatetime_display_fromNow: maxUpdatetime_display_fromNow,
+      login: req.session.login
     };
 
     res.render("table", data);
@@ -178,6 +194,7 @@ router.get("/", function(req, res, next) {
 
 // updateはここから
 router.post("/update", function(req, res, next) {
+  console.log("update開始しました。");
   if (req.session.login == null) {
     var data = {
       title: "login",
@@ -186,22 +203,41 @@ router.post("/update", function(req, res, next) {
     };
     res.render("login", data);
   }
-  console.log(req.body);
-  
+
+  if (
+    req.body.status == "" ||
+    req.body.status == "在席" ||
+    req.body.status == "帰宅"
+  ) {
+    req.body.ikisaki = "／";
+    req.body.time = "／";
+  } else if (
+    req.body.status == "出張" ||
+    req.body.status == "研修" ||
+    req.body.status == "その他"
+  ) {
+    req.body.ikisaki = "／";
+  } else if (req.body.status == "休暇") {
+    req.body.time = "／";
+  }
+  console.log("req.body.id.length : " + req.body.id.length);
   for (var i = 0; i < req.body.id.length; i++) {
     if (req.body.ikisaki == undefined || req.body.ikisaki.length == 0) {
-      req.body.ikisaki = "";
+      req.body.ikisaki = "／";
     }
     if (req.body.time == undefined || req.body.time.length == 0) {
-      req.body.time = "";
+      req.body.time = "／";
     }
-
+    console.log("更新開始しました。");
     var rec = {
       status: req.body.status,
       ikisaki: req.body.ikisaki,
       time: req.body.time,
       memo: req.body.memo
     };
+    
+    console.log("req.body.id[i] : " + req.body.id[i]);
+    
     new Userdata({ id: req.body.id[i] })
       .save(rec, { patch: true })
       .then(result => {
@@ -230,6 +266,43 @@ router.post("/contact", (req, res, next) => {
   new contactdata({ id: 1 }).save(rec, { patch: true }).then(result => {
     console.log("更新しました。");
   });
+
+  res.redirect("/table");
+});
+
+//position変更はここから
+router.post("/positionSet", (req, res, next) => {
+  if (req.session.login == null) {
+    var data = {
+      title: "login",
+      form: { name: "", password: "" },
+      content: "<p class='error login_info'>ログインしてください。</p>"
+    };
+    res.render("login", data);
+  }
+
+  console.log("req.body.setting_id1_submit= " + req.body.setting_id1_submit);
+  console.log("req.body.setting_id2_submit= " + req.body.setting_id2_submit);
+  console.log("req.body.setting_position1_submit= " + req.body.setting_position1_submit);
+  console.log("req.body.setting_position2_submit= " + req.body.setting_position2_submit);
+
+  if (req.body.setting_id1_submit.length){
+    var rec1 = {
+      position: req.body.setting_position2_submit
+    };
+    new Userdata({ id: req.body.setting_id1_submit }).save(rec1, { patch: true }).then(result => {
+      console.log("REC1を更新しました。");
+    });
+  }
+
+  if (req.body.setting_id2_submit.length){
+    var rec2 = {
+      position: req.body.setting_position1_submit
+    };
+    new Userdata({ id: req.body.setting_id2_submit }).save(rec2, { patch: true }).then(result => {
+      console.log("REC2を更新しました。");
+    });
+  }
 
   res.redirect("/table");
 });

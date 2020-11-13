@@ -121,6 +121,12 @@ function getMsg() {
 
 //SQL router.GETはここから
 router.get("/", function(req, res, next) {
+  
+  getStatus();
+  getKyakusaki();
+  getShanai();
+  getMsg();
+  getDepartment();
 
   if (req.session.login == null) {
     var data = {
@@ -129,12 +135,6 @@ router.get("/", function(req, res, next) {
       content: "<p class='error login_info'>ログインしてください。</p>"
     };
     res.render("login", data);
-
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
 
@@ -463,6 +463,7 @@ router.post("/newuser", (req, res, next) => {
     department: req.body.department,
     admin: req.body.newadmin_check_body,
     name: req.body.name,
+    position: req.body.position,
     information: req.body.information,
     email: req.body.email,
     password: req.body.password
@@ -770,6 +771,7 @@ router.post("/newuserinfo", (req, res, next) => {
     var rec = {
       name: req.body.userinfo_name,
       department: req.body.userinfo_department,
+      position: req.body.userinfo_position,
       information: req.body.userinfo_information,
       email: req.body.userinfo_email
     }
@@ -777,6 +779,7 @@ router.post("/newuserinfo", (req, res, next) => {
     var rec = {
       name: req.body.userinfo_name,
       department: req.body.userinfo_department,
+      position: req.body.userinfo_position,
       information: req.body.userinfo_information,
       email: req.body.userinfo_email,
       password: req.body.userinfo_newpassword
@@ -792,6 +795,8 @@ router.post("/newuserinfo", (req, res, next) => {
           req.body.userinfo_name +
           "; 部署：" +
           req.body.userinfo_department +
+          "; 配置：" +
+          req.body.userinfo_position +
           "; 内線：" +
           req.body.userinfo_information +
           "; 新パスワード：" +

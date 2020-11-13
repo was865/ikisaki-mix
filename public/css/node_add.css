@@ -1,0 +1,241 @@
+.status_icon {
+	position: relative;
+	display: block;
+	cursor: pointer;
+}
+.status_img {
+	margin:-20px -50% auto 50%;
+	transform: translate(-50%)
+}
+.status_icon .p_name {
+	position: absolute;
+	text-align: center;
+	font-size: 14px;
+	top: -6px;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%);
+}
+
+
+/* btn用 */
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 62.5%;/*rem算出をしやすくするために*/
+}
+
+.btn,
+a.btn,
+button.btn {
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1;
+  position: relative;
+  padding: 0.7rem 1rem;
+  right: 10px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  color: #212529;
+  border-radius: 0.5rem;
+}
+
+#btn_contact {
+	top: -30px;
+	right: -167px;
+}
+
+a.btn-radius-solid {
+	border: 1px solid #ccc;
+	background: #f1e767;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fdfbfb), to(#ebedee));
+	background: -webkit-linear-gradient(top, #fdfbfb 0%, #ebedee 100%);
+	background: linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%);
+	-webkit-box-shadow: inset 1px 1px 1px #fff;
+	box-shadow: inset 1px 1px 1px #fff;
+}
+
+a.btn-radius-solid:hover {
+background: -webkit-gradient(linear, left bottom, left top, from(#fdfbfb), to(#ebedee));
+background: -webkit-linear-gradient(bottom, #fdfbfb 0%, #ebedee 100%);
+background: linear-gradient(to top, #fdfbfb 0%, #ebedee 100%);
+}	
+
+.tooltip {
+	position: absolute;
+	width: 88px;
+	padding: 5px 8px;
+	height: 33px;
+	font-size: 14px;
+	background-color:rgba(83, 85, 85, 0.795);
+	color:#fff;
+	left: 10px;
+	top: -42px;
+	border-radius: 20px;
+	z-index: 100;
+	text-shadow: 0 1px 0 #000;
+}
+
+#pageChange {
+	position: absolute;
+	font-size: 22px;
+	cursor: pointer;
+	top: 50px;
+	right: -110px;
+}
+#pageChange i {
+	padding-left: 15px;
+	padding-right: 15px;
+	color: #7f7f7f;
+	transition: .3s;
+}
+#pageChange i:hover {
+	opacity: 0.8;
+}
+
+.room {
+	cursor: default;
+}
+
+span div p {
+	font-family: "UD Digi Kyokasho N-R";
+	font-weight: 1000;
+}
+
+#cog {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	font-size: 22px;
+	color: #8f8f8f;
+	transition: 0.5s;
+	cursor: pointer;
+}
+
+#cog:hover {
+	color: #3f3f3f;
+}
+
+#u86_clip {
+	position: relative;
+}
+
+#setting_info {
+	position: absolute;
+	top:26px;
+	left:80px;
+	line-height: 150%;
+}
+
+.setting_input_display {
+	font-family: "UD Digi Kyokasho N-R";
+	font-weight: 500;
+	letter-spacing: 1.1px;
+}
+
+#setting_input1_display {
+	position: absolute;
+	font-size: 16px;
+	top: 25px;
+	right: 190px;
+	height: 20px;
+	width: 52px;
+	background-color: rgba(0, 0, 0, 0);
+}
+#setting_input2_display {
+	position: absolute;
+	font-size: 16px;
+	top: 50px;
+	right: 190px;
+	height: 20px;
+	width: 52px;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+#change_code {
+	position: absolute;
+	color: rgb(221, 32, 32);
+	font-size: 23px;
+	right: 130px;
+	top: 34px;
+	cursor: pointer;
+	transition: 0.4s;
+}
+
+#change_code:hover {
+	color: #42b5eb;
+}
+
+#u823 {
+	position: relative;
+}
+
+.btn_redo {
+	position: absolute;
+    width: 100px;
+	height: 40px;
+	top: 25px;
+	left: 25px;
+	line-height: 40px;
+	cursor: pointer;
+}
+.btn_redo a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration:  none;
+    background: #D54243;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 15px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    box-shadow: 5px 5px 0px 0px #DEDEDE ;
+}
+.btn_redo a:hover {
+    background: #AB1329;
+    color: #FFFFFF;
+    margin-left: 0px;
+    margin-top: 0px;
+    box-shadow: none;
+}
+
+.none_img {
+	display: inline-block;
+	color: #939393;
+	font-size: 40px;
+	margin:-50% -50% auto 50%;
+	transform: translate(-50%);
+	opacity: 1;
+}
+.none_img:hover {
+	color: #f53131;
+}
+
+body {
+	position: relative;
+}
+#p_login {
+	position: absolute;
+	margin-left: 80px;
+	bottom: 5px;
+}
+
+

@@ -26,7 +26,7 @@
 </div>
 	</header>
 
-		<!-- モーダル部分　社員新規登録 -->
+	<!-- モーダル部分　社員新規登録 -->
 	<div class="signup-modal-wrapper admin_only" id="signup-modal">
 		<div class="modal">
 		  <div id="close-modal">
@@ -35,17 +35,23 @@
 		  <div id="adduser-form">
 			<h2>社員新規登録</h2>
 			<form name="form_newuser" method="POST" action="/newuser">
-				<input id="create_department" name="department" class="form-control" type="text" placeholder="部署名">
+				<select name="department" class="form-control placeholder_select" id="select_create_department">
+					<option value='' disabled selected style='display:none;'>部署名</option>
+					<% datadepartment.forEach ( (element)=> {  %>
+						<option value="<%= element.attributes.department %>"><%= element.attributes.department %></option>
+					<% }); %>
+				</select>
 				<div class="div_create_name">
 					<input id="create_name" name="name" class="form-control" type="text" placeholder="名前"><a id="newadmin_check_btn"><i class="fas fa-user"></i></a>
 				</div>
 				<input type="hidden" id="newadmin_check_body" name="newadmin_check_body" value="0">
-
+				<input id="create_position" name="position" class="form-control" type="text" placeholder="社内ポジション（省略可）">
 				<input id="create_information" name="information" class="form-control" type="text" placeholder="内線番号（省略可）">
 				<input id="create_email" name="email" class="form-control" type="text" placeholder="メールアドレス（省略可）">
 				<input id="create_password" name="password" class="form-control" type="password" placeholder="パスワード">
 				<input id="tmp_password" class="form-control" type="password" placeholder="パスワードを確認">
 				<a href="javascript:form_newuser.submit()" id="btn_newuser">新規登録</a>
+				<p id="form_newuser_info" style="font-size: 0.8em;"><span style="color: red;">※</span>氏名欄のアイコンをクリックすると管理者を登録できます。</p>
 			</form>
 		  </div>
 		</div>
@@ -127,35 +133,37 @@
 	</div>
 	<!-- モーダルここまで -->
 
-	<!-- モーダル部分　社員情報管理 -->
-	<div class="signup-modal-wrapper" id="userinfo-modal">
-		<div class="modal">
-		<div id="close-modal4">
-			<i class="fa fa-2x fa-times"></i>
-		</div>
-		<div id="userinfo-form">
-			<h2>基本情報変更</h2>
-			<form name="form_newuserinfo" method="POST" action="/newuserinfo">
-			<input id="userinfo_name" name="userinfo_name" class="form-control" type="text" placeholder="名前" value="<%= login.name %>">
-			<select name="userinfo_department" class="form-control" id="userinfo_department" value="<%= login.department %>">
-				<% datadepartment.forEach ( (element)=> {  %>
-					<option value="<%= element.attributes.department %>"
-						<% if (element.attributes.department == login.department) { %>
-							selected
-						<% } %> 
-						><%= element.attributes.department %></option>
-				<% }); %>
-			</select>
-			<input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
-			<input id="userinfo_email" name="userinfo_email" class="form-control" type="text" placeholder="メールアドレス（省略可）" value="<%= login.email %>">
-			<input id="userinfo_newpassword" name="userinfo_newpassword" class="form-control" type="password" placeholder="新しいパスワード（入力しない場合無変更）">
-			<input id="userinfo_newpassword_tmp" class="form-control" type="password" placeholder="新しいパスワードを確認">
-			<a href="javascript:form_newuserinfo.submit()" id="btn_newuserinfo">変更</a>
-			</form>
-		</div>
-		</div>
+<!-- モーダル部分　社員情報管理 -->
+<div class="signup-modal-wrapper" id="userinfo-modal">
+	<div class="modal">
+	  <div id="close-modal4">
+		<i class="fa fa-2x fa-times"></i>
+	  </div>
+	  <div id="userinfo-form">
+		<h2>基本情報変更</h2>
+		<form name="form_newuserinfo" method="POST" action="/newuserinfo">
+		  <input id="userinfo_name" name="userinfo_name" class="form-control" type="text" placeholder="名前" value="<%= login.name %>">
+		  <select name="userinfo_department" class="form-control" id="userinfo_department" value="<%= login.department %>">
+			<% datadepartment.forEach ( (element)=> {  %>
+				<option value="<%= element.attributes.department %>"
+					<% if (element.attributes.department == login.department) { %>
+						selected
+					<% } %> 
+					><%= element.attributes.department %></option>
+			<% }); %>
+		  </select>
+		  <input id="userinfo_position" name="userinfo_position" class="form-control" type="text" placeholder="社内ポジション（省略可）" value="<%= login.position %>">
+		  <input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
+		  <input id="userinfo_email" name="userinfo_email" class="form-control" type="text" placeholder="メールアドレス（省略可）" value="<%= login.email %>">
+		  <input id="userinfo_newpassword" name="userinfo_newpassword" class="form-control" type="password" placeholder="新しいパスワード（入力しない場合無変更）">
+		  <input id="userinfo_newpassword_tmp" class="form-control" type="password" placeholder="新しいパスワードを確認">
+		  <a href="javascript:form_newuserinfo.submit()" id="btn_newuserinfo">変更</a>
+		  <p style="font-size: 0.9em;"><span style="color: red;">※</span>変更後自動的にログアウトされます。</p>
+		</form>
+	  </div>
 	</div>
-	<!-- モーダルここまで　社員情報管理 -->
+</div>
+<!-- モーダルここまで　社員情報管理 -->
 
 	<!-- モーダル部分 部署管理-->
 	<div class="signup-modal-wrapper admin_only" id="adddepartment-modal">
@@ -216,6 +224,13 @@
 								><%= element.attributes.department %></option>
 						<% }); %>
 					</select></td></tr>
+				<% } %>
+				<tr id="position_tr"><th style="background-color:#e7853e; border: none;">配置</th></tr>
+				<% if (login.admin != 1 || login.id == content.id ){ %>
+					<tr><td><input type="hidden" name="position" id="position" value="<%= content.position %>" >
+						<%= content.position %></td></tr>
+				<% } else if (login.id != content.id) { %>
+				<tr><td><input name="position" id="position" value="<%= content.position %>"></td></tr>
 				<% } %>
 				<tr id="information_tr"><th style="background-color:#e7853e; border: none;">情報</th></tr>
 				<% if (login.admin != 1 || login.id == content.id ){ %>
@@ -475,6 +490,7 @@
 
 			console.log('使用中ユーザー管理者権限: <%= login.admin %>');
 			if ('<%= login.admin %>' != 1){
+				$('body').css('background-image','url(https://msi-net.co.jp/main/wp-content/uploads/2020/01/image5.jpg)');
 				$('.admin_only').remove();
 				$('.main_edit').height('100%');
 			}else {
@@ -661,7 +677,7 @@
 		$('#close-modal').click(function() {
 			$('#signup-modal').fadeOut();
 		});
-		// admin判定
+		// admin登録判定
 		$('#newadmin_check_btn').click(function(){
 			if ($(this).hasClass('Isadmin')){
 				$(this).removeClass('Isadmin').children('i').attr('class','fas fa-user');
@@ -670,6 +686,7 @@
 				$('#btn_newuser').css({
 					'background-color': '#56bed8'
 				});
+				$('#form_newuser_info').html('<span style="color: red;">※</span>氏名欄のアイコンをクリックすると管理者を登録できます。');
 				
 				$('#newadmin_check_body').val('0');
 				console.log('新規管理者判定: ' + $('#newadmin_check_body').val());
@@ -680,6 +697,7 @@
 				$('#btn_newuser').css({
 					'background-color': '#ff9f4f'
 				});
+				$('#form_newuser_info').html('<span style="color: red;">※</span>再度アイコンをクリックすると社員登録に戻ります。');
 
 				$('#newadmin_check_body').val('1');
 				console.log('新規管理者判定: ' + $('#newadmin_check_body').val());
@@ -990,6 +1008,8 @@
 		//編集tr td整理
 		$('#department').parent().parent('tr').hide();
 		$('#department_tr').hide();
+		$('#position').parent().parent('tr').hide();
+		$('#position_tr').hide();
 		$('#information').parent().parent('tr').hide();
 		$('#information_tr').hide();
 		$('#email').parent().parent('tr').hide();
@@ -999,6 +1019,8 @@
 			if ($('.opened').length == 0) {
 				$('#department').parent().parent('tr').show().addClass('opened');
 				$('#department_tr').show().addClass('opened');
+				$('#position').parent().parent('tr').show().addClass('opened');
+				$('#position_tr').show().addClass('opened');
 				$('#information').parent().parent('tr').show().addClass('opened');
 				$('#information_tr').show().addClass('opened');
 				$('#email').parent().parent('tr').show().addClass('opened');

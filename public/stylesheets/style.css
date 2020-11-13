@@ -468,13 +468,13 @@ header {
   font-size: 17px;
   width: 180px;
 }
-.table_edit select, .table_edit #information, .table_edit #email {
+.table_edit select, .table_edit #information, .table_edit #position, .table_edit #email {
   font-size: 16px;
   font-weight: 400;
   font-family: "UD Digi Kyokasho N-R";
   width: 100%;
   height:30px; 
-  padding:5px; 
+  padding:3px; 
   position: relative;
   background: #f8f8f8;
   border-radius: 6px;
@@ -564,7 +564,7 @@ header {
   text-shadow: 0 1px 0 #000;
 }
 
-
+/* 見やすいhover */
 .table_index tbody:hover td {
   color: transparent;
   text-shadow: 0 0 3px #aaa;
@@ -575,6 +575,7 @@ header {
   text-shadow: 0 1px 0 #fff;
   background:#fff;
 }
+
   /* status色分け */
 .status_zaiseki {
   margin-right: 10px;
@@ -860,6 +861,7 @@ a.btn-switch:active span {
    padding: 10px;
    font-size: 19px;
    font-family: "UD Digi Kyokasho NP-R";
+   resize: none;
  }
 
  .contact_icon {
@@ -1107,7 +1109,7 @@ header {
   font-size:40px;
   width: 100%;
 }
-.table_edit select, .table_edit #information, .table_edit #email {
+.table_edit select, .table_edit #information, .table_edit #position, .table_edit #email {
   font-size: 40px;
   font-weight: 400;
   font-family: "UD Digi Kyokasho N-R";

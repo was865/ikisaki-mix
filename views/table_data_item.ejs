@@ -1,4 +1,4 @@
-<% if (data != null) { %>
+<% if (data != null && data != undefined) { %>
 
     <% switch (data.status) {
         case '在席': %>
@@ -34,7 +34,11 @@
         <p class="p_ikisaki"><%= data.ikisaki %></p>
         <p class="p_time"><%= data.time %></p>
         <p class="p_memo"><%= data.memo %></p>
-        <p class="id"><%= data.id %></p>
+        <p class="p_position"><%= data.position %></p>
+        <p class="p_id"><%= data.id %></p>
     </div>
 
+<% } else { %>
+    <a class="none_img"><i class="fas fa-caret-down"></i></a>
+    <p class="p_name" style="display: none;">空席*</p>
 <% } %>

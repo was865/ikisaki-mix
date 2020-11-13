@@ -165,6 +165,7 @@ router.post("/:id", function(req, res, next) {
   var rec = {
     name: req.body.name,
     department: req.body.department,
+    position: req.body.position,
     information: req.body.information,
     email: req.body.email,
     status: req.body.status,
