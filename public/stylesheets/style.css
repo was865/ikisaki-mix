@@ -860,14 +860,15 @@ a.btn-switch:active span {
   border-width: 3px;
  }
  .contact_text {
-   background-color: #ede4cd;
-   border: none;
-   width:90%;
-   height: 90%;
-   padding: 10px;
-   font-size: 19px;
-   font-family: "UD Digi Kyokasho NP-R";
-   resize: none;
+  background-color: #ede4cd;
+  border: none;
+  width:90%;
+  height: 90%;
+  padding: 10px;
+  font-size: 19px;
+  font-family: "UD Digi Kyokasho NP-R";
+  resize: none;
+  outline: none;
  }
 
  .contact_icon {
@@ -1262,6 +1263,7 @@ button.btn {
    padding: 10px;
    font-size: 2.4em;
    font-family: "UD Digi Kyokasho NP-R";
+   outline: none;
  }
 
  .contact_icon {
