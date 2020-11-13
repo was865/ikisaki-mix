@@ -459,15 +459,27 @@ router.post("/newuser", (req, res, next) => {
     return;
   }
 
-  var rec = {
-    department: req.body.department,
-    admin: req.body.newadmin_check_body,
-    name: req.body.name,
-    position: req.body.position,
-    information: req.body.information,
-    email: req.body.email,
-    password: req.body.password
-  };
+  if (req.body.position.length) {
+    var rec = {
+      department: req.body.department,
+      admin: req.body.newadmin_check_body,
+      name: req.body.name,
+      position: req.body.position,
+      information: req.body.information,
+      email: req.body.email,
+      password: req.body.password
+    };
+  } else {
+    var rec = {
+      department: req.body.department,
+      admin: req.body.newadmin_check_body,
+      name: req.body.name,
+      information: req.body.information,
+      email: req.body.email,
+      password: req.body.password
+    };
+  }
+
 
   new Userdata(rec).save().then(model => {
     res.redirect("/");

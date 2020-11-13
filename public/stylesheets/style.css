@@ -206,6 +206,12 @@ header {
   color: rgba(0, 0, 0, 0.603);
 }
 
+#edting_name {
+  color: #000;
+  background-color: #ffffff;
+  cursor: not-allowed;
+}
+
 .div_create_name{
   position: relative;
   display: inline-block;
