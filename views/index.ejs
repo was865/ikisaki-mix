@@ -239,7 +239,7 @@
 		  <div id="editing-form">
 			<h2></h2>
 			<form name="form_editing" method="POST" action="/editing">
-			  <input id="edting_name" class="form-control" type="text" placeholder="名前" value="" disabled>
+			  <input id="editing_names" class="form-control" type="text" placeholder="名前" value="" disabled>
 			  <select name="status" id="status-edit">
 				<% datastatus.forEach ( (element)=> {  %>
 					<option value="<%= element.attributes.status %>"><%= element.attributes.status %></option>
@@ -775,7 +775,7 @@
 				editingNames = editingNames + $(this).children('.name').text() + "，";
 			})
 			console.log(editingNames);
-			$('#edting_name').val(editingNames.slice(0,-1));
+			$('#editing_names').val(editingNames.slice(0,-1));
 		});
 		$('#close-modal6').click(function(){
 			$('#editing-modal').fadeOut();

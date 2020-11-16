@@ -1194,13 +1194,13 @@
 				</div>				
 				<div class="clearfix grpelem room" id="u654-4">
 					<!-- content -->
-					<p>会議室1</p>
+					<p style="font-size: small;">会議室（食堂側）</p>
 					<p class="tooltip">内613</p>
 					<span id="r03"></span>
 				</div>
 				<div class="clearfix grpelem room" id="u655-4">
 					<!-- content -->
-					<p>会議室2</p>
+					<p style="font-size: smaller;">会議室（社長室側）</p>
 					<p class="tooltip">内614</p>
 					<span id="r04"></span>
 
@@ -1444,8 +1444,12 @@
 
 				if ($('.editing-group').length) {
 					$('#btn_update').show();
+					$('#u795-4').show();
+					$('#status').show();
 				} else {
 					$('#btn_update').hide();
+					$('#u795-4').hide();
+					$('#status').hide();
 				}
 		
 			} else {
