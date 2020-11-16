@@ -415,11 +415,6 @@ router.post("/add", (req, res, next) => {
       content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
     };
     res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
 
@@ -450,11 +445,6 @@ router.post("/newuser", (req, res, next) => {
       content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
     };
     res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
 
@@ -495,11 +485,6 @@ router.post("/newkyakusaki", (req, res, next) => {
       content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
     };
     res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
 
@@ -573,11 +558,6 @@ router.post("/newdepartment", (req, res, next) => {
       content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
     };
     res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
 
@@ -654,11 +634,6 @@ router.post("/newshanai", (req, res, next) => {
       content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
     };
     res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
   console.log(req.body);
@@ -768,11 +743,6 @@ router.post("/newuserinfo", (req, res, next) => {
       content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
     };
     res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
   
@@ -829,11 +799,6 @@ router.post("/editing", (req, res, next) => {
       content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
     };
     res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
   console.log(req.body);
@@ -874,11 +839,6 @@ router.post("/contact", (req, res, next) => {
       content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
     };
     res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
     return;
   }
 

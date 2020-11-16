@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" 	href="css/site_globaldc10.css?114823713" />
 <link rel="stylesheet" type="text/css" href="css/index7e17.css?4246631859" id="pagesheet" />
 <link rel="stylesheet" type="text/css" href="css/node_add.css" />
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.2.1/font-awesome-animation.min.css">
 </head>
 <body>
@@ -1184,7 +1184,7 @@
 				<div class="clearfix grpelem room" id="u653-4">
 					<!-- content -->
 					 <p>食堂</p>
-					 <p class="tooltip">内615</p> 
+					 <p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内615</p> 
 					<span id="r01"></span>
 				</div>
 				<div class="clearfix grpelem" id="u653-4-1">
@@ -1195,26 +1195,26 @@
 				<div class="clearfix grpelem room" id="u654-4">
 					<!-- content -->
 					<p style="font-size: small;">会議室（食堂側）</p>
-					<p class="tooltip">内613</p>
+					<p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内613</p>
 					<span id="r03"></span>
 				</div>
 				<div class="clearfix grpelem room" id="u655-4">
 					<!-- content -->
 					<p style="font-size: smaller;">会議室（社長室側）</p>
-					<p class="tooltip">内614</p>
+					<p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内614</p>
 					<span id="r04"></span>
 
 				</div>
 				<div class="clearfix grpelem room" id="u656-4">
 					<!-- content -->
 					<p>社長室</p>
-					<p class="tooltip">内611</p>
+					<p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内611</p>
 					<span id="r06"></span>
 				</div>
 				<div class="clearfix grpelem room" id="u657-4">
 					<!-- content -->
 					 <p>システム打合室</p>
-					 <p class="tooltip">内501</p>
+					 <p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内501</p>
 					<span id="r05"></span>
 
 				</div>
@@ -1293,14 +1293,14 @@
 				<div class="clearfix grpelem room" id="u658-4">
 					<!-- content -->
 					<p>検証室</p>
-					<p class="tooltip">内216</p>
+					<p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内216</p>
 					<span id="r08"></span>
 
 				</div>
 				<div class="clearfix grpelem room" id="u659-4">
 					<!-- content -->
 					<p>営業打合室</p>
-					<p class="tooltip">内530</p>
+					<p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内530</p>
 					<span id="r09"></span>
 				</div>
 			</div>
@@ -1309,14 +1309,14 @@
 				<div class="clearfix grpelem room" id="u660-4">
 					<!-- content -->
 					 <p>応接室１</p>
-					 <p class="tooltip">内212</p>
+					 <p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内212</p>
 					<span id="r11"></span>
 
 				</div>
 				<div class="clearfix grpelem room" id="u661-4">
 					<!-- content -->
 					<p>フロント</p>
-					<p class="tooltip">内211</p>
+					<p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内211</p>
 					<span id="r13"></span>
 
 				</div>
@@ -1324,7 +1324,7 @@
 			<div class="clearfix colelem room" id="u662-4">
 				<!-- content -->
 				<p>応接室２</p>
-				<p class="tooltip">内213</p>
+				<p class="tooltip"><i class="fas fa-phone-alt" style="font-size: smaller;"></i> 内213</p>
 				<span id="r12"></span>
 
 			</div>
@@ -1334,7 +1334,7 @@
 			<p style="font-size: 0.9em;"><i class="fas fa-user-shield admin_only" style="color: #939393;"></i>＂<%= login.name %>
 				<% if(login.email.length) {%>
 					[<%= login.email %>]<% } %>＂でログインしています。
-				<span style="margin-left: 20px;">最後の更新：<%= maxUpdatetime_display_fromNow %>。</span><span style="margin-left: 20px;">更新時刻：<%= maxUpdatetime_display %>。</span></p>
+				<span style="margin-left: 20px;">最後の更新：<%= maxUpdatetime_display_fromNow %>。</span><span style="margin-left: 20px;">更新時刻：<%= maxUpdatetime_display %>。</span><a href="/logout" id="logout"><span><i class="fas fa-sign-out-alt"></i></span> ログアウト</a></p>
 		</div>
 
 		<div class="verticalspacer"></div>
@@ -1579,10 +1579,19 @@
 		});
 
 		$('.tooltip').hide();
+		$('.tooltip_people').hide();
+
+		var sethover;
+		var tmp;
 		$('.status_icon').hover(function(){
-			$(this).children('.tooltip').show();
-		},function(){
-			$(this).children('.tooltip').hide();
+			tmp = $(this).children('.tooltip_people');
+			sethover = setTimeout(function(){
+				console.log(tmp.text());
+				tmp.fadeIn(300);
+			},1500);
+		}, function() {
+			tmp.fadeOut(300);
+			clearTimeout(sethover);
 		})
 
 		$('.room').hover(function(){
@@ -1694,10 +1703,15 @@
 				});
 
 				$('#change_code').click(function(){
-					if (!confirm('\n〝' + first_name + '″ポジションコード：' + first_position + '\n〝' + last_name + '″ポジションコード：' + last_position + '  を入れ替えます。\n\n   よろしいですか？')) {
+					if (first_name == last_name){
+						alert('\n空席の間では入れ替えできません！選びなおしてください。');
 						return false;
 					} else {
-						return true;
+						if (!confirm('\n〝' + first_name + '″ポジションコード：' + first_position + '\n〝' + last_name + '″ポジションコード：' + last_position + '  を入れ替えます。\n\n   よろしいですか？')) {
+							return false;
+						} else {
+							return true;
+						}
 					}
 				})
 	

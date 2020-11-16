@@ -102,7 +102,16 @@ function getShanai() {
 /* GET page. */
 router.get("/:id", function(req, res, next) {
   if (req.session.login == null) {
-    res.redirect("/login");
+    var data = {
+      title: "login",
+      form: { name: "", password: "" },
+      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+    };
+    res.render("login", data);
+    getStatus();
+    getKyakusaki();
+    getShanai();
+    getDepartment();
     return;
   }
 
@@ -138,6 +147,20 @@ router.get("/:id", function(req, res, next) {
 });
 
 router.post("/:id", function(req, res, next) {
+  if (req.session.login == null) {
+    var data = {
+      title: "login",
+      form: { name: "", password: "" },
+      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+    };
+    res.render("login", data);
+    getStatus();
+    getKyakusaki();
+    getShanai();
+    getDepartment();
+    return;
+  }
+
   getStatus();
   getKyakusaki();
   getShanai();
@@ -194,6 +217,17 @@ router.post("/:id", function(req, res, next) {
 });
 
 router.post("/:id/delete", function(req, res, next) {
+
+  if (req.session.login == null) {
+    var data = {
+      title: "login",
+      form: { name: "", password: "" },
+      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+    };
+    res.render("login", data);
+    return;
+  }
+
   new Userdata()
     .where("id", "=", req.body.id)
     .fetch()
