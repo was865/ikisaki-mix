@@ -418,6 +418,10 @@ router.post("/add", (req, res, next) => {
     return;
   }
 
+  if (req.body.information == '') {
+    req.body.information == '／';
+  }
+
   var rec = {
     department: req.body.department,
     admin: 0,
@@ -446,6 +450,10 @@ router.post("/newuser", (req, res, next) => {
     };
     res.render("login", data);
     return;
+  }
+
+  if (req.body.information == '') {
+    req.body.information == '／';
   }
 
   if (req.body.position.length) {
@@ -747,6 +755,10 @@ router.post("/newuserinfo", (req, res, next) => {
   }
   
   console.log(req.body);
+
+  if (req.body.userinfo_information == '') {
+    req.body.userinfo_information == '／';
+  }
 
   if (req.body.userinfo_newpassword == ''){
     var rec = {
