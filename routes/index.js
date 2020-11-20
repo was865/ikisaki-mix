@@ -121,6 +121,11 @@ function getMsg() {
 
 //SQL router.GETはここから
 router.get("/", function(req, res, next) {
+  getStatus();
+  getKyakusaki();
+  getShanai();
+  getMsg();
+  getDepartment();
 
   if (req.session.login == null) {
     var data = {
@@ -140,12 +145,6 @@ router.get("/", function(req, res, next) {
   // if (req.session.login == null) {
   //   res.redirect("/login");
   // }
-
-  getStatus();
-  getKyakusaki();
-  getShanai();
-  getMsg();
-  getDepartment();
 
   var usertabledata = new Array();
   var login = req.session.login;

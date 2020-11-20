@@ -127,6 +127,11 @@ router.get("/", function(req, res, next) {
       form: { name: "", password: "" },
       content: "<p class='error login_info'>ログインしてください。</p>"
     };
+    getStatus();
+    getKyakusaki();
+    getShanai();
+    getMsg();
+    getDepartment();
     res.render("login", data);
   }
 
@@ -195,6 +200,7 @@ router.get("/", function(req, res, next) {
 // updateはここから
 router.post("/update", function(req, res, next) {
   console.log("update開始しました。");
+  console.log(req.body);
   if (req.session.login == null) {
     var data = {
       title: "login",
@@ -220,14 +226,36 @@ router.post("/update", function(req, res, next) {
   } else if (req.body.status == "休暇") {
     req.body.time = "／";
   }
-  console.log("req.body.id.length : " + req.body.id.length);
-  for (var i = 0; i < req.body.id.length; i++) {
-    if (req.body.ikisaki == undefined || req.body.ikisaki.length == 0) {
-      req.body.ikisaki = "／";
+
+  if (req.body.ikisaki == undefined || req.body.ikisaki.length == 0) {
+    req.body.ikisaki = "／";
+  }
+  if (req.body.time == undefined || req.body.time.length == 0) {
+    req.body.time = "／";
+  }
+
+  if (Array.isArray(req.body.id)) {
+    console.log("req.body.id.length : " + req.body.id.length);
+    for (var i = 0; i < req.body.id.length; i++) {
+
+      console.log("更新開始しました。");
+      var rec = {
+        status: req.body.status,
+        ikisaki: req.body.ikisaki,
+        time: req.body.time,
+        memo: req.body.memo
+      };
+      
+      console.log("req.body.id[" + i + "] : " + req.body.id[i]);
+      
+      new Userdata({ id: req.body.id[i] })
+        .save(rec, { patch: true })
+        .then(result => {
+          console.log("Array更新完了しました。");
+        });
     }
-    if (req.body.time == undefined || req.body.time.length == 0) {
-      req.body.time = "／";
-    }
+    res.redirect("/table");
+  } else {
     console.log("更新開始しました。");
     var rec = {
       status: req.body.status,
@@ -236,12 +264,12 @@ router.post("/update", function(req, res, next) {
       memo: req.body.memo
     };
     
-    console.log("req.body.id[i] : " + req.body.id[i]);
+    console.log("req.body.id: " + req.body.id);
     
-    new Userdata({ id: req.body.id[i] })
+    new Userdata({ id: req.body.id })
       .save(rec, { patch: true })
       .then(result => {
-        console.log("更新完了しました。");
+        console.log("単項目更新完了しました。");
         res.redirect("/table");
       });
   }
