@@ -269,3 +269,9 @@ body {
 	color: #494949;
 	text-decoration: underline;
 }
+
+#u786 {
+	cursor: default;
+	transition: 0.4s;
+	z-index: 100000;
+}

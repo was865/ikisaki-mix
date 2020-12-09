@@ -1342,7 +1342,6 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script>
 	$(function() {
 
@@ -1366,40 +1365,24 @@
 		$('#btn_redo').hide();
 		$('.none_img').hide();
 
-		var editingNames = [];
-		var display_editingNames = '';
-		var lastClicked_editingName;
-		var lastClicked_editingGroup;
-
 		$('.status_icon').click(function(){
 
 			$('#u795-4').show();
 			$('#status').show();
 
+			var editingNames = '';
 			if ($(this).hasClass('editing-group')){
 				$(this).removeClass('editing-group').css('color', '');
-				
-				var editingNames_remove_index = editingNames.indexOf($(this).children('.p_name').text());
-				editingNames.splice(editingNames_remove_index, 1);
-				console.log(editingNames);
-				display_editingNames = editingNames.join(',');
-
-				lastClicked_editingName = editingNames[editingNames.length - 1];
-
 				$('.append_area').remove();
 				$('.editing-group').each(function(){
 					$('#form_update').append('<div class="append_area"><input name="name" type="hidden" value="' + $(this).children('.p_name').text() + '">' + '<input name="id" type="hidden" value="' + $(this).children().children('.p_id').text() + '"></div>');
-					if ($(this).children('.p_name').text() == lastClicked_editingName){
-						lastClicked_editingGroup = $(this);
-					}
+					editingNames = editingNames + $(this).children('.p_name').text() + ",";
 				});
-
-				if (display_editingNames.length > 8) {
-					$('#u786 p').text(display_editingNames.slice(0,6) + '...');
+				if (editingNames.length > 8) {
+					$('#u786 p').text(editingNames.slice(0,6) + '...');
 				} else {
-					$('#u786 p').text(display_editingNames);
+					$('#u786 p').text(editingNames.slice(0,-1));
 				}
-
 				if ($('.editing-group').length > 1) {
 					$('#u791').hide(); //情報ラベル
 					$('#u793').hide(); //情報欄
@@ -1407,73 +1390,66 @@
 					$('#u791').show(); //情報ラベル
 					$('#u793').show(); //情報欄
 				}
-				
-				if ($('.editing-group').length > 0) {
-					$('#u793 p').text(lastClicked_editingGroup.children().children('.p_information').text());
-					$('#u770 select').val(lastClicked_editingGroup.children().children('.p_status').text());
-					switch ($('#u770 select').val()) {
-						case '休暇':
-							var selectContent_kyuuka = '<option value="全休">全休</option>' +
-									'<option value="ＡＭ半休">ＡＭ半休</option>' + 
-									'<option value="ＰＭ半休">ＰＭ半休</option>';
-							$('#ikisaki').html(selectContent_kyuuka);
-							$('#u797-4').children('p').text('期間');
-							$('#ikisaki').show();
-							$('#u797-4').show();
-							$('#time').val('').hide();
-							$('#u799-4').hide();
-							break;
-						case '客先':
-							var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.attributes.kyakusaki %>"><%= element.attributes.kyakusaki %></option><%  }) %>';
-							$('#ikisaki').html(selectContent_kyakusaki);
-							$('#u797-4').children('p').text('行先');
-							$('#ikisaki').show();
-							$('#u797-4').show();
-							$('#time').show();
-							$('#u799-4').show();
-							break;
-						case '社内':
-							var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.attributes.shanai %>"><%= element.attributes.shanai %></option><%  }) %>';
-							$('#ikisaki').html(selectContent_shanai);
-							$('#u797-4').children('p').text('行先');
-							$('#ikisaki').show();
-							$('#u797-4').show();
-							$('#time').show();
-							$('#u799-4').show();
-							break;
-						case '':
-						case '在席':
-						case '帰宅':
-							$('#ikisaki').val('').hide();
-							$('#u797-4').hide();
-							$('#time').val('').hide();
-							$('#u799-4').hide();
-							break;
-						default:
-							$('#u797-4').children('p').text('行先');
-							$('#ikisaki').val('').hide();
-							$('#u797-4').hide();
-							$('#time').show();
-							$('#u799-4').show();
-							break;
-					}
-					$('#u774 select').val(lastClicked_editingGroup.children().children('.p_ikisaki').text());
-					$('#u776 select').val(lastClicked_editingGroup.children().children('.p_time').text());
-					$('#u802 textarea').val(lastClicked_editingGroup.children().children('.p_memo').text());
+				$('#u793 p').text($('.editing-group:last').children().children('.p_information').text());
+				$('#u770 select').val($('.editing-group:last').children().children('.p_status').text());
+				switch ($('#u770 select').val()) {
+					case '休暇':
+						var selectContent_kyuuka = '<option value="全休">全休</option>' +
+								'<option value="ＡＭ半休">ＡＭ半休</option>' + 
+								'<option value="ＰＭ半休">ＰＭ半休</option>';
+						$('#ikisaki').html(selectContent_kyuuka);
+						$('#u797-4').children('p').text('期間');
+						$('#ikisaki').show();
+						$('#u797-4').show();
+						$('#time').val('').hide();
+						$('#u799-4').hide();
+						break;
+					case '客先':
+						var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.attributes.kyakusaki %>"><%= element.attributes.kyakusaki %></option><%  }) %>';
+						$('#ikisaki').html(selectContent_kyakusaki);
+						$('#u797-4').children('p').text('行先');
+						$('#ikisaki').show();
+						$('#u797-4').show();
+						$('#time').show();
+						$('#u799-4').show();
+						break;
+					case '社内':
+						var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.attributes.shanai %>"><%= element.attributes.shanai %></option><%  }) %>';
+						$('#ikisaki').html(selectContent_shanai);
+						$('#u797-4').children('p').text('行先');
+						$('#ikisaki').show();
+						$('#u797-4').show();
+						$('#time').show();
+						$('#u799-4').show();
+						break;
+					case '':
+					case '在席':
+					case '帰宅':
+						$('#ikisaki').val('').hide();
+						$('#u797-4').hide();
+						$('#time').val('').hide();
+						$('#u799-4').hide();
+						break;
+					default:
+						$('#u797-4').children('p').text('行先');
+						$('#ikisaki').val('').hide();
+						$('#u797-4').hide();
+						$('#time').show();
+						$('#u799-4').show();
+						break;
+				}
+				$('#u774 select').val($('.editing-group:last').children().children('.p_ikisaki').text());
+				$('#u776 select').val($('.editing-group:last').children().children('.p_time').text());
+				$('#u802 textarea').val($('.editing-group:last').children().children('.p_memo').text());
 
+				if ($('.editing-group').length) {
 					$('#btn_update').show();
 					$('#u795-4').show();
 					$('#status').show();
 				} else {
 					$('#btn_update').hide();
 					$('#u795-4').hide();
-					$('#u797-4').hide();
-					$('#u799-4').hide();
 					$('#status').hide();
-					$('#ikisaki').hide();
-					$('#time').hide();
-					$('#u793 p').text('');
-					$('#memo').text('');
 				}
 		
 			} else {
@@ -1534,14 +1510,12 @@
 				$('.append_area').remove();
 				$('.editing-group').each(function(){
 					$('#form_update').append('<div class="append_area"><input name="name" type="hidden" value="' + $(this).children('.p_name').text() + '">' + '<input name="id" type="hidden" value="' + $(this).children().children('.p_id').text() + '"></div>');
+					editingNames = editingNames + $(this).children('.p_name').text() + ",";
 				});
-				editingNames.push($(this).children('.p_name').text());
-				console.log(editingNames);
-				display_editingNames = editingNames.join(',')
-				if (display_editingNames.length > 8) {
-					$('#u786 p').text(display_editingNames.slice(0,6) + '...');
+				if (editingNames.length > 8) {
+					$('#u786 p').text(editingNames.slice(0,6) + '...');
 				} else {
-					$('#u786 p').text(display_editingNames);
+					$('#u786 p').text(editingNames.slice(0,-1));
 				}
 				if ($('.editing-group').length > 1) {
 					$('#u791').hide(); //情報ラベル
@@ -1552,23 +1526,6 @@
 				}
 			}
 		});
-
-		$('#u768').css("visibility", "hidden");
-		
-		$('#u786').hover(function(){
-			if (display_editingNames.length > 8 && display_editingNames.length <= 17) {
-				$(this).css({'background-color':'#f4f4f4','height':'65px'}).children('p').text(display_editingNames);
-			} else if (display_editingNames.length > 17 && display_editingNames.length <= 25) {
-				$(this).css({'background-color':'#f4f4f4','height':'98px'}).children('p').text(display_editingNames);
-			} else if (display_editingNames.length > 25) {
-				$(this).css({'background-color':'#f4f4f4','height':'98px'}).children('p').text(display_editingNames.slice(0,24) + '...');
-			}
-		}, function(){
-			if ($(this).children('p').text().length) {
-				$(this).css({'background-color':'','height':'31px'}).children('p').text(display_editingNames.slice(0,6) + '...');
-			}
-		})
-	
 
 		$('#status').change(function() {
 		var val = $(this).val();
