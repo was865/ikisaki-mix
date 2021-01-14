@@ -220,6 +220,7 @@
 			  <input id="userinfo_position" name="userinfo_position" class="form-control admin_only" type="text" placeholder="社内ポジション（省略可）" value="<%= login.position %>">
 			  <input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
 			  <input id="userinfo_email" name="userinfo_email" class="form-control" type="text" placeholder="メールアドレス（省略可）" value="<%= login.email %>">
+			  <input type="hidden" name="original_email" value="<%= login.email %>">
 			  <input id="userinfo_newpassword" name="userinfo_newpassword" class="form-control" type="password" placeholder="新しいパスワード（入力しない場合無変更）">
 			  <input id="userinfo_newpassword_tmp" class="form-control" type="password" placeholder="新しいパスワードを確認">
 			  <a href="javascript:form_newuserinfo.submit()" id="btn_newuserinfo">変更</a>
@@ -229,6 +230,27 @@
 		</div>
 	</div>
 	<!-- モーダルここまで　社員情報管理 -->
+
+	<!-- モーダル部分　メール編集用モダール -->
+	<div class="signup-modal-wrapper" id="mail-modal">
+		<div class="modal">
+			<div id="close-modal7">
+			  <i class="fa fa-2x fa-times"></i>
+			</div>
+			<div id="mail-form">
+			  <h2></h2>
+			  <form name="form_mail" method="POST" action="/mail">
+				<input name="mailTo" id="mailTo" class="form-control" type="text" placeholder="宛先">
+				<input name="subject" id="subject" placeholder="件名" value="伝言メモ">
+			    <textarea type="text" class="mail_Text" name="mail_Text" placeholder="本文"></textarea>
+				<a href="javascript:form_mail.submit()" id="btn_mail">送信</a>
+
+				<input type="hidden" name="mailFrom" value="<%= login.email %>">
+			  </form>
+			</div>
+		  </div>
+	</div>
+	<!-- モーダルここまで　メール編集用モダール -->
 
 	<!-- モーダル部分　まとめ編集 -->
 	<div class="signup-modal-wrapper" id="editing-modal">
@@ -706,8 +728,20 @@
 			$('#adddepartment-modal').fadeOut();
 		});
 
-		// まとめ変更モーダル
+		//sentMail用モダール
+		
+		$('.sentMail').click(function() {
+			var mailName = $(this).parent().parent().children('.name').text();
+			var mailAdress = $(this).parent().children('p').text();
+			$('#mail-form').children('h2').text('"' + mailName + '" へメッセージ');
+			$('#mailTo').val('宛先：' + mailAdress);
+			$('#mail-modal').fadeIn();
+		});
+		$('#close-modal7').click(function() {
+			$('#mail-modal').fadeOut();
+		});
 
+		// まとめ変更モーダル
 		//まとめ編集用
 		$('#edit-group').hide();
 

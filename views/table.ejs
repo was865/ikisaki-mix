@@ -1473,7 +1473,7 @@
 					$('#ikisaki').hide();
 					$('#time').hide();
 					$('#u793 p').text('');
-					$('#memo').text('');
+					$('#memo').val('');
 				}
 		
 			} else {
@@ -1706,7 +1706,7 @@
 							if (last_position.length && first_position.length){
 								$('#setting_position1_submit').val(first_position);
 								$('#setting_position2_submit').val(last_position);
-							} else{
+							} else {
 								first_position = $('.moving').not(this).parent('span').attr('id');
 								last_position = $(this).parent('span').attr('id');
 								$('#setting_position1_submit').val(first_position);

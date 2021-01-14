@@ -3,6 +3,7 @@ var router = express.Router();
 var moment = require("moment-timezone");
 var datautils = require("date-utils");
 const { response } = require("express");
+const sendmail = require('sendmail')();
 
 var knex = require("knex")({
   dialect: "sqlite3",
@@ -185,18 +186,45 @@ router.post("/:id", function(req, res, next) {
 
   console.log("管理者権限" + req.body.admin);
 
-  var rec = {
-    name: req.body.name,
-    department: req.body.department,
-    position: req.body.position,
-    information: req.body.information,
-    email: req.body.email,
-    status: req.body.status,
-    ikisaki: req.body.ikisaki,
-    time: req.body.time,
-    memo: req.body.memo,
-    admin: req.body.admin
-  };
+  if (req.body.password == undefined || req.body.password == '') {
+    var rec = {
+      name: req.body.name,
+      department: req.body.department,
+      position: req.body.position,
+      information: req.body.information,
+      email: req.body.email,
+      status: req.body.status,
+      ikisaki: req.body.ikisaki,
+      time: req.body.time,
+      memo: req.body.memo,
+      admin: req.body.admin
+    };
+  } else {
+    var formatted = new Date().toFormat("YYYY/MM/DD HH24時MI分SS秒");
+    var rec = {
+      name: req.body.name,
+      department: req.body.department,
+      position: req.body.position,
+      information: req.body.information,
+      email: req.body.email,
+      status: req.body.status,
+      ikisaki: req.body.ikisaki,
+      time: req.body.time,
+      memo: req.body.memo,
+      password: req.body.password,
+      admin: req.body.admin
+    };
+    sendmail({
+      from: 'a-ou@msi-net.co.jp',
+      to: req.body.email,
+      subject: 'セキュリティーに関する通知（行先管理システム）',
+      text: '株式会社エム・エス・アイ　'+ req.body.name +'様\r\n\r\nあなたのパスワードが管理者より変更されました。\r\n\r\n操作の時刻：' + formatted,
+    }, function(err, reply) {
+      console.log(err && err.stack);
+      console.dir(reply);
+    });
+    console.log("パスワードを変更しました。");
+  }
 
   new Userdata({ id: req.body.id }).save(rec).then(model => {
     var d2 = new Date(model.attributes.updated_at);
@@ -234,6 +262,26 @@ router.post("/:id/delete", function(req, res, next) {
     .then(record => {
       record.destroy();
     })
+    .then(result => {
+      res.redirect("/");
+    });
+});
+
+router.post("/:id/unlock", function(req, res, next) {
+
+  if (req.session.login == null) {
+    var data = {
+      title: "login",
+      form: { name: "", password: "" },
+      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+    };
+    res.render("login", data);
+    return;
+  }
+
+  new Userdata()
+    .where("id", "=", req.body.id)
+    .save({err_times: 0, locked_at: null},{patch:true})
     .then(result => {
       res.redirect("/");
     });

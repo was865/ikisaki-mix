@@ -19,6 +19,8 @@
     "knex": "^0.12.9",
     "moment-timezone": "^0.5.31",
     "morgan": "~1.9.1",
+    "nodemailer": "^6.4.17",
+    "sendmail": "^1.6.1",
     "serve-favicon": "^2.5.0",
     "sqlite3": "^5.0.0"
   }

@@ -209,7 +209,11 @@
 			<table class="table_edit">
 				<p class="editing_name"><span>ログイン中のユーザー：<span><%= login.name %><i class="fas fa-user-shield admin_only" style="margin-left: 5px;"></i></span></span><br><%- greeting %></p>
 				<tr><th>名前</th></tr>
-				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.name %>"><%= content.name %><span><i class="fas fa-ellipsis-h"></i></span></td></tr>
+				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.name %>"><%= content.name %><span><i class="fas fa-ellipsis-h"></i></span>
+				<% if (content.err_times >= 5) { %>
+					<a class="admin_only" href="javascript:form_unlock.submit()" id="unlock_a"><i class="fas fa-lock"></i></a><p class="admin_only" style="margin-top: 10px;font-size: 0.8em; color: rgb(255, 0, 0);">※ログインが制限されています。<br><br>制限を解除するには名前の右側にあるロックアイコンをクリックしてください。</p>
+				<% } %>
+				</td></tr>
 				<tr id="department_tr"><th style="background-color: #e7853e; border: none;">部署</th></tr>
 				<% if (login.admin != 1 || login.id == content.id ){ %>
 					<tr><td><input type="hidden" name="department" id="department" value="<%= content.department %>" >
@@ -245,6 +249,10 @@
 						<%= content.email %></td></tr>
 				<% } else if (login.id != content.id) { %>
 				<tr><td><input name="email" id="email" value="<%= content.email %>"></td></tr>
+				<% } %>
+				<% if (login.admin == 1 && login.id != content.id ){ %>
+				<tr id="password_tr"><th style="background-color: #e7853e; border: none;">パスワードを変更</th></tr>
+				<tr><td><input name="password" id="password" value="" placeholder="入力しない場合無変更"></td></tr>
 				<% } %>
 				<tr><th>状態</th></tr>
 				<tr><td><select name="status" id="status" >
@@ -467,6 +475,11 @@
 			</table>
 		</form>
 		<p><a href="/" class="backhome faa-parent animated-hover"><i class="fas fa-angle-double-right faa-passing"></i> 一覧に戻る</a></p>
+
+		<!-- unlock用フォーム -->
+		<form method="POST" action="/edit/<%= content.id %>/unlock" name="form_unlock" class="admin_only">
+			<input type="hidden" name="id" value="<%= content.id %>">
+		</form>
 
 		<% if (login.admin == 1){ %>
 			<p></p>
@@ -1014,6 +1027,8 @@
 		$('#information_tr').hide();
 		$('#email').parent().parent('tr').hide();
 		$('#email_tr').hide();
+		$('#password').parent().parent('tr').hide();
+		$('#password_tr').hide();
 
 		$('#edit_name span').click(function(){
 			if ($('.opened').length == 0) {
@@ -1025,12 +1040,31 @@
 				$('#information_tr').show().addClass('opened');
 				$('#email').parent().parent('tr').show().addClass('opened');
 				$('#email_tr').show().addClass('opened');
+				$('#password').parent().parent('tr').show().addClass('opened');
+				$('#password_tr').show().addClass('opened');
 				$('#edit_name span').css('color','#e7853e');
 			} else {
 				$('.opened').hide().removeClass('opened');
 				$('#edit_name span').css('color','');
 			}
 		})
+
+		// $('#unlock_a').hover(function(){
+		// 	$(this).html('<i class="fas fa-unlock"></i>');
+		// },function(){
+		// 	$(this).html('<i class="fas fa-lock"></i>');
+		// });
+
+		$('#unlock_a').hover(function(){
+			$(this).children('i').attr('class','fas fa-unlock');
+		},function(){
+			$(this).children('i').attr('class','fas fa-lock');
+		});
+
+		$('#unlock_a').click(function(){
+			alert('<%= content.name %>のアカウントロックが解除されました！')
+		});
+		
 
 
 				// var deleteBtn = $('#delete_content');    

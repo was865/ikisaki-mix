@@ -212,7 +212,7 @@ header {
   cursor: not-allowed;
 }
 
-.div_create_name{
+.div_create_name {
   position: relative;
   display: inline-block;
 }
@@ -287,7 +287,7 @@ header {
   background-color: #0084ff;
 }
 
-#adduser-form, #addkyakusaki-form, #addshanai-form, #userinfo-form, #editing-form, #adddepartment-form {
+#adduser-form, #addkyakusaki-form, #addshanai-form, #userinfo-form, #editing-form, #adddepartment-form, #mail-form {
   width: 100%;
 }
 
@@ -295,6 +295,15 @@ header {
   color: #5f5d60;
   letter-spacing: 1px;
   margin-bottom: 25px;
+}
+#mail-form h2 {
+  color: #5f5d60;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+#mailTo {
+  background-color: #d7dde0;
+  pointer-events: none;
 }
 #addshanai-form h2 {
   color: #5f5d60;
@@ -320,8 +329,29 @@ header {
   border: 1px solid #d0d5d8;
   border-radius: 5px;
 }
+#mail-form input {
+  width: 85%;
+  margin-bottom: 5px;
+  font-size: 15px;
+  padding: 8px 8px;
+  border: 1px solid #d0d5d8;
+  border-radius: 5px;
+  outline: none;
+}
+#mail-form textarea {
+  font-family: "UD Digi Kyokasho NP-R";
+  width: 85%;
+  height: 360px;
+  margin-bottom: 5px;
+  font-size: 17px;
+  padding: 8px 8px;
+  border: 1px solid #d0d5d8;
+  border-radius: 5px;
+  outline: none;
+  resize: none;
+}
 
-#btn_newuser,  #btn_newkyakusaki, #btn_newshanai, #btn_newdepartment, #btn_newuserinfo, #btn_editing {
+#btn_newuser,  #btn_newkyakusaki, #btn_newshanai, #btn_newdepartment, #btn_newuserinfo, #btn_editing, #btn_mail {
   display: inline-block;
   padding: 14px 140px;
   background-color: #56bed8;
@@ -333,7 +363,7 @@ header {
   text-decoration: none;
   transition: .3s;
 }
-#btn_newkyakusaki:hover, #btn_newshanai:hover, #btn_newdepartment:hover, #btn_editing:hover {
+#btn_newkyakusaki:hover, #btn_newshanai:hover, #btn_newdepartment:hover, #btn_editing:hover, #btn_mail:hover {
   background-color: #35abc9;
 }
 #userinfo_position_info {
@@ -418,7 +448,7 @@ header {
   transform: translateY(48px);
 }
 
-/* forms */
+/* editforms */
 
 .index-form {
   position: relative;
@@ -477,7 +507,7 @@ header {
   font-size: 17px;
   width: 180px;
 }
-.table_edit select, .table_edit #information, .table_edit #position, .table_edit #email {
+.table_edit select, .table_edit #information, .table_edit #position, .table_edit #email, .table_edit #password {
   font-size: 16px;
   font-weight: 400;
   font-family: "UD Digi Kyokasho N-R";
@@ -490,6 +520,7 @@ header {
   vertical-align:bottom; 
   display:inline-block; 
   border:1px solid #d3d3d3;
+  outline: none;
 }
 .table_edit textarea {
   font-size: 16px;
@@ -499,6 +530,7 @@ header {
   border-radius: 6px;
   border: none;
   width: 100%;
+  outline: none;
 }
 .table_edit tr th {
   background-color: rgb(38, 142, 202);
@@ -571,6 +603,9 @@ header {
   border-radius: 20px;
   z-index: 1;
   text-shadow: 0 1px 0 #000;
+}
+.sentMail {
+  color: #0084ff;
 }
 
 /* 見やすいhover */
@@ -890,6 +925,19 @@ a.btn-switch:active span {
 
 .space {
 margin-top:100px;
+}
+
+#unlock_a {
+  text-decoration: none;
+  color: white;
+  position: absolute;
+  right: -35px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+#unlock_a:hover {
+  opacity: 0.8;
 }
 
 

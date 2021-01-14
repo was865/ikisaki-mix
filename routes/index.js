@@ -5,6 +5,7 @@ var moment = require("moment-timezone");
 var datautils = require("date-utils");
 const { response } = require("express");
 const { get } = require("./login");
+const sendmail = require('sendmail')();
 
 var db = new sqlite3.Database("ikisaki.sqlite3");
 
@@ -166,6 +167,7 @@ router.get("/", function(req, res, next) {
       usertabledata.push({
         id: element.id,
         name: element.name,
+        err_times: element.err_times,
         information: element.information,
         department: element.department,
         status: element.status,
@@ -759,6 +761,7 @@ router.post("/newuserinfo", (req, res, next) => {
     req.body.userinfo_information == '／';
   }
 
+  var formatted = new Date().toFormat("YYYY/MM/DD HH24時MI分SS秒");
   if (req.body.userinfo_newpassword == ''){
     var rec = {
       name: req.body.userinfo_name,
@@ -767,6 +770,27 @@ router.post("/newuserinfo", (req, res, next) => {
       information: req.body.userinfo_information,
       email: req.body.userinfo_email
     }
+    if (req.body.userinfo_email == req.body.original_email) {
+      sendmail({
+        from: 'a-ou@msi-net.co.jp',
+        to: req.body.original_email,
+        subject: 'セキュリティーに関する通知（行先管理システム）',
+        text: '株式会社エム・エス・アイ　'+ req.body.userinfo_name +'様\r\n\r\nあなたの基本情報が変更されました。\r\n本人による操作でない場合は、アカウントが不正利用された可能性があります。\r\n\r\n操作の時刻：' + formatted,
+      }, function(err, reply) {
+        console.log(err && err.stack);
+        console.dir(reply);
+      });
+    } else {
+      sendmail({
+        from: 'a-ou@msi-net.co.jp',
+        to: req.body.original_email,
+        subject: 'セキュリティーに関する通知（行先管理システム）',
+        text: '株式会社エム・エス・アイ　'+ req.body.userinfo_name +'様\r\n\r\nあなたのメールアドレスが変更されました。\r\n本人による操作でない場合は、アカウントが不正利用された可能性があります。\r\nなお、これからのセキュリティー通知が本メールアドレスに届かなくなります。\r\n\r\n操作の時刻：' + formatted,
+      }, function(err, reply) {
+        console.log(err && err.stack);
+        console.dir(reply);
+      });
+   }
   } else {
     var rec = {
       name: req.body.userinfo_name,
@@ -776,6 +800,15 @@ router.post("/newuserinfo", (req, res, next) => {
       email: req.body.userinfo_email,
       password: req.body.userinfo_newpassword
     }
+    sendmail({
+      from: 'a-ou@msi-net.co.jp',
+      to: req.body.original_email,
+      subject: 'セキュリティーに関する通知（行先管理システム）',
+      text: '株式会社エム・エス・アイ　'+ req.body.userinfo_name +'様\r\n\r\nあなたのパスワードが変更されました。\r\n本人による操作でない場合は、アカウントが不正利用された可能性があります。\r\n\r\n操作の時刻：' + formatted,
+    }, function(err, reply) {
+      console.log(err && err.stack);
+      console.dir(reply);
+    });
   }
 
   new Userdata({ id: req.session.login.id })
@@ -800,6 +833,21 @@ router.post("/newuserinfo", (req, res, next) => {
       console.log("更新完了 >> ログアウトします。");
     });
 });
+
+//メール
+router.post("/mail", (req, res, next) => {
+  var formatted = new Date().toFormat("YYYY/MM/DD HH24時MI分SS秒");
+    sendmail({
+      from: req.body.mailFrom,
+      to: req.body.mailTo,
+      subject: req.body.subject,
+      text: req.body.mail_Text + '\r\n\r\n' + formatted,
+    }, function(err, reply) {
+      console.log(err && err.stack);
+      console.dir(reply);
+    });
+    res.redirect("/");
+})
 
 //まとめ編集
 router.post("/editing", (req, res, next) => {

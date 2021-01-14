@@ -38,10 +38,40 @@
         
                     <button type="submit" class="float">ログイン</button>
                 </form>
+                <a id="password_forget">パスワードをリセット</a>
             </div>
         </div>
 
     </div>
+
+    <!-- モーダル部分　パスワード忘れ用モダール -->
+	<div class="reset-modal-wrapper" id="reset-modal">
+		<div class="modal_reset">
+			<div id="close-modal-reset">
+			  <i class="fa fa-2x fa-times"></i>
+			</div>
+			<div id="reset-form">
+			  <h2>パスワードをリセット</h2>
+			  <form name="form_reset" method="POST" action="/reset">
+				<input name="name_reset" id="name_reset" class="form-control" type="text" placeholder="リセットしたいアカウント名">
+				<a href="javascript:form_reset.submit()" id="btn_reset">確定</a>
+			  </form>
+			</div>
+		</div>
+	</div>
+    <!-- モーダルここまで　パスワード忘れ用モダール -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function() {
+        // パスワード忘れモーダル
+            $('#password_forget').click(function() {
+                $('#reset-modal').fadeIn();
+            });
+            $('#close-modal-reset').click(function() {
+                $('#reset-modal').fadeOut();
+            });
+        });
+    </script>
+    
 </body>
 </html>
