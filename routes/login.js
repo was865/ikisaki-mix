@@ -51,14 +51,14 @@ passport.use(new LocalStrategy(
             }
           }
           
-          //パスワード暗号化
-            var password_enter = password;
-            let hashed_password_enter = bcrypt.hashSync(password_enter, 10)
-            console.log("hashedパスワード：" + hashed_password_enter);
+          //パスワード暗号化解除＆照会
+            // var password_enter = password;
+            // let hashed_password_enter = bcrypt.hashSync(password_enter, 10)
+            // console.log("hashedパスワード：" + hashed_password_enter);
 
             var errMax = 5;
             var errMessage;
-            if (!bcrypt.compareSync(result.attributes.password, hashed_password_enter)) {
+            if (!bcrypt.compareSync(password, result.attributes.password)) {
               if (result.attributes.err_times < errMax -1) {
                 result.attributes.err_times ++;
                 result.save();

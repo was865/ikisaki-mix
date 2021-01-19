@@ -4,6 +4,7 @@ var moment = require("moment-timezone");
 var datautils = require("date-utils");
 const { response } = require("express");
 const sendmail = require('sendmail')();
+const bcrypt = require('bcrypt');
 
 var knex = require("knex")({
   dialect: "sqlite3",
@@ -215,6 +216,7 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
     };
   } else {
     var formatted = new Date().toFormat("YYYY/MM/DD HH24時MI分SS秒");
+    let hashed_password_adminChange = bcrypt.hashSync(req.body.password, 10);
     var rec = {
       name: req.body.name,
       department: req.body.department,
@@ -225,7 +227,7 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
       ikisaki: req.body.ikisaki,
       time: req.body.time,
       memo: req.body.memo,
-      password: req.body.password,
+      password: hashed_password_adminChange,
       admin: req.body.admin
     };
     sendmail({
@@ -284,15 +286,15 @@ router.post("/:id/delete", isAuthenticated, function(req, res, next) {
 
 router.post("/:id/unlock", isAuthenticated, function(req, res, next) {
 
-  if (req.user == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
 
   new Userdata()
     .where("id", "=", req.body.id)

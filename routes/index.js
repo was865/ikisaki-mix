@@ -8,6 +8,7 @@ const { get } = require("./login");
 const sendmail = require('sendmail')();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
 
 var db = new sqlite3.Database("ikisaki.sqlite3");
 
@@ -434,11 +435,13 @@ router.post("/add", isAuthenticated, (req, res, next) => {
     req.body.information == '／';
   }
 
+  const password_new_1 = 1;
+  let hashed_password_new_1 = bcrypt.hashSync(password_new_1, 10);
   var rec = {
     department: req.body.department,
     admin: 0,
     name: req.body.name,
-    password: 1,
+    password: hashed_password_new_1,
     information: req.body.information,
     status: req.body.status,
     ikisaki: req.body.ikisaki,
@@ -468,6 +471,7 @@ router.post("/newuser", isAuthenticated, (req, res, next) => {
     req.body.information == '／';
   }
 
+  let hashed_password_new = bcrypt.hashSync(req.body.password, 10);
   if (req.body.position.length) {
     var rec = {
       department: req.body.department,
@@ -476,7 +480,7 @@ router.post("/newuser", isAuthenticated, (req, res, next) => {
       position: req.body.position,
       information: req.body.information,
       email: req.body.email,
-      password: req.body.password
+      password: hashed_password_new
     };
   } else {
     var rec = {
@@ -485,7 +489,7 @@ router.post("/newuser", isAuthenticated, (req, res, next) => {
       name: req.body.name,
       information: req.body.information,
       email: req.body.email,
-      password: req.body.password
+      password: hashed_password_new
     };
   }
 
@@ -656,7 +660,7 @@ router.post("/newshanai", isAuthenticated, (req, res, next) => {
   //   res.render("login", data);
   //   return;
   // }
-  console.log("req.body" + req.body);
+
   db.serialize(() => {
     var cnt_shanai = req.body.cnt_shanai;
     console.log("更新回数は：「" + cnt_shanai + "+1」");
@@ -765,8 +769,6 @@ router.post("/newuserinfo", isAuthenticated, (req, res, next) => {
   //   res.render("login", data);
   //   return;
   // }
-  
-  console.log("req.body" + req.body);
 
   if (req.body.userinfo_information == '') {
     req.body.userinfo_information == '／';
@@ -803,13 +805,14 @@ router.post("/newuserinfo", isAuthenticated, (req, res, next) => {
       });
    }
   } else {
+    let hashed_password_change = bcrypt.hashSync(req.body.userinfo_newpassword, 10);
     var rec = {
       name: req.body.userinfo_name,
       department: req.body.userinfo_department,
       position: req.body.userinfo_position,
       information: req.body.userinfo_information,
       email: req.body.userinfo_email,
-      password: req.body.userinfo_newpassword
+      password: hashed_password_change
     }
     sendmail({
       from: 'a-ou@msi-net.co.jp',
@@ -871,7 +874,6 @@ router.post("/editing", isAuthenticated, (req, res, next) => {
   //   res.render("login", data);
   //   return;
   // }
-  console.log("req.body" + req.body);
 
   for (var i = 0; i < req.body.editing_id.length; i++) {
     if (req.body.ikisaki == undefined || req.body.ikisaki.length == 0) {
