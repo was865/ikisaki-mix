@@ -118,22 +118,36 @@ function getMsg() {
   return datacontact;
 }
 
-//SQL router.GETはここから
-router.get("/", function(req, res, next) {
-
-  if (req.session.login == null) {
+function isAuthenticated(req, res, next){
+  if (req.isAuthenticated()) {  // 認証済
+    return next();
+  }
+  else {  // 認証されていない
     var data = {
       title: "login",
       form: { name: "", password: "" },
-      content: "<p class='error login_info'>ログインしてください。</p>"
+      content: "<p class='error login_info'>ログインし直てください。</p>"
     };
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
-    res.render("login", data);
+    res.render("login", data);  // ログイン画面に遷移
   }
+}
+
+//SQL router.GETはここから
+router.get("/", isAuthenticated, function(req, res, next) {
+
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>ログインしてください。</p>"
+  //   };
+  //   getStatus();
+  //   getKyakusaki();
+  //   getShanai();
+  //   getMsg();
+  //   getDepartment();
+  //   res.render("login", data);
+  // }
 
   getStatus();
   getKyakusaki();
@@ -190,7 +204,7 @@ router.get("/", function(req, res, next) {
       usertableMap: usertableMap,
       maxUpdatetime_display: maxUpdatetime_display,
       maxUpdatetime_display_fromNow: maxUpdatetime_display_fromNow,
-      login: req.session.login
+      login: req.user
     };
 
     res.render("table", data);
@@ -198,17 +212,17 @@ router.get("/", function(req, res, next) {
 });
 
 // updateはここから
-router.post("/update", function(req, res, next) {
+router.post("/update", isAuthenticated, function(req, res, next) {
   console.log("update開始しました。");
   console.log(req.body);
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>ログインしてください。</p>"
-    };
-    res.render("login", data);
-  }
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  // }
 
   if (
     req.body.status == "" ||
@@ -277,15 +291,15 @@ router.post("/update", function(req, res, next) {
 });
 
 // msgはここから
-router.post("/contact", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>ログインしてください。</p>"
-    };
-    res.render("login", data);
-  }
+router.post("/contact", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  // }
 
   console.log("req.body = " + req.body.msg);
   var rec = {
@@ -299,15 +313,15 @@ router.post("/contact", (req, res, next) => {
 });
 
 //position変更はここから
-router.post("/positionSet", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>ログインしてください。</p>"
-    };
-    res.render("login", data);
-  }
+router.post("/positionSet", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  // }
 
   console.log("req.body.setting_id1_submit= " + req.body.setting_id1_submit);
   console.log("req.body.setting_id2_submit= " + req.body.setting_id2_submit);

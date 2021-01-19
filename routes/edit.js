@@ -100,21 +100,35 @@ function getShanai() {
   return datashanai;
 }
 
-/* GET page. */
-router.get("/:id", function(req, res, next) {
-  if (req.session.login == null) {
+function isAuthenticated(req, res, next){
+  if (req.isAuthenticated()) {  // 認証済
+    return next();
+  }
+  else {  // 認証されていない
     var data = {
       title: "login",
       form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+      content: "<p class='error login_info'>ログインし直てください。</p>"
     };
-    res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getDepartment();
-    return;
+    res.render("login", data);  // ログイン画面に遷移
   }
+}
+
+/* GET page. */
+router.get("/:id", isAuthenticated, function(req, res, next) {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   getStatus();
+  //   getKyakusaki();
+  //   getShanai();
+  //   getDepartment();
+  //   return;
+  // }
 
   getStatus();
   getKyakusaki();
@@ -132,7 +146,7 @@ router.get("/:id", function(req, res, next) {
       var data = {
         title: "行先情報",
         subtitle: "編集...",
-        login: req.session.login,
+        login: req.user,
         greeting: "前回のアップデート: " + dstr,
         content: collection.attributes,
         datastatus: datastatus,
@@ -147,20 +161,20 @@ router.get("/:id", function(req, res, next) {
     });
 });
 
-router.post("/:id", function(req, res, next) {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getDepartment();
-    return;
-  }
+router.post("/:id", isAuthenticated, function(req, res, next) {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   getStatus();
+  //   getKyakusaki();
+  //   getShanai();
+  //   getDepartment();
+  //   return;
+  // }
 
   getStatus();
   getKyakusaki();
@@ -238,23 +252,23 @@ router.post("/:id", function(req, res, next) {
       datakyakusaki: datakyakusaki,
       datashanai: datashanai,
       datadepartment: datadepartment,
-      login: req.session.login
+      login: req.user
     };
     res.render("edit", data);
   });
 });
 
-router.post("/:id/delete", function(req, res, next) {
+router.post("/:id/delete", isAuthenticated, function(req, res, next) {
 
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
 
   new Userdata()
     .where("id", "=", req.body.id)
@@ -265,11 +279,12 @@ router.post("/:id/delete", function(req, res, next) {
     .then(result => {
       res.redirect("/");
     });
+
 });
 
-router.post("/:id/unlock", function(req, res, next) {
+router.post("/:id/unlock", isAuthenticated, function(req, res, next) {
 
-  if (req.session.login == null) {
+  if (req.user == null) {
     var data = {
       title: "login",
       form: { name: "", password: "" },

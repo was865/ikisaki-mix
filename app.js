@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var validator = require('express-validator');
 var jquery = require('express-jquery');
+var local = require('passport-local');
+var passport = require('passport');
 
 var index = require('./routes/index');
 var table = require('./routes/table');
@@ -38,6 +40,8 @@ var session_opt = {
   cookie: { maxAge: 60 * 60 *1000 }
 };
 app.use(session(session_opt));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/edit', edit);
 app.use('/login', login);

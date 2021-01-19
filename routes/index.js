@@ -6,6 +6,8 @@ var datautils = require("date-utils");
 const { response } = require("express");
 const { get } = require("./login");
 const sendmail = require('sendmail')();
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 var db = new sqlite3.Database("ikisaki.sqlite3");
 
@@ -120,35 +122,50 @@ function getMsg() {
   return datacontact;
 }
 
+function isAuthenticated(req, res, next){
+  if (req.isAuthenticated()) {  // 認証済
+    return next();
+  }
+  else {  // 認証されていない
+    var data = {
+      title: "login",
+      form: { name: "", password: "" },
+      content: "<p class='error login_info'>ログインし直てください。</p>"
+    };
+    res.render("login", data);  // ログイン画面に遷移
+  }
+}
+
 //SQL router.GETはここから
-router.get("/", function(req, res, next) {
+router.get("/", isAuthenticated, function(req, res, next) {
+  
   getStatus();
   getKyakusaki();
   getShanai();
   getMsg();
   getDepartment();
 
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>ログインしてください。</p>"
-    };
-    res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
-    return;
-  }
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   getStatus();
+  //   getKyakusaki();
+  //   getShanai();
+  //   getMsg();
+  //   getDepartment();
+  //   return;
+  // }
 
-  // if (req.session.login == null) {
+  // if (req.user == null) {
   //   res.redirect("/login");
   // }
 
   var usertabledata = new Array();
-  var login = req.session.login;
+  var login = req.user;
 
   var sql =
     'SELECT * , CASE WHEN department = "' +
@@ -182,7 +199,7 @@ router.get("/", function(req, res, next) {
     var data = {
       title: "行先情報一覧",
       finding: "名前または部署名などを入力",
-      login: req.session.login,
+      login: req.user,
       usertabledata: usertabledata,
       datastatus: datastatus,
       datakyakusaki: datakyakusaki,
@@ -232,7 +249,7 @@ router.get("/", function(req, res, next) {
   //           var data = {
   //             title: '行先情報一覧',
   //             finding : '名前または部署名などを入力',
-  //             login: req.session.login,
+  //             login: req.user,
   //             usertabledata: usertabledata,
   //             datastatus: datastatus,
   //             datakyakusaki: datakyakusaki,
@@ -257,7 +274,7 @@ router.get("/", function(req, res, next) {
 //Bookshelf router.getはここから
 // router.get('/', function(req, res, next) {
 
-  // if (req.session.login == null) {
+  // if (req.user == null) {
   //   var data = {
   //     title: "login",
   //     form: { name: "", password: "" },
@@ -306,7 +323,7 @@ router.get("/", function(req, res, next) {
 //         var data = {
 //             title: '行先情報一覧',
 //             finding : '名前または部署名などを入力',
-//             login: req.session.login,
+//             login: req.user,
 //             usertabledata: usertabledata,
 //             datastatus: datastatus,
 //             datakyakusaki: datakyakusaki,
@@ -323,33 +340,27 @@ router.get("/", function(req, res, next) {
 //Bookshelf router.getはここまで
 
 //検索バー
-router.post("/", (req, res, next) => {
+router.post("/", isAuthenticated, (req, res, next) => {
 
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    getStatus();
-    getKyakusaki();
-    getShanai();
-    getMsg();
-    getDepartment();
-    return;
-  }
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   getStatus();
+  //   getKyakusaki();
+  //   getShanai();
+  //   getMsg();
+  //   getDepartment();
+  //   return;
+  // }
 
   if (req.body.find == "") {
     res.redirect("/");
     return;
   }
-
-  getStatus();
-  getKyakusaki();
-  getShanai();
-  getMsg();
-  getDepartment();
 
   var usertabledata = new Array();
   var find_content = req.body.find;
@@ -397,7 +408,7 @@ router.post("/", (req, res, next) => {
         datastatus: datastatus,
         datakyakusaki: datakyakusaki,
         datashanai: datashanai,
-        login: req.session.login,
+        login: req.user,
         msg: datacontact
       };
       res.render("index", data);
@@ -408,16 +419,16 @@ router.post("/", (req, res, next) => {
 });
 
 //テーブル社員新規
-router.post("/add", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
+router.post("/add", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
 
   if (req.body.information == '') {
     req.body.information == '／';
@@ -442,16 +453,16 @@ router.post("/add", (req, res, next) => {
 });
 
 //モーダル社員新規
-router.post("/newuser", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
+router.post("/newuser", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
 
   if (req.body.information == '') {
     req.body.information == '／';
@@ -486,16 +497,16 @@ router.post("/newuser", (req, res, next) => {
 
 // test SQL
 //客先変更
-router.post("/newkyakusaki", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
+router.post("/newkyakusaki", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
 
   console.log(req.body);
   db.serialize(() => {
@@ -559,18 +570,18 @@ router.post("/newkyakusaki", (req, res, next) => {
 });
 
 //部署変更
-router.post("/newdepartment", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
+router.post("/newdepartment", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
 
-  console.log(req.body);
+  console.log("req.body" + req.body);
   db.serialize(() => {
     var cnt = req.body.cnt;
     console.log("更新回数は：「 " + cnt + "+1 」回");
@@ -635,17 +646,17 @@ router.post("/newdepartment", (req, res, next) => {
 });
 
 //社内ポジション変更
-router.post("/newshanai", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
-  console.log(req.body);
+router.post("/newshanai", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
+  console.log("req.body" + req.body);
   db.serialize(() => {
     var cnt_shanai = req.body.cnt_shanai;
     console.log("更新回数は：「" + cnt_shanai + "+1」");
@@ -743,19 +754,19 @@ router.post("/newshanai", (req, res, next) => {
 // });
 
 //基本情報変更
-router.post("/newuserinfo", (req, res, next) => {
+router.post("/newuserinfo", isAuthenticated, (req, res, next) => {
 
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
   
-  console.log(req.body);
+  console.log("req.body" + req.body);
 
   if (req.body.userinfo_information == '') {
     req.body.userinfo_information == '／';
@@ -811,11 +822,11 @@ router.post("/newuserinfo", (req, res, next) => {
     });
   }
 
-  new Userdata({ id: req.session.login.id })
+  new Userdata({ id: req.user.id })
     .save(rec, { patch: true })
     .then(result => {
       console.log(
-        req.session.login.name +
+        req.user.name +
           "の基本情報を更新しました：名前：" +
           req.body.userinfo_name +
           "; 部署：" +
@@ -835,7 +846,7 @@ router.post("/newuserinfo", (req, res, next) => {
 });
 
 //メール
-router.post("/mail", (req, res, next) => {
+router.post("/mail", isAuthenticated, (req, res, next) => {
   var formatted = new Date().toFormat("YYYY/MM/DD HH24時MI分SS秒");
     sendmail({
       from: req.body.mailFrom,
@@ -850,17 +861,17 @@ router.post("/mail", (req, res, next) => {
 })
 
 //まとめ編集
-router.post("/editing", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
-  console.log(req.body);
+router.post("/editing", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
+  console.log("req.body" + req.body);
 
   for (var i = 0; i < req.body.editing_id.length; i++) {
     if (req.body.ikisaki == undefined || req.body.ikisaki.length == 0) {
@@ -886,20 +897,21 @@ router.post("/editing", (req, res, next) => {
 });
 
 router.get("/logout", function(req, res) {
-  req.session.login = null;
+  // req.user = null;
+  req.logout();
   res.redirect("/login");
 });
 
-router.post("/contact", (req, res, next) => {
-  if (req.session.login == null) {
-    var data = {
-      title: "login",
-      form: { name: "", password: "" },
-      content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-    };
-    res.render("login", data);
-    return;
-  }
+router.post("/contact", isAuthenticated, (req, res, next) => {
+  // if (req.user == null) {
+  //   var data = {
+  //     title: "login",
+  //     form: { name: "", password: "" },
+  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
+  //   };
+  //   res.render("login", data);
+  //   return;
+  // }
 
   console.log("req.body = " + req.body.msg);
   var rec = {

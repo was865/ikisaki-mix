@@ -28,7 +28,7 @@
           
                     <div class="input-group input-group-lg">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                    <input type="text" class="form-control" placeholder="名前" value="<%= form.name %>" name="login_nm">
+                    <input type="text" class="form-control" placeholder="名前" value="<%= form.username %>" name="username">
                     </div>
             
                     <div class="input-group input-group-lg">
@@ -53,7 +53,7 @@
 			<div id="reset-form">
 			  <h2>パスワードをリセット</h2>
 			  <form name="form_reset" method="POST" action="/reset">
-				<input name="name_reset" id="name_reset" class="form-control" type="text" placeholder="リセットしたいアカウント名">
+				<input name="name_reset" id="name_reset" class="form-control" type="text" placeholder="リセットしたいユーザー名">
 				<a href="javascript:form_reset.submit()" id="btn_reset">確定</a>
 			  </form>
 			</div>
