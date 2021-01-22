@@ -1346,7 +1346,7 @@
 <script>
 	$(function() {
 
-		if ('<%= login.admin %>' != 1){
+		if ('<%= req_user.admin %>' != 1){
 			$('.admin_only').remove();
 		}
 		// $('.seatspan').each(function() {
@@ -1376,7 +1376,7 @@
 			$('#u795-4').show();
 			$('#status').show();
 
-			if ($(this).hasClass('editing-group')){
+			if ($(this).hasClass('editing-group')){  //Clicked状態が解除されたら
 				$(this).removeClass('editing-group').css('color', '');
 				
 				var editingNames_remove_index = editingNames.indexOf($(this).children('.p_name').text());
@@ -1386,7 +1386,7 @@
 
 				lastClicked_editingName = editingNames[editingNames.length - 1];
 
-				$('.append_area').remove();
+				$('.append_area').remove();  //upload用エリアをリセット
 				$('.editing-group').each(function(){
 					$('#form_update').append('<div class="append_area"><input name="name" type="hidden" value="' + $(this).children('.p_name').text() + '">' + '<input name="id" type="hidden" value="' + $(this).children().children('.p_id').text() + '"></div>');
 					if ($(this).children('.p_name').text() == lastClicked_editingName){
@@ -1409,7 +1409,7 @@
 				}
 				
 				if ($('.editing-group').length > 0) {
-					$('#u793 p').text(lastClicked_editingGroup.children().children('.p_information').text());
+					$('#u793 p').text(lastClicked_editingGroup.children().children('.p_information').text()); //表示を直前にクリックした者に戻す
 					$('#u770 select').val(lastClicked_editingGroup.children().children('.p_status').text());
 					switch ($('#u770 select').val()) {
 						case '休暇':

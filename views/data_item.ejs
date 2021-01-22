@@ -9,7 +9,7 @@
                <% } %>
           </td>
           <td class="table_name" style="font-family: ＭＳ 明朝;"><span class="name"
-               <% if (login.admin == 1 && usertabledata.err_times >= 5) { %> style="color: red;" <% } %>><%= usertabledata.name %></span>
+               <% if (req_user.admin == 1 && usertabledata.err_times >= 5) { %> style="color: red;" <% } %>><%= usertabledata.name %></span>
             <% if (usertabledata.email != ''){ %>
                 <span class="mailto"><a class="sentMail"><i class="far fa-envelope"></i></a><p style="display: none;"><%= usertabledata.email %></p></span><p class="tooltip">送信先：<br><%= usertabledata.email %></p><span style="display: none;" class="id"><%= usertabledata.id %></span>
             <% } %>

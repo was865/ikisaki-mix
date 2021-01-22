@@ -4,6 +4,8 @@ var moment = require("moment-timezone");
 var datautils = require("date-utils");
 const { response } = require("express");
 const sendmail = require('sendmail')();
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 
 var knex = require("knex")({
@@ -18,7 +20,14 @@ var Bookshelf = require("bookshelf")(knex);
 
 var Userdata = Bookshelf.Model.extend({
   tableName: "users",
-  hasTimestamps: true
+});
+
+var UserStatusData = Bookshelf.Model.extend({
+  tableName: "users_status",
+  hasTimestamps: true,
+  user: function() {
+    return this.belongsTo(Userdata);
+  }
 });
 
 var statusdata = Bookshelf.Model.extend({
@@ -117,28 +126,18 @@ function isAuthenticated(req, res, next){
 
 /* GET page. */
 router.get("/:id", isAuthenticated, function(req, res, next) {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   getStatus();
-  //   getKyakusaki();
-  //   getShanai();
-  //   getDepartment();
-  //   return;
-  // }
 
   getStatus();
   getKyakusaki();
   getShanai();
   getDepartment();
 
-  new Userdata()
-    .where("id", "=", req.params.id)
-    .fetch()
+  var login = req.session.login;
+  var req_user = req.user;
+
+  new UserStatusData()
+    .where("user_id", "=", req.params.id)
+    .fetch({withRelated: ["user"]})
     .then(collection => {
       var d1 = moment(new Date(collection.attributes.updated_at));
       d1.locale("ja");
@@ -147,13 +146,14 @@ router.get("/:id", isAuthenticated, function(req, res, next) {
       var data = {
         title: "行先情報",
         subtitle: "編集...",
-        login: req.user,
         greeting: "前回のアップデート: " + dstr,
-        content: collection.attributes,
+        content: collection,
         datastatus: datastatus,
         datakyakusaki: datakyakusaki,
         datashanai: datashanai,
-        datadepartment: datadepartment
+        datadepartment: datadepartment,
+        login: login,
+        req_user: req_user,
       };
       res.render("edit", data);
     })
@@ -163,24 +163,14 @@ router.get("/:id", isAuthenticated, function(req, res, next) {
 });
 
 router.post("/:id", isAuthenticated, function(req, res, next) {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   getStatus();
-  //   getKyakusaki();
-  //   getShanai();
-  //   getDepartment();
-  //   return;
-  // }
 
   getStatus();
   getKyakusaki();
   getShanai();
   getDepartment();
+
+  var login = req.session.login;
+  var req_user = req.user;
 
   if (
     req.body.status == "" ||
@@ -199,10 +189,14 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
     req.body.time = "／";
   }
 
-  console.log("管理者権限" + req.body.admin);
+  console.log("req.body.admin：" + req.body.admin);
 
   if (req.body.password == undefined || req.body.password == '') {
-    var rec = {
+    var rec_Userdata = {
+      username: req.body.name,
+      admin: req.body.admin
+    };
+    var rec_UserStatusData = {
       name: req.body.name,
       department: req.body.department,
       position: req.body.position,
@@ -212,12 +206,16 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
       ikisaki: req.body.ikisaki,
       time: req.body.time,
       memo: req.body.memo,
-      admin: req.body.admin
     };
   } else {
     var formatted = new Date().toFormat("YYYY/MM/DD HH24時MI分SS秒");
     let hashed_password_adminChange = bcrypt.hashSync(req.body.password, 10);
-    var rec = {
+    var rec_Userdata = {
+      username: req.body.name,
+      admin: req.body.admin,
+      password: hashed_password_adminChange
+    };
+    var rec_UserStatusData = {
       name: req.body.name,
       department: req.body.department,
       position: req.body.position,
@@ -227,8 +225,6 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
       ikisaki: req.body.ikisaki,
       time: req.body.time,
       memo: req.body.memo,
-      password: hashed_password_adminChange,
-      admin: req.body.admin
     };
     sendmail({
       from: 'a-ou@msi-net.co.jp',
@@ -242,59 +238,54 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
     console.log("パスワードを変更しました。");
   }
 
-  new Userdata({ id: req.body.id }).save(rec).then(model => {
-    var d2 = new Date(model.attributes.updated_at);
-    var dstr = d2.toFormat("YYYY年M月D日 HH24時MI分SS秒");
-    var data = {
-      title: "行先情報",
-      subtitle: "編集済み。",
-      greeting: dstr + "に更新。",
-      content: model.attributes,
-      datastatus: datastatus,
-      datakyakusaki: datakyakusaki,
-      datashanai: datashanai,
-      datadepartment: datadepartment,
-      login: req.user
-    };
-    res.render("edit", data);
-  });
+  new Userdata({ id: req.body.id })
+    .save(rec_Userdata, { patch: true })
+    .then(user => {
+      return new UserStatusData().where("user_id","=", user.id)
+        .save(rec_UserStatusData, { patch: true })
+      })
+    .then(status => {
+      return new UserStatusData().where("user_id","=", req.body.id)
+        .fetch({withRelated: ["user"]})
+      })
+    .then(statusData => {
+      var d2 = new Date(statusData.attributes.updated_at);
+      var dstr = d2.toFormat("YYYY年M月D日 HH24時MI分SS秒");
+      var data = {
+        title: "行先情報",
+        subtitle: "編集済み。",
+        greeting: dstr + "に更新。",
+        content: statusData,
+        datastatus: datastatus,
+        datakyakusaki: datakyakusaki,
+        datashanai: datashanai,
+        datadepartment: datadepartment,
+        login: login,
+        req_user: req_user
+      };
+      res.render("edit", data);
+    });
 });
 
 router.post("/:id/delete", isAuthenticated, function(req, res, next) {
 
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
-
   new Userdata()
     .where("id", "=", req.body.id)
     .fetch()
-    .then(record => {
-      record.destroy();
+    .then(record_user => {
+      record_user.destroy();
     })
     .then(result => {
-      res.redirect("/");
+      return new UserStatusData().where("user_id","=", req.body.id)
+      .fetch()
+      .then(record_status => {
+        record_status.destroy();
+        res.redirect("/");
+      })
     });
-
 });
 
 router.post("/:id/unlock", isAuthenticated, function(req, res, next) {
-
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
 
   new Userdata()
     .where("id", "=", req.body.id)

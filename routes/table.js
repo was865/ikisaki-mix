@@ -4,6 +4,10 @@ var sqlite3 = require("sqlite3");
 var moment = require("moment-timezone");
 var datautils = require("date-utils");
 const { response } = require("express");
+const sendmail = require('sendmail')();
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
 
 var db = new sqlite3.Database("ikisaki.sqlite3");
 
@@ -18,8 +22,15 @@ var knex = require("knex")({
 var Bookshelf = require("bookshelf")(knex);
 
 var Userdata = Bookshelf.Model.extend({
-  tableName: "users",
-  hasTimestamps: true
+  tableName: "users"
+});
+
+var UserStatusData = Bookshelf.Model.extend({
+  tableName: "users_status",
+  hasTimestamps: true,
+  user: function() {
+    return this.belongsTo(Userdata);
+  }
 });
 
 var statusdata = Bookshelf.Model.extend({
@@ -135,31 +146,20 @@ function isAuthenticated(req, res, next){
 //SQL router.GETはここから
 router.get("/", isAuthenticated, function(req, res, next) {
 
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>ログインしてください。</p>"
-  //   };
-  //   getStatus();
-  //   getKyakusaki();
-  //   getShanai();
-  //   getMsg();
-  //   getDepartment();
-  //   res.render("login", data);
-  // }
-
   getStatus();
   getKyakusaki();
   getShanai();
   getMsg();
   getDepartment();
+
+  var login = req.session.login;
+  var req_user = req.user;
  
   var usertabledata = new Array();
   var usertableMap = new Map();
   var updatedTimes = new Array();
 
-  new Userdata().fetchAll().then((collection) => {
+  new UserStatusData().fetchAll().then((collection) => {
     var content = collection.toArray();
     content.forEach(element => {
 
@@ -171,7 +171,7 @@ router.get("/", isAuthenticated, function(req, res, next) {
       updatedTimes.push(element.attributes.updated_at);
 
       usertabledata.push({
-        id: element.attributes.id,
+        id: element.attributes.user_id,
         name: element.attributes.name,
         information: element.attributes.information,
         department: element.attributes.department,
@@ -204,7 +204,8 @@ router.get("/", isAuthenticated, function(req, res, next) {
       usertableMap: usertableMap,
       maxUpdatetime_display: maxUpdatetime_display,
       maxUpdatetime_display_fromNow: maxUpdatetime_display_fromNow,
-      login: req.user
+      login: login,
+      req_user: req_user
     };
 
     res.render("table", data);
@@ -213,16 +214,9 @@ router.get("/", isAuthenticated, function(req, res, next) {
 
 // updateはここから
 router.post("/update", isAuthenticated, function(req, res, next) {
+
   console.log("update開始しました。");
   console.log(req.body);
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  // }
 
   if (
     req.body.status == "" ||
@@ -261,8 +255,8 @@ router.post("/update", isAuthenticated, function(req, res, next) {
       };
       
       console.log("req.body.id[" + i + "] : " + req.body.id[i]);
-      
-      new Userdata({ id: req.body.id[i] })
+
+      new UserStatusData().where("user_id","=", req.body.id[i])
         .save(rec, { patch: true })
         .then(result => {
           console.log("Array更新完了しました。");
@@ -280,26 +274,17 @@ router.post("/update", isAuthenticated, function(req, res, next) {
     
     console.log("req.body.id: " + req.body.id);
     
-    new Userdata({ id: req.body.id })
-      .save(rec, { patch: true })
-      .then(result => {
-        console.log("単項目更新完了しました。");
-        res.redirect("/table");
-      });
+    new UserStatusData().where("user_id","=", req.body.id)
+        .save(rec, { patch: true })
+        .then(result => {
+          console.log("単項目更新完了しました。");
+        });
   }
 
 });
 
 // msgはここから
 router.post("/contact", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  // }
 
   console.log("req.body = " + req.body.msg);
   var rec = {
@@ -314,14 +299,6 @@ router.post("/contact", isAuthenticated, (req, res, next) => {
 
 //position変更はここから
 router.post("/positionSet", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  // }
 
   console.log("req.body.setting_id1_submit= " + req.body.setting_id1_submit);
   console.log("req.body.setting_id2_submit= " + req.body.setting_id2_submit);
@@ -332,7 +309,7 @@ router.post("/positionSet", isAuthenticated, (req, res, next) => {
     var rec1 = {
       position: req.body.setting_position2_submit
     };
-    new Userdata({ id: req.body.setting_id1_submit }).save(rec1, { patch: true }).then(result => {
+    new UserStatusData().where("user_id","=", req.body.setting_id1_submit).save(rec1, { patch: true }).then(result => {
       console.log("REC1を更新しました。");
     });
   }
@@ -341,7 +318,7 @@ router.post("/positionSet", isAuthenticated, (req, res, next) => {
     var rec2 = {
       position: req.body.setting_position1_submit
     };
-    new Userdata({ id: req.body.setting_id2_submit }).save(rec2, { patch: true }).then(result => {
+    new UserStatusData().where("user_id","=", req.body.setting_id2_submit).save(rec2, { patch: true }).then(result => {
       console.log("REC2を更新しました。");
     });
   }

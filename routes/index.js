@@ -24,8 +24,16 @@ var Bookshelf = require("bookshelf")(knex);
 
 var Userdata = Bookshelf.Model.extend({
   tableName: "users",
-  hasTimestamps: true
 });
+
+var UserStatusData = Bookshelf.Model.extend({
+  tableName: "users_status",
+  hasTimestamps: true,
+  user: function() {
+    return this.belongsTo(Userdata);
+  }
+});
+
 
 var statusdata = Bookshelf.Model.extend({
   tableName: "status_list"
@@ -146,34 +154,16 @@ router.get("/", isAuthenticated, function(req, res, next) {
   getMsg();
   getDepartment();
 
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   getStatus();
-  //   getKyakusaki();
-  //   getShanai();
-  //   getMsg();
-  //   getDepartment();
-  //   return;
-  // }
-
-  // if (req.user == null) {
-  //   res.redirect("/login");
-  // }
-
   var usertabledata = new Array();
-  var login = req.user;
+  var login = req.session.login;
+  var req_user = req.user;
 
   var sql =
     'SELECT * , CASE WHEN department = "' +
     login.department +
     '" THEN "AA" ELSE department END as sort1, CASE WHEN name = "' +
     login.name +
-    '" THEN "00" ELSE name END as sort2 FROM users ORDER BY sort1,sort2 ASC;';
+    '" THEN "00" ELSE name END as sort2 FROM users_status JOIN users ON users_status.user_id = users.id ORDER BY sort1,sort2 ASC;';
 
   Bookshelf.knex.raw(sql).then(collection => {
     collection.forEach(element => {
@@ -200,7 +190,8 @@ router.get("/", isAuthenticated, function(req, res, next) {
     var data = {
       title: "行先情報一覧",
       finding: "名前または部署名などを入力",
-      login: req.user,
+      login: login,
+      req_user: req_user,
       usertabledata: usertabledata,
       datastatus: datastatus,
       datakyakusaki: datakyakusaki,
@@ -343,21 +334,9 @@ router.get("/", isAuthenticated, function(req, res, next) {
 //検索バー
 router.post("/", isAuthenticated, (req, res, next) => {
 
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   getStatus();
-  //   getKyakusaki();
-  //   getShanai();
-  //   getMsg();
-  //   getDepartment();
-  //   return;
-  // }
-
+  var login = req.session.login;
+  var req_user = req.user;
+  
   if (req.body.find == "") {
     res.redirect("/");
     return;
@@ -365,7 +344,7 @@ router.post("/", isAuthenticated, (req, res, next) => {
 
   var usertabledata = new Array();
   var find_content = req.body.find;
-  new Userdata()
+  new UserStatusData()
     .orderBy("created_at", "DESC")
     .query(function(find) {
       find
@@ -388,7 +367,7 @@ router.post("/", isAuthenticated, (req, res, next) => {
         var dstr = d1.fromNow();
 
         usertabledata.push({
-          id: element.attributes.id,
+          id: element.attributes.user_id,
           name: element.attributes.name,
           information: element.attributes.information,
           department: element.attributes.department,
@@ -409,7 +388,8 @@ router.post("/", isAuthenticated, (req, res, next) => {
         datastatus: datastatus,
         datakyakusaki: datakyakusaki,
         datashanai: datashanai,
-        login: req.user,
+        login: login,
+        req_user: req_user,
         msg: datacontact
       };
       res.render("index", data);
@@ -421,51 +401,30 @@ router.post("/", isAuthenticated, (req, res, next) => {
 
 //テーブル社員新規
 router.post("/add", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
 
   if (req.body.information == '') {
     req.body.information == '／';
   }
 
-  const password_new_1 = 1;
-  let hashed_password_new_1 = bcrypt.hashSync(password_new_1, 10);
   var rec = {
     department: req.body.department,
-    admin: 0,
     name: req.body.name,
-    password: hashed_password_new_1,
     information: req.body.information,
     status: req.body.status,
     ikisaki: req.body.ikisaki,
     time: req.body.time,
     memo: req.body.memo
   };
-  console.log("新規登録レコード" + rec);
 
-  new Userdata(rec).save().then(model => {
+  console.log("新規登録レコード(未登録ユーザー)" + rec);
+
+  new UserStatusData(rec).save().then(model => {
     res.redirect("/");
   });
 });
 
 //モーダル社員新規
 router.post("/newuser", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
 
   if (req.body.information == '') {
     req.body.information == '／';
@@ -473,46 +432,47 @@ router.post("/newuser", isAuthenticated, (req, res, next) => {
 
   let hashed_password_new = bcrypt.hashSync(req.body.password, 10);
   if (req.body.position.length) {
-    var rec = {
-      department: req.body.department,
+    var rec_Userdata = {
+      username: req.body.name,
       admin: req.body.newadmin_check_body,
+      password: hashed_password_new,
+      err_times: 0
+    };
+    var rec_UserStatusData = {
       name: req.body.name,
+      department: req.body.department,
       position: req.body.position,
       information: req.body.information,
       email: req.body.email,
-      password: hashed_password_new
-    };
+    }
   } else {
-    var rec = {
-      department: req.body.department,
+    var rec_Userdata = {
+      username: req.body.name,
       admin: req.body.newadmin_check_body,
+      password: hashed_password_new,
+      err_times: 0
+    };
+    var rec_UserStatusData = {
       name: req.body.name,
+      department: req.body.department,
       information: req.body.information,
       email: req.body.email,
-      password: hashed_password_new
-    };
+    }
   }
 
-
-  new Userdata(rec).save().then(model => {
-    res.redirect("/");
+  new Userdata(rec_Userdata).save().then(user => {
+    rec_UserStatusData.user_id = user.id;
+    return new UserStatusData(rec_UserStatusData).save()
+    .then(status => {
+      res.redirect("/");
+    })
   });
 });
 
 // test SQL
 //客先変更
 router.post("/newkyakusaki", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
 
-  console.log(req.body);
   db.serialize(() => {
     var cnt = req.body.cnt;
     console.log("更新回数は：「 " + cnt + "+1 」回");
@@ -575,17 +535,7 @@ router.post("/newkyakusaki", isAuthenticated, (req, res, next) => {
 
 //部署変更
 router.post("/newdepartment", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
 
-  console.log("req.body" + req.body);
   db.serialize(() => {
     var cnt = req.body.cnt;
     console.log("更新回数は：「 " + cnt + "+1 」回");
@@ -651,15 +601,6 @@ router.post("/newdepartment", isAuthenticated, (req, res, next) => {
 
 //社内ポジション変更
 router.post("/newshanai", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
 
   db.serialize(() => {
     var cnt_shanai = req.body.cnt_shanai;
@@ -760,23 +701,16 @@ router.post("/newshanai", isAuthenticated, (req, res, next) => {
 //基本情報変更
 router.post("/newuserinfo", isAuthenticated, (req, res, next) => {
 
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
-
   if (req.body.userinfo_information == '') {
     req.body.userinfo_information == '／';
   }
 
   var formatted = new Date().toFormat("YYYY/MM/DD HH24時MI分SS秒");
   if (req.body.userinfo_newpassword == ''){
-    var rec = {
+    var rec_Userdata = {
+      username: req.body.userinfo_name
+    }
+    var rec_UserStatusData = {
       name: req.body.userinfo_name,
       department: req.body.userinfo_department,
       position: req.body.userinfo_position,
@@ -806,13 +740,16 @@ router.post("/newuserinfo", isAuthenticated, (req, res, next) => {
    }
   } else {
     let hashed_password_change = bcrypt.hashSync(req.body.userinfo_newpassword, 10);
-    var rec = {
+    var rec_Userdata = {
+      username: req.body.userinfo_name,
+      password: hashed_password_change
+    }
+    var rec_UserStatusData = {
       name: req.body.userinfo_name,
       department: req.body.userinfo_department,
       position: req.body.userinfo_position,
       information: req.body.userinfo_information,
-      email: req.body.userinfo_email,
-      password: hashed_password_change
+      email: req.body.userinfo_email
     }
     sendmail({
       from: 'a-ou@msi-net.co.jp',
@@ -826,26 +763,30 @@ router.post("/newuserinfo", isAuthenticated, (req, res, next) => {
   }
 
   new Userdata({ id: req.user.id })
-    .save(rec, { patch: true })
-    .then(result => {
+    .save(rec_Userdata, { patch: true })
+    .then(user => {
+      return new UserStatusData().where("user_id","=", user.id)
+      .save(rec_UserStatusData, { patch: true })
+    })
+    .then(status => {
       console.log(
-        req.user.name +
-          "の基本情報を更新しました：名前：" +
-          req.body.userinfo_name +
-          "; 部署：" +
-          req.body.userinfo_department +
-          "; 配置：" +
-          req.body.userinfo_position +
-          "; 内線：" +
-          req.body.userinfo_information +
-          "; 新パスワード：" +
-          req.body.userinfo_newpassword +
-          "; result.attributes.name：" +
-          result.attributes.name
-      );
+      req.user.username +
+        "の基本情報を更新しました：名前：" +
+        req.body.userinfo_name +
+        "; 部署：" +
+        req.body.userinfo_department +
+        "; 配置：" +
+        req.body.userinfo_position +
+        "; 内線：" +
+        req.body.userinfo_information +
+        "; 新パスワード：" +
+        req.body.userinfo_newpassword +
+        "; status.attributes.name：" +
+        status.attributes.name
+    )
       res.redirect("/logout");
       console.log("更新完了 >> ログアウトします。");
-    });
+  })
 });
 
 //メール
@@ -865,15 +806,6 @@ router.post("/mail", isAuthenticated, (req, res, next) => {
 
 //まとめ編集
 router.post("/editing", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
 
   for (var i = 0; i < req.body.editing_id.length; i++) {
     if (req.body.ikisaki == undefined || req.body.ikisaki.length == 0) {
@@ -889,7 +821,7 @@ router.post("/editing", isAuthenticated, (req, res, next) => {
       time: req.body.time,
       memo: req.body.memo
     };
-    new Userdata({ id: req.body.editing_id[i] })
+    new UserStatusData().where("user_id","=", req.body.editing_id[i])
       .save(rec, { patch: true })
       .then(result => {
         console.log("更新しました。");
@@ -899,21 +831,11 @@ router.post("/editing", isAuthenticated, (req, res, next) => {
 });
 
 router.get("/logout", function(req, res) {
-  // req.user = null;
   req.logout();
   res.redirect("/login");
 });
 
 router.post("/contact", isAuthenticated, (req, res, next) => {
-  // if (req.user == null) {
-  //   var data = {
-  //     title: "login",
-  //     form: { name: "", password: "" },
-  //     content: "<p class='error login_info'>操作がなかったため、ログアウトされました。<br>再度ログインしてください。</p>"
-  //   };
-  //   res.render("login", data);
-  //   return;
-  // }
 
   console.log("req.body = " + req.body.msg);
   var rec = {

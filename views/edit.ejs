@@ -205,24 +205,24 @@
 
 	<!-- 編集テーブル -->
 	<div role="main" class="main_edit">
-		<form name="form_edit" method="POST" action="/edit/<%= content.id %>">
+		<form name="form_edit" method="POST" action="/edit/<%= content.attributes.user_id %>">
 			<table class="table_edit">
-				<p class="editing_name"><span>ログイン中のユーザー：<span><%= login.name %><i class="fas fa-user-shield admin_only" style="margin-left: 5px;"></i></span></span><br><%- greeting %></p>
+				<p class="editing_name"><span>ログイン中のユーザー：<span><%= req_user.username %><i class="fas fa-user-shield admin_only" style="margin-left: 5px;"></i></span></span><br><%- greeting %></p>
 				<tr><th>名前</th></tr>
-				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.name %>"><%= content.name %><span><i class="fas fa-ellipsis-h"></i></span>
-				<% if (content.err_times >= 5) { %>
+				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.attributes.name %>"><%= content.attributes.name %><span><i class="fas fa-ellipsis-h"></i></span>
+				<% if (content.relations.user.attributes.err_times >= 5) { %>
 					<a class="admin_only" href="javascript:form_unlock.submit()" id="unlock_a"><i class="fas fa-lock"></i></a><p class="admin_only" style="margin-top: 10px;font-size: 0.8em; color: rgb(255, 0, 0);">※ログインが制限されています。<br><br>制限を解除するには名前の右側にあるロックアイコンをクリックしてください。</p>
 				<% } %>
 				</td></tr>
 				<tr id="department_tr"><th style="background-color: #e7853e; border: none;">部署</th></tr>
-				<% if (login.admin != 1 || login.id == content.id ){ %>
-					<tr><td><input type="hidden" name="department" id="department" value="<%= content.department %>" >
-						<%= content.department %></td></tr>
-				<% } else if (login.id != content.id) { %>
-					<tr><td><select name="department" id="department" value="<%= content.department %>">
+				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
+					<tr><td><input type="hidden" name="department" id="department" value="<%= content.attributes.department %>" >
+						<%= content.attributes.department %></td></tr>
+				<% } else if (req_user.id != content.attributes.user_id) { %>
+					<tr><td><select name="department" id="department" value="<%= content.attributes.department %>">
 						<% datadepartment.forEach ( (element)=> {  %>
 							<option value="<%= element.attributes.department %>"
-								<% if (element.attributes.department == content.department) { %>
+								<% if (element.attributes.department == content.attributes.department) { %>
 									selected
 								<% } %> 
 								><%= element.attributes.department %></option>
@@ -230,27 +230,27 @@
 					</select></td></tr>
 				<% } %>
 				<tr id="position_tr"><th style="background-color:#e7853e; border: none;">配置</th></tr>
-				<% if (login.admin != 1 || login.id == content.id ){ %>
-					<tr><td><input type="hidden" name="position" id="position" value="<%= content.position %>" >
-						<%= content.position %></td></tr>
-				<% } else if (login.id != content.id) { %>
-				<tr><td><input name="position" id="position" value="<%= content.position %>"></td></tr>
+				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
+					<tr><td><input type="hidden" name="position" id="position" value="<%= content.attributes.position %>" >
+						<%= content.attributes.position %></td></tr>
+				<% } else if (req_user.id != content.attributes.user_id) { %>
+				<tr><td><input name="position" id="position" value="<%= content.attributes.position %>"></td></tr>
 				<% } %>
 				<tr id="information_tr"><th style="background-color:#e7853e; border: none;">情報</th></tr>
-				<% if (login.admin != 1 || login.id == content.id ){ %>
-					<tr><td><input type="hidden" name="information" id="information" value="<%= content.information %>" >
-						<%= content.information %></td></tr>
-				<% } else if (login.id != content.id) { %>
-				<tr><td><input name="information" id="information" value="<%= content.information %>"></td></tr>
+				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
+					<tr><td><input type="hidden" name="information" id="information" value="<%= content.attributes.information %>" >
+						<%= content.attributes.information %></td></tr>
+				<% } else if (req_user.id != content.attributes.user_id) { %>
+				<tr><td><input name="information" id="information" value="<%= content.attributes.information %>"></td></tr>
 				<% } %>
 				<tr id="email_tr"><th style="background-color: #e7853e; border: none;">メールアドレス</th></tr>
-				<% if (login.admin != 1 || login.id == content.id ){ %>
-					<tr><td><input type="hidden" name="email" id="email" value="<%= content.email %>" >
-						<%= content.email %></td></tr>
-				<% } else if (login.id != content.id) { %>
-				<tr><td><input name="email" id="email" value="<%= content.email %>"></td></tr>
+				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
+					<tr><td><input type="hidden" name="email" id="email" value="<%= content.attributes.email %>" >
+						<%= content.attributes.email %></td></tr>
+				<% } else if (req_user.id != content.attributes.user_id) { %>
+				<tr><td><input name="email" id="email" value="<%= content.attributes.email %>"></td></tr>
 				<% } %>
-				<% if (login.admin == 1 && login.id != content.id ){ %>
+				<% if (req_user.admin == 1 && req_user.id != content.attributes.user_id ){ %>
 				<tr id="password_tr"><th style="background-color: #e7853e; border: none;">パスワードを変更</th></tr>
 				<tr><td><input name="password" id="password" value="" placeholder="入力しない場合無変更"></td></tr>
 				<% } %>
@@ -259,7 +259,7 @@
 					<option value=""></option>
 					<% datastatus.forEach ( (element)=> { %>
 						<option value="<%= element.attributes.status %>" 
-							<% if (content.status == element.attributes.status){ %>
+							<% if (content.attributes.status == element.attributes.status){ %>
 								selected
 							<% } %> ><%= element.attributes.status %>
 						</option>
@@ -269,34 +269,34 @@
 				<tr class="table_ikisaki"><th id="th_ikisaki">行先</th></tr>
 				<tr class="table_ikisaki"><td><select name="ikisaki" id="ikisaki">
 
-				<% if (content.status == "休暇") { %>
+				<% if (content.attributes.status == "休暇") { %>
 					<option value="全休" 
-						<% if (content.ikisaki == "全休"){ %>
+						<% if (content.attributes.ikisaki == "全休"){ %>
 							selected
 						<% } %>>全休
 					</option>
 					<option value="ＡＭ半休" 
-						<% if (content.ikisaki == "ＡＭ半休"){ %>
+						<% if (content.attributes.ikisaki == "ＡＭ半休"){ %>
 							selected 
 						<% } %>>ＡＭ半休
 					</option>
 					<option value="ＰＭ半休"
-						<% if (content.ikisaki == "ＰＭ半休"){ %>
+						<% if (content.attributes.ikisaki == "ＰＭ半休"){ %>
 							selected 
 						<% } %>>ＰＭ半休
 					</option>
-				<% } else if (content.status == "客先"){ %>
+				<% } else if (content.attributes.status == "客先"){ %>
 					<% datakyakusaki.forEach ( (element)=> { %>
 						<option value="<%= element.attributes.kyakusaki %>" 
-							<% if (content.ikisaki == element.attributes.kyakusaki){ %>
+							<% if (content.attributes.ikisaki == element.attributes.kyakusaki){ %>
 								selected
 							<% } %> ><%= element.attributes.kyakusaki %>
 						</option>
 					<% });  %>
-				<% } else if (content.status == "社内"){ %>
+				<% } else if (content.attributes.status == "社内"){ %>
 					<% datashanai.forEach ( (element)=> { %>
 						<option value="<%= element.attributes.shanai %>" 
-							<% if (content.ikisaki == element.attributes.shanai){ %>
+							<% if (content.attributes.ikisaki == element.attributes.shanai){ %>
 								selected
 							<% } %> ><%= element.attributes.shanai %>
 						</option>
@@ -308,191 +308,191 @@
 			<tr class="table_yoteijikoku"><th>予定時刻</th></tr>
 				<tr class="table_yoteijikoku"><td><select type="text" name="time">
 					<option value="~ 8:30"
-						<% if (content.time == "~ 8:30"){ %>
+						<% if (content.attributes.time == "~ 8:30"){ %>
 							selected 
 						<% } %> >~ 8:30
 					</option>
 					<option value="~ 9:00"
-						<% if (content.time == "~ 9:00"){ %>
+						<% if (content.attributes.time == "~ 9:00"){ %>
 							selected 
 						<% } %> >~ 9:00
 					</option>
 					<option value="~ 9:30"
-						<% if (content.time == "~ 9:30"){ %>
+						<% if (content.attributes.time == "~ 9:30"){ %>
 							selected 
 						<% } %> >~ 9:30
 					</option>
 					<option value="~ 10:00"
-						<% if (content.time == "~ 10:00"){ %>
+						<% if (content.attributes.time == "~ 10:00"){ %>
 							selected 
 						<% } %> >~ 10:00
 					</option>
 					<option value="~ 10:30"
-						<% if (content.time == "~ 10:30"){ %>
+						<% if (content.attributes.time == "~ 10:30"){ %>
 							selected 
 						<% } %> >~ 10:30
 					</option>
 					<option value="~ 11:00"
-						<% if (content.time == "~ 11:00"){ %>
+						<% if (content.attributes.time == "~ 11:00"){ %>
 							selected 
 						<% } %> >~ 11:00
 					</option>
 					<option value="~ 11:30"
-						<% if (content.time == "~ 11:30"){ %>
+						<% if (content.attributes.time == "~ 11:30"){ %>
 							selected 
 						<% } %> >~ 11:30
 					</option>
 					<option value="~ 12:00"
-						<% if (content.time == "~ 12:00"){ %>
+						<% if (content.attributes.time == "~ 12:00"){ %>
 							selected 
 						<% } %> >~ 12:00
 					</option>
 					<option value="~ 12:30"
-						<% if (content.time == "~ 12:30"){ %>
+						<% if (content.attributes.time == "~ 12:30"){ %>
 							selected 
 						<% } %> >~ 12:30
 					</option>
 					<option value="~ 13:00"
-						<% if (content.time == "~ 13:00"){ %>
+						<% if (content.attributes.time == "~ 13:00"){ %>
 							selected 
 						<% } %> >~ 13:00
 					</option>
 					<option value="~ 13:30"
-						<% if (content.time == "~ 13:30"){ %>
+						<% if (content.attributes.time == "~ 13:30"){ %>
 							selected 
 						<% } %> >~ 13:30
 					</option>
 					<option value="~ 14:00"
-						<% if (content.time == "~ 14:00"){ %>
+						<% if (content.attributes.time == "~ 14:00"){ %>
 							selected 
 						<% } %> >~ 14:00
 					</option>
 					<option value="~ 14:30"
-						<% if (content.time == "~ 14:30"){ %>
+						<% if (content.attributes.time == "~ 14:30"){ %>
 							selected 
 						<% } %> >~ 14:30
 					</option>
 					<option value="~ 15:00"
-						<% if (content.time == "~ 15:00"){ %>
+						<% if (content.attributes.time == "~ 15:00"){ %>
 							selected 
 						<% } %> >~ 15:00
 					</option>
 					<option value="~ 15:30"
-						<% if (content.time == "~ 15:30"){ %>
+						<% if (content.attributes.time == "~ 15:30"){ %>
 							selected 
 						<% } %> >~ 15:30
 					</option>
 					<option value="~ 16:00"
-						<% if (content.time == "~ 16:00"){ %>
+						<% if (content.attributes.time == "~ 16:00"){ %>
 							selected 
 						<% } %> >~ 16:00
 					</option>
 					<option value="~ 16:30"
-						<% if (content.time == "~ 16:30"){ %>
+						<% if (content.attributes.time == "~ 16:30"){ %>
 							selected 
 						<% } %> >~ 16:30
 					</option>
 					<option value="~ 17:00"
-						<% if (content.time == "~ 17:00"){ %>
+						<% if (content.attributes.time == "~ 17:00"){ %>
 							selected 
 						<% } %> >~ 17:00
 					</option>
 					<option value="~ 17:30"
-						<% if (content.time == "~ 17:30"){ %>
+						<% if (content.attributes.time == "~ 17:30"){ %>
 							selected 
 						<% } %> >~ 17:30
 					</option>
 					<option value="~ 18:00"
-						<% if (content.time == "~ 18:00"){ %>
+						<% if (content.attributes.time == "~ 18:00"){ %>
 							selected 
 						<% } %> >~ 18:00
 					</option>
 					<option value="~ 18:30"
-						<% if (content.time == "~ 18:30"){ %>
+						<% if (content.attributes.time == "~ 18:30"){ %>
 							selected 
 						<% } %> >~ 18:30
 					</option>
 					<option value="~ 19:00"
-						<% if (content.time == "~ 19:00"){ %>
+						<% if (content.attributes.time == "~ 19:00"){ %>
 							selected 
 						<% } %> >~ 19:00
 					</option>
 					<option value="~ 19:30"
-						<% if (content.time == "~ 19:30"){ %>
+						<% if (content.attributes.time == "~ 19:30"){ %>
 							selected 
 						<% } %> >~ 19:30
 					</option>
 					<option value="~ 20:00"
-						<% if (content.time == "~ 20:00"){ %>
+						<% if (content.attributes.time == "~ 20:00"){ %>
 							selected 
 						<% } %> >~ 20:00
 					</option>
 					<option value="~ 20:30"
-						<% if (content.time == "~ 20:30"){ %>
+						<% if (content.attributes.time == "~ 20:30"){ %>
 							selected 
 						<% } %> >~ 20:30
 					</option>
 					<option value="~ 21:00"
-						<% if (content.time == "~ 21:00"){ %>
+						<% if (content.attributes.time == "~ 21:00"){ %>
 							selected 
 						<% } %> >~ 21:00
 					</option>
 					<option value="~ 21:30"
-						<% if (content.time == "~ 21:30"){ %>
+						<% if (content.attributes.time == "~ 21:30"){ %>
 							selected 
 						<% } %> >~ 21:30
 					</option>
 					<option value="~ 22:00"
-						<% if (content.time == "~ 22:00"){ %>
+						<% if (content.attributes.time == "~ 22:00"){ %>
 							selected 
 						<% } %> >~ 22:00
 					</option>
 					<option value="22:00 ~"
-						<% if (content.time == "22:00 ~"){ %>
+						<% if (content.attributes.time == "22:00 ~"){ %>
 							selected 
 						<% } %> >22:00 ~
 					</option>
 					<option value="不帰"
-						<% if (content.time == "不帰"){ %>
+						<% if (content.attributes.time == "不帰"){ %>
 							selected 
 						<% } %> >不帰
 					</option></select>
 
 				</td></tr>
 				<tr><th>メモ</th></tr>
-				<tr><td><textarea name="memo"><%= content.memo %></textarea></td></tr>
+				<tr><td><textarea name="memo"><%= content.attributes.memo %></textarea></td></tr>
 				<tr class="admin_only"><th>
 					管理者権限
 					<input type="checkbox" class="c-switch-check" id="check">
 					<label class="c-switch-label" for="check"></label>
-					<input type="hidden" name="admin" id="admin" value="<%= content.admin %>">
+					<input type="hidden" name="admin" id="admin" value="<%= content.relations.user.attributes.admin %>">
 				</th></tr>
 				<tr><td>
 					<a href="javascript:form_edit.submit()" id="btn_post" class="faa-parent animated-hover"><i class="fas fa-pencil-alt"></i>更新</a>
 				</td></tr>
 
-				<input type="hidden" name="id" value="<%= content.id %>">
+				<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
 			</table>
 		</form>
 		<p><a href="/" class="backhome faa-parent animated-hover"><i class="fas fa-angle-double-right faa-passing"></i> 一覧に戻る</a></p>
 
 		<!-- unlock用フォーム -->
-		<form method="POST" action="/edit/<%= content.id %>/unlock" name="form_unlock" class="admin_only">
-			<input type="hidden" name="id" value="<%= content.id %>">
+		<form method="POST" action="/edit/<%= content.attributes.user_id %>/unlock" name="form_unlock" class="admin_only">
+			<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
 		</form>
 
-		<% if (login.admin == 1){ %>
+		<% if (req_user.admin == 1){ %>
 			<p></p>
 		<% } else { %>
 			<p class="space"><br></p>
 		<% } %>
 
-	<form method="POST" action="/edit/<%= content.id %>/delete" name="form_delete" id="scroll-form-delete" class="admin_only">
-		<input type="hidden" name="id" value="<%= content.id %>">
+	<form method="POST" action="/edit/<%= content.attributes.user_id %>/delete" name="form_delete" id="scroll-form-delete" class="admin_only">
+		<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
 		<div id="delete_content">
 			<a href="javascript:form_delete.submit()" class="btn-massage faa-parent animated-hover" id="btn_delete"><i class="fas fa-user-times faa-flash"></i>
 			  DELETE
-			  <span>"<%= content.name %>"の情報が削除されます</span>
+			  <span>"<%= content.attributes.name %>"の情報が削除されます</span>
 			</a>
 		</div>
 	</form>
@@ -501,8 +501,8 @@
 	<script>
 		$(function() {
 
-			console.log('使用中ユーザー管理者権限: <%= login.admin %>');
-			if ('<%= login.admin %>' != 1){
+			console.log('使用中ユーザー管理者権限: <%= req_user.admin %>');
+			if ('<%= req_user.admin %>' != 1){
 				$('body').css('background-image','url(https://msi-net.co.jp/main/wp-content/uploads/2020/01/image5.jpg)');
 				$('.admin_only').remove();
 				$('.main_edit').height('100%');
@@ -511,8 +511,8 @@
 			}
 
 			//管理者権限BOXチェック
-			console.log('編集するユーザー管理者権限: <%= content.admin %>');
-			if ('<%= content.admin %>' == 1){
+			console.log('編集するユーザー管理者権限: <%= content.relations.user.attributes.admin %>');
+			if ('<%= content.relations.user.attributes.admin %>' == 1){
 				$('#check').prop('checked', true);
 			} else {
 				$('#check').prop('checked', false);
@@ -574,14 +574,14 @@
 
 
 			$('#btn_delete').click(function(){
-				if ('<%= content.name %>' == '<%= login.name %>'){
+				if ('<%= content.attributes.name %>' == '<%= login.name %>'){
 					if (!confirm('\nあなたの関連データはすべて削除されます。\nよろしいですか？\n\n※アカウント削除後、ログアウトするまで操作可能です。')) {
 						return false;
 					} else {
 						return true;
 					}
 				} else {
-					if (!confirm('\n<%= content.department %>〝<%= content.name %>″の関連データはすべて削除されます。\n\nよろしいですか？')) {
+					if (!confirm('\n<%= content.attributes.department %>〝<%= content.attributes.name %>″の関連データはすべて削除されます。\n\nよろしいですか？')) {
 						return false;
 					} else {
 						return true;
@@ -642,9 +642,9 @@
 						}
 						console.log("$('#admin').val()は：" + $('#admin').val());
 
-						if ($('#admin').val() != '<%= content.admin %>'){
+						if ($('#admin').val() != '<%= content.relations.user.attributes.admin %>'){
 							if ($('#admin').val() == 1){
-								if ('<%= content.name %>' == '<%= login.name %>'){
+								if ('<%= content.attributes.name %>' == '<%= login.name %>'){
 									if(!confirm('\n管理者権限を回収します。\nよろしいですか？')){
 										$('#check').prop('checked', false);
 										return false;
@@ -652,7 +652,7 @@
 										return true;
 									}
 								} else {
-									if(!confirm('\n<%= content.department %>＂<%= content.name %>＂に管理者権限を付与します。\n\nよろしいですか？')){
+									if(!confirm('\n<%= content.attributes.department %>＂<%= content.attributes.name %>＂に管理者権限を付与します。\n\nよろしいですか？')){
 										$('#check').prop('checked', false);
 										return false;
 									} else {
@@ -660,15 +660,15 @@
 									}
 								}
 							} else {
-								if ('<%= content.name %>' == '<%= login.name %>'){
+								if ('<%= content.attributes.name %>' == '<%= login.name %>'){
 									if(!confirm('\nあなたは管理者権限を失います。\nよろしいですか？\n\n※管理者権限はログアウトするまで有効です。')){
 										$('#check').prop('checked', true);
 										return false;
 									} else {
 										return true;
 									}
-								} else if('<%= content.name %>' != '<%= login.name %>') {
-									if(!confirm('\n<%= content.department %>＂<%= content.name %>＂は管理者権限を失います。\nよろしいですか？')){
+								} else if('<%= content.attributes.name %>' != '<%= login.name %>') {
+									if(!confirm('\n<%= content.attributes.department %>＂<%= content.attributes.name %>＂は管理者権限を失います。\nよろしいですか？')){
 										$('#check').prop('checked', true);
 										return false;
 									} else {
@@ -1062,7 +1062,7 @@
 		});
 
 		$('#unlock_a').click(function(){
-			alert('<%= content.name %>のアカウントロックが解除されました！')
+			alert('<%= content.attributes.name %>のアカウントロックが解除されました！')
 		});
 		
 

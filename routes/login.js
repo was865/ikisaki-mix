@@ -20,14 +20,21 @@ var Bookshelf = require("bookshelf")(knex);
 
 var Userdata = Bookshelf.Model.extend({
   tableName: "users",
-  hasTimestamps: true
+});
+
+var UserStatusData = Bookshelf.Model.extend({
+  tableName: "users_status",
+  hasTimestamps: true,
+  user: function() {
+    return this.belongsTo(Userdata);
+  }
 });
 
 
 passport.use(new LocalStrategy(
   (username, password, done) => {
     console.log("username: " + username)
-    new Userdata().where('name','=',username)
+    new Userdata().where('username','=',username)
       .fetch()
       .then((result) => {
         if (result == null) {
@@ -51,7 +58,7 @@ passport.use(new LocalStrategy(
             }
           }
           
-          //パスワード暗号化解除＆照会
+          //パスワード暗号化
             // var password_enter = password;
             // let hashed_password_enter = bcrypt.hashSync(password_enter, 10)
             // console.log("hashedパスワード：" + hashed_password_enter);
@@ -72,9 +79,9 @@ passport.use(new LocalStrategy(
                 return done(null, false, errMessage);
               } else {
                 if (result.attributes.admin != 1) {
-                  errMessage = { message : '<p class="error login_info">＂' + result.attributes.name + '＂のアカウントがロックされました。<br>一定時間後にまたお試しください。または管理者に連絡ください。</p>' }
+                  errMessage = { message : '<p class="error login_info">＂' + result.attributes.username + '＂のアカウントがロックされました。<br>一定時間後にまたお試しください。または管理者に連絡ください。</p>' }
                 } else {
-                  errMessage = { message : '<p class="error login_info">＂' + result.attributes.name + '＂のアカウントがロックされました。<br>一定時間後またお試しください。または他の管理者にロック解除してもらえます。</p>' }
+                  errMessage = { message : '<p class="error login_info">＂' + result.attributes.username + '＂のアカウントがロックされました。<br>一定時間後またお試しください。または他の管理者にロック解除してもらえます。</p>' }
                 }
                 if (result.attributes.err_times == errMax -1) {
                   result.attributes.locked_at = new Date();
@@ -95,9 +102,9 @@ passport.use(new LocalStrategy(
                 return done(null, result.attributes);
               } else {
                 if (result.attributes.admin != 1) {
-                  errMessage = { message : '<p class="error login_info">＂' + result.attributes.name + '＂のアカウントがロックされました。<br>一定時間後にまたお試しください。または管理者に連絡ください。</p>' }
+                  errMessage = { message : '<p class="error login_info">＂' + result.attributes.username + '＂のアカウントがロックされました。<br>一定時間後にまたお試しください。または管理者に連絡ください。</p>' }
                 } else {
-                  errMessage = { message : '<p class="error login_info">＂' + result.attributes.name + '＂のアカウントがロックされました。<br>一定時間後またお試しください。または他の管理者にロック解除してもらえます。</p>' }
+                  errMessage = { message : '<p class="error login_info">＂' + result.attributes.username + '＂のアカウントがロックされました。<br>一定時間後またお試しください。または他の管理者にロック解除してもらえます。</p>' }
                 }
                 return done(null, false, errMessage);
               }
@@ -174,13 +181,19 @@ router.post('/',
     passport.authenticate('local',
       {
         failureRedirect : '/login',
-        successRedirect : '/',
         failureFlash: true
-      })
+      }),
+      function(req, res){  // 成功したときの処理
+        new UserStatusData().where('user_id','=', req.user.id)
+      .fetch()
+      .then((result) => {
+        req.session.login = result.attributes;
+        res.redirect("/");
+        });
+      }
 );
 
 router.post('/logout', (req, res) => {
-  // req.session.passport.user = undefined;
   req.logout();
   res.redirect('/login');
 });
