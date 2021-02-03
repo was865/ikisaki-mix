@@ -201,6 +201,7 @@ header {
   right: 12px;
   color: rgba(128, 128, 128, 0.46);
   cursor: pointer;
+  z-index: 100;
 }
 .fa-times:hover {
   color: rgba(0, 0, 0, 0.603);
@@ -297,13 +298,32 @@ header {
   margin-bottom: 25px;
 }
 #mail-form h2 {
+  position: relative;
   color: #5f5d60;
   letter-spacing: 1px;
   margin-bottom: 15px;
 }
 #mailTo {
-  background-color: #d7dde0;
+  background-color: #ffffff;
   pointer-events: none;
+}
+#mailTo_label {
+  position: absolute;
+  font-size: 0.9em;
+  cursor: text;
+  top: 88px;
+  right: 40px;
+  background: #ffffff;
+  color: #5f5d60;
+}
+#subject_label {
+  position: absolute;
+  font-size: 0.9em;
+  cursor: text;
+  top: 128px;
+  right: 40px;
+  background: #ffffff;
+  color: #5f5d60;
 }
 #addshanai-form h2 {
   color: #5f5d60;
@@ -320,6 +340,8 @@ header {
   padding: 12px 12px;
   border: 1px solid #d0d5d8;
   border-radius: 5px;
+  resize: none;
+  /* outline: none; */
 }
 #addshanai-form input {
   width: 320px;

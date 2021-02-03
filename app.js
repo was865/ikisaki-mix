@@ -10,6 +10,7 @@ var validator = require('express-validator');
 var jquery = require('express-jquery');
 var local = require('passport-local');
 var passport = require('passport');
+var ajax = require('./routes/ajax')
 
 var index = require('./routes/index');
 var table = require('./routes/table');
@@ -43,11 +44,25 @@ app.use(session(session_opt));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// //. 全てのリクエストに対して前処理
+// app.use( '/*', function( req, res, next ){
+  
+//   getDepartment();
+//   getStatus();
+//   getKyakusaki();
+//   getShanai();
+//   getMsg();
+
+//   console.log("前処理終了。");
+
+//   next();  //. 個別処理へ
+// });
 app.use('/edit', edit);
 app.use('/login', login);
 app.use('/', index);
 app.use('/table', table);
 app.use('/users', users);
+app.use('/ajax', ajax);
 
 
 // catch 404 and forward to error handler

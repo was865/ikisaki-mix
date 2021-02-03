@@ -145,20 +145,24 @@
 		  <input id="userinfo_name" name="userinfo_name" class="form-control" type="text" placeholder="名前" value="<%= login.name %>">
 		  <select name="userinfo_department" class="form-control" id="userinfo_department" value="<%= login.department %>">
 			<% datadepartment.forEach ( (element)=> {  %>
-				<option value="<%= element.attributes.department %>"
-					<% if (element.attributes.department == login.department) { %>
+				<option value="<%= element.department %>"
+					<% if (element.department == login.department) { %>
 						selected
 					<% } %> 
-					><%= element.attributes.department %></option>
+					><%= element.department %></option>
 			<% }); %>
+			<% if (login.department == "社長") { %>
+				<option value="社長" selected>社長</option>
+			<% } %>
 		  </select>
-		  <input id="userinfo_position" name="userinfo_position" class="form-control" type="text" placeholder="社内ポジション（省略可）" value="<%= login.position %>">
+		  <input id="userinfo_position" name="userinfo_position" class="form-control admin_only" type="text" placeholder="社内ポジション（省略可）" value="<%= login.position %>">
 		  <input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
 		  <input id="userinfo_email" name="userinfo_email" class="form-control" type="text" placeholder="メールアドレス（省略可）" value="<%= login.email %>">
+		  <input type="hidden" name="original_email" value="<%= login.email %>">
 		  <input id="userinfo_newpassword" name="userinfo_newpassword" class="form-control" type="password" placeholder="新しいパスワード（入力しない場合無変更）">
 		  <input id="userinfo_newpassword_tmp" class="form-control" type="password" placeholder="新しいパスワードを確認">
 		  <a href="javascript:form_newuserinfo.submit()" id="btn_newuserinfo">変更</a>
-		  <p style="font-size: 0.9em;"><span style="color: red;">※</span>変更後自動的にログアウトされます。</p>
+		  <p id="userinfo_position_info"><span style="color: red;">※</span>変更後自動的にログアウトされます。</p>
 		</form>
 	  </div>
 	</div>
@@ -205,12 +209,16 @@
 
 	<!-- 編集テーブル -->
 	<div role="main" class="main_edit">
-		<form name="form_edit" method="POST" action="/edit/<%= content.attributes.user_id %>">
+		<% if (!content.attributes.user_id) { %>
+			<form name="form_edit" method="POST" action="/edit/tableUser_<%= content.attributes.id %>">
+		<% } else { %>
+			<form name="form_edit" method="POST" action="/edit/<%= content.attributes.user_id %>">
+		<% } %>
 			<table class="table_edit">
 				<p class="editing_name"><span>ログイン中のユーザー：<span><%= req_user.username %><i class="fas fa-user-shield admin_only" style="margin-left: 5px;"></i></span></span><br><%- greeting %></p>
 				<tr><th>名前</th></tr>
 				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.attributes.name %>"><%= content.attributes.name %><span><i class="fas fa-ellipsis-h"></i></span>
-				<% if (content.relations.user.attributes.err_times >= 5) { %>
+				<% if (content_user.err_times >= 5) { %>
 					<a class="admin_only" href="javascript:form_unlock.submit()" id="unlock_a"><i class="fas fa-lock"></i></a><p class="admin_only" style="margin-top: 10px;font-size: 0.8em; color: rgb(255, 0, 0);">※ログインが制限されています。<br><br>制限を解除するには名前の右側にあるロックアイコンをクリックしてください。</p>
 				<% } %>
 				</td></tr>
@@ -227,30 +235,42 @@
 								<% } %> 
 								><%= element.attributes.department %></option>
 						<% }); %>
+						<% if (login.department == "社長") { %>
+							<option value="社長"
+								<% if (content.attributes.department == "社長") { %>
+									selected
+								<% } %> 
+								>社長</option>
+						<% } %>
+						<option value="*非表示*" 
+							<% if (content.attributes.department == "*非表示*") { %>
+								selected
+							<% } %>
+							>*非表示*</option>
 					</select></td></tr>
 				<% } %>
 				<tr id="position_tr"><th style="background-color:#e7853e; border: none;">配置</th></tr>
 				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
-					<tr><td><input type="hidden" name="position" id="position" value="<%= content.attributes.position %>" >
+					<tr><td><input type="hidden" name="position" id="position" value="<%= content.attributes.position %>">
 						<%= content.attributes.position %></td></tr>
 				<% } else if (req_user.id != content.attributes.user_id) { %>
-				<tr><td><input name="position" id="position" value="<%= content.attributes.position %>"></td></tr>
+				<tr><td><input name="position" id="position" value="<%= content.attributes.position %>" placeholder="例:f_1_1（省略可）"></td></tr>
 				<% } %>
 				<tr id="information_tr"><th style="background-color:#e7853e; border: none;">情報</th></tr>
 				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
 					<tr><td><input type="hidden" name="information" id="information" value="<%= content.attributes.information %>" >
 						<%= content.attributes.information %></td></tr>
 				<% } else if (req_user.id != content.attributes.user_id) { %>
-				<tr><td><input name="information" id="information" value="<%= content.attributes.information %>"></td></tr>
+				<tr><td><input name="information" id="information" value="<%= content.attributes.information %>" placeholder="内線番号（省略可）"></td></tr>
 				<% } %>
 				<tr id="email_tr"><th style="background-color: #e7853e; border: none;">メールアドレス</th></tr>
 				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
 					<tr><td><input type="hidden" name="email" id="email" value="<%= content.attributes.email %>" >
 						<%= content.attributes.email %></td></tr>
 				<% } else if (req_user.id != content.attributes.user_id) { %>
-				<tr><td><input name="email" id="email" value="<%= content.attributes.email %>"></td></tr>
+				<tr><td><input name="email" id="email" value="<%= content.attributes.email %>" placeholder="メールアドレス（省略可）"></td></tr>
 				<% } %>
-				<% if (req_user.admin == 1 && req_user.id != content.attributes.user_id ){ %>
+				<% if (req_user.admin == 1 && req_user.id != content.attributes.user_id && content.attributes.user_id != undefined){ %>
 				<tr id="password_tr"><th style="background-color: #e7853e; border: none;">パスワードを変更</th></tr>
 				<tr><td><input name="password" id="password" value="" placeholder="入力しない場合無変更"></td></tr>
 				<% } %>
@@ -461,17 +481,22 @@
 				</td></tr>
 				<tr><th>メモ</th></tr>
 				<tr><td><textarea name="memo"><%= content.attributes.memo %></textarea></td></tr>
+				<% if (content_user.username != undefined) { %>
 				<tr class="admin_only"><th>
 					管理者権限
 					<input type="checkbox" class="c-switch-check" id="check">
 					<label class="c-switch-label" for="check"></label>
-					<input type="hidden" name="admin" id="admin" value="<%= content.relations.user.attributes.admin %>">
+					<input type="hidden" name="admin" id="admin" value="<%= content_user.admin %>">
 				</th></tr>
+				<% } %>
 				<tr><td>
 					<a href="javascript:form_edit.submit()" id="btn_post" class="faa-parent animated-hover"><i class="fas fa-pencil-alt"></i>更新</a>
 				</td></tr>
-
-				<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
+				<% if (!content.attributes.user_id) { %>
+					<input type="hidden" name="id" value="tableUser_<%= content.attributes.id %>">
+				<% } else { %>
+					<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
+				<% } %>
 			</table>
 		</form>
 		<p><a href="/" class="backhome faa-parent animated-hover"><i class="fas fa-angle-double-right faa-passing"></i> 一覧に戻る</a></p>
@@ -511,8 +536,8 @@
 			}
 
 			//管理者権限BOXチェック
-			console.log('編集するユーザー管理者権限: <%= content.relations.user.attributes.admin %>');
-			if ('<%= content.relations.user.attributes.admin %>' == 1){
+			console.log('編集するユーザー管理者権限: <%= content_user.admin %>');
+			if ('<%= content_user.admin %>' == 1){
 				$('#check').prop('checked', true);
 			} else {
 				$('#check').prop('checked', false);
@@ -642,7 +667,7 @@
 						}
 						console.log("$('#admin').val()は：" + $('#admin').val());
 
-						if ($('#admin').val() != '<%= content.relations.user.attributes.admin %>'){
+						if ($('#admin').val() != '<%= content_user.admin %>'){
 							if ($('#admin').val() == 1){
 								if ('<%= content.attributes.name %>' == '<%= login.name %>'){
 									if(!confirm('\n管理者権限を回収します。\nよろしいですか？')){

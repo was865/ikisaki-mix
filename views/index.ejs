@@ -14,15 +14,16 @@
 				<a href="/"><img class="logo" src="https://msi-net.co.jp/main/wp-content/uploads/2020/01/logo.png"></a>
 			</div>
 			<div class="header-left">
-						<h1><span><i class="fa fa-bars" aria-hidden="true"></i></span><%= title %></h1>
-						<ul class="downlist">
-							<li id="create_user" class="admin_only"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span>社員新規登録</li>
-							<li id="create_kyakusaki" class="admin_only mobile-hide"><span><i class="fas fa-handshake"></i></span>客先管理＆新規</li>
-							<li id="create_shanai" class="admin_only mobile-hide"><span><i class="fa fa-building" aria-hidden="true"></i></span>社内管理＆新規</li>
-							<li id="create_department" class="admin_only mobile-hide"><span><i class="fas fa-users" aria-hidden="true"></i></span>部署管理＆新規</li>
-							<li id="change_userinfo"><span><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>基本情報変更</li>
-							<li id="logout"><span><i class="fas fa-sign-out-alt"></i></span>ログアウト</li>
-						</ul>
+					<h1><span><i class="fa fa-bars" aria-hidden="true"></i></span><%= title %></h1>
+					<ul class="downlist">
+						<li id="create_user" class="admin_only"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span>社員新規登録</li>
+						<li id="create_kyakusaki" class="admin_only mobile-hide"><span><i class="fas fa-handshake"></i></span>客先管理＆新規</li>
+						<li id="create_shanai" class="admin_only mobile-hide"><span><i class="fa fa-building" aria-hidden="true"></i></span>社内管理＆新規</li>
+						<li id="create_department" class="admin_only mobile-hide"><span><i class="fas fa-users" aria-hidden="true"></i></span>部署管理＆新規</li>
+						<li id="change_userinfo"><span><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>基本情報変更</li>
+						<li id="manage_users"><span><i class="fas fa-key" aria-hidden="true"></i></span>ユーザー管理</li>
+						<li id="logout"><span><i class="fas fa-sign-out-alt"></i></span>ログアウト</li>
+					</ul>
 			</div>
 			<div id="searchbox-input-wrapper">
 				<form method="POST" action="/">
@@ -65,8 +66,12 @@
 				<select name="department" class="form-control placeholder_select" id="select_create_department">
 					<option value='' disabled selected style='display:none;'>部署名</option>
 					<% datadepartment.forEach ( (element)=> {  %>
-						<option value="<%= element.attributes.department %>"><%= element.attributes.department %></option>
+						<option value="<%= element.department %>"><%= element.department %></option>
 					<% }); %>
+					<% if (login.department == "社長") { %>
+						<option value="社長">社長</option>
+					<% } %>
+					<option value="*非表示*">*非表示*</option>
 				</select>
 				<div class="div_create_name">
 					<input id="create_name" name="name" class="form-control" type="text" placeholder="名前"><a id="newadmin_check_btn"><i class="fas fa-user"></i></a>
@@ -96,8 +101,8 @@
 			<form id="form_newkyakusaki" name="form_newkyakusaki" method="POST" action="/newkyakusaki">
 				<% var i;for (i in datakyakusaki) {  %>
 					<div>
-						<input name="kyakusaki" type="text" value="<%= datakyakusaki[i].attributes.kyakusaki %>"><span><i class="far fa-trash-alt btn_kyakusaki_delete"></i></span>
-						<input type="hidden" name="id" value="<%= datakyakusaki[i].attributes.id %>">
+						<input name="kyakusaki" type="text" value="<%= datakyakusaki[i].kyakusaki %>"><span><i class="far fa-trash-alt btn_kyakusaki_delete"></i></span>
+						<input type="hidden" name="id" value="<%= datakyakusaki[i].id %>">
 					</div>
 				<% } %>
 				<input name="cnt" value="<%= i %>" type="hidden">
@@ -133,8 +138,8 @@
 			<form id="form_newshanai" name="form_newshanai" method="POST" action="/newshanai">
 				<% var n;for (n in datashanai) {  %>
 					<div>
-						<input name="shanai" type="text" value="<%= datashanai[n].attributes.shanai %>"><span><i class="far fa-trash-alt btn_shanai_delete"></i></span>
-						<input type="hidden" name="id" value="<%= datashanai[n].attributes.id %>">
+						<input name="shanai" type="text" value="<%= datashanai[n].shanai %>"><span><i class="far fa-trash-alt btn_shanai_delete"></i></span>
+						<input type="hidden" name="id" value="<%= datashanai[n].id %>">
 					</div>
 				<% } %>
 				<input name="cnt_shanai" value="<%= n %>" type="hidden">
@@ -171,8 +176,8 @@
 			<form id="form_newdepartment" name="form_newdepartment" method="POST" action="/newdepartment">
 				<% var i;for (i in datadepartment) {  %>
 					<div>
-						<input name="department" type="text" value="<%= datadepartment[i].attributes.department %>"><span><i class="far fa-trash-alt btn_department_delete"></i></span>
-						<input type="hidden" name="id" value="<%= datadepartment[i].attributes.id %>">
+						<input name="department" type="text" value="<%= datadepartment[i].department %>"><span><i class="far fa-trash-alt btn_department_delete"></i></span>
+						<input type="hidden" name="id" value="<%= datadepartment[i].id %>">
 					</div>
 				<% } %>
 				<input name="cnt" value="<%= i %>" type="hidden">
@@ -210,12 +215,20 @@
 			  <input id="userinfo_name" name="userinfo_name" class="form-control" type="text" placeholder="名前" value="<%= login.name %>">
 			  <select name="userinfo_department" class="form-control" id="userinfo_department" value="<%= login.department %>">
 				<% datadepartment.forEach ( (element)=> {  %>
-					<option value="<%= element.attributes.department %>"
-						<% if (element.attributes.department == login.department) { %>
+					<option value="<%= element.department %>"
+						<% if (element.department == login.department) { %>
 							selected
 						<% } %> 
-						><%= element.attributes.department %></option>
+						><%= element.department %></option>
 				<% }); %>
+				<% if (login.department == "社長") { %>
+					<option value="社長" selected>社長</option>
+				<% } %>
+				<option value="*非表示*" 
+				<% if (login.department == "*非表示*") { %>
+					selected
+				<% } %>
+				>*非表示*</option>
 			  </select>
 			  <input id="userinfo_position" name="userinfo_position" class="form-control admin_only" type="text" placeholder="社内ポジション（省略可）" value="<%= login.position %>">
 			  <input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
@@ -240,7 +253,9 @@
 			<div id="mail-form">
 			  <h2></h2>
 			  <form name="form_mail" method="POST" action="/mail">
-				<input name="mailTo" id="mailTo" class="form-control" type="text" placeholder="宛先">
+				<label for="mailTo" id="mailTo_label">（宛先）</label>
+				<input name="mailTo" id="mailTo" class="form-control validate" type="text" placeholder="宛先">
+				<label for="subject" id="subject_label">（件名）</label>
 				<input name="subject" id="subject" placeholder="件名" value="伝言メモ">
 			    <textarea type="text" class="mail_Text" name="mail_Text" placeholder="本文"></textarea>
 				<a href="javascript:form_mail.submit()" id="btn_mail">送信</a>
@@ -264,7 +279,7 @@
 			  <input id="editing_names" class="form-control" type="text" placeholder="名前" value="" disabled>
 			  <select name="status" id="status-edit">
 				<% datastatus.forEach ( (element)=> {  %>
-					<option value="<%= element.attributes.status %>"><%= element.attributes.status %></option>
+					<option value="<%= element.status %>"><%= element.status %></option>
 				<% }); %>
 			  </select>
 			  <select name="ikisaki" id="ikisaki-edit"></select>
@@ -308,8 +323,7 @@
 	</div>
 	<!-- モーダルここまで　まとめ編集 -->
 
-
-<div class="main_index">
+<div class="main_index" id="main_index_display">
 	<div role="main" class="index-form">
         <form name="form_table" method="POST" action="/add">
             <table class="table_index">
@@ -334,11 +348,11 @@
 					<td><select name="department" class="select_add placeholder_select" id="department" placeholder="部署">
 						<option value='' disabled selected style='display:none;'>部署名</option>
 						<% datadepartment.forEach ( (element)=> {  %>
-							<option value="<%= element.attributes.department %>">
-								<% if (element.attributes.department == "イノベーション事業本部") { %>
+							<option value="<%= element.department %>">
+								<% if (element.department == "イノベーション事業本部") { %>
 									ｲﾉﾍﾞｰｼｮﾝ事業本部
 								<% } else { %>
-									<%= element.attributes.department %>
+									<%= element.department %>
 								<% } %>
 							</option>
 						<% }); %>
@@ -349,7 +363,7 @@
 					<td><select name="status" class="select_add" id="status">
 						<option value=""></option>
 						<% datastatus.forEach ( (element)=> {  %>
-							<option value="<%= element.attributes.status %>"><%= element.attributes.status %></option>
+							<option value="<%= element.status %>"><%= element.status %></option>
 						<% }); %>
 						</select>
 					</td>
@@ -397,6 +411,66 @@
             </table>
           <p class="space"><br></p>
         </form>
+	</div>
+</div>	
+
+
+<div class="main_index admin_only" id="main_index_manage">
+	<div role="main" class="index-form">
+		<table class="table_index">
+			<thead>
+				<tr>
+					<th style="min-width: 100pt; background-color:#58687f;">ユーザー名</th>
+					<th style="min-width: 100pt; background-color:#58687f;">名前</th>
+					<th style="min-width: 100pt; background-color:#58687f;">ユーザー種類</th>
+					<th style="width: 20%; max-width: 100pt; background-color:#58687f;">ログイン失敗回数</th>
+					<th style="width: 12%; min-width: 75pt; background-color:#58687f;">変更</th>
+				</tr>
+			</thead>
+			
+			<% for(var i in usertabledata_manage) { %>
+				<tr class="data_item_tr">
+					<td><% if(usertabledata_manage[i].user_admin == 1 || usertabledata_manage[i].user_admin == 0) { %>
+						<%= usertabledata_manage[i].username %>
+					<% } else { %>
+						/
+					<% } %></td>
+					<td><%= usertabledata_manage[i].name %></td>
+					<td><% if (usertabledata_manage[i].user_admin == 1) { %>
+							<% if (usertabledata_manage[i].department != "*非表示*") { %>
+								管理者
+							<% } else { %>
+								管理者（非表示）
+							<% } %>
+					<% } else if (usertabledata_manage[i].user_admin == 0){ %>
+						<% if (usertabledata_manage[i].department != "*非表示*") { %>
+							一般ユーザー
+						<% } else { %>
+							一般ユーザー（非表示）
+						<% } %>
+					<% } else { %>
+						アカウント無し
+					<% } %></td>
+					<td><% if(usertabledata_manage[i].user_admin == 1 || usertabledata_manage[i].user_admin == 0) { %>
+						<%= usertabledata_manage[i].err_times %>回
+					<% } else { %>
+						/
+					<% } %></td>
+				  	<td>
+						<div class="btn-wrap">
+							<% if (usertabledata_manage[i].id == "" || usertabledata_manage[i].id == undefined) { %>
+								<a href="/edit/tableUser_<%=  usertabledata_manage[i].table_id  %>/" class="btn btn-switch"><span>編集</span></a>
+							<% } else { %>
+								<a href="/edit/<%=  usertabledata_manage[i].id  %>/" class="btn btn-switch"><span>編集</span></a>
+							<% } %>
+						</div>
+					</td>
+					</tr>
+			<% } %>
+
+			
+		</table>
+		<p class="space"><br></p>
 	</div>
 </div>
 
@@ -487,6 +561,21 @@
 				});
 			}
 
+			// $.getJSON("/ajax", function(json){
+			// 	$('#contact_text').val(json.msg);
+			// });
+			
+		$('#main_index_manage').hide();
+		$('#manage_users').click(function() {
+			$('body').css('background-image','url(https://msi-net.co.jp/main/wp-content/uploads/2020/01/computer-1591018_1920-1024x669.jpg)');
+			$('#main_index_display').hide();
+			$('.color_example').hide();
+			$('#contact_wrap').hide();
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
+			$('#main_index_manage').show();
+		});
+
 		$('.btn_edit').hover(function(){
 			$(this).animate({opacity: 1},150)
 		},function(){
@@ -522,13 +611,13 @@
 					$('#time').val('').hide();
 					break;
 				case '客先':
-					var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.attributes.kyakusaki %>"><%= element.attributes.kyakusaki %></option><%  }) %>';
+					var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.kyakusaki %>"><%= element.kyakusaki %></option><%  }) %>';
 					$('#ikisaki').html(selectContent_kyakusaki);
 					$('#ikisaki').show();
 					$('#time').show();
 					break;
 				case '社内':
-					var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.attributes.shanai %>"><%= element.attributes.shanai %></option><%  }) %>';
+					var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.shanai %>"><%= element.shanai %></option><%  }) %>';
 					$('#ikisaki').html(selectContent_shanai);
 					$('#ikisaki').show();
 					$('#time').show();
@@ -570,13 +659,13 @@
 					$('#time-edit').val('').hide();
 					break;
 				case '客先':
-					var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.attributes.kyakusaki %>"><%= element.attributes.kyakusaki %></option><%  }) %>';
+					var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.kyakusaki %>"><%= element.kyakusaki %></option><%  }) %>';
 					$('#ikisaki-edit').html(selectContent_kyakusaki);
 					$('#ikisaki-edit').show();
 					$('#time-edit').show();
 					break;
 				case '社内':
-					var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.attributes.shanai %>"><%= element.attributes.shanai %></option><%  }) %>';
+					var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.shanai %>"><%= element.shanai %></option><%  }) %>';
 					$('#ikisaki-edit').html(selectContent_shanai);
 					$('#ikisaki-edit').show();
 					$('#time-edit').show();
@@ -630,6 +719,8 @@
 		// 新規登録モーダル
 		$('#create_user').click(function() {
 			$('#signup-modal').fadeIn();
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
 		});
 		$('#close-modal').click(function() {
 			$('#signup-modal').fadeOut();
@@ -694,6 +785,8 @@
 		// 新規客先登録モーダル
 		$('#create_kyakusaki').click(function() {
 			$('#form_newkyakusaki').children().children('input[name="kyakusaki"]').parent().show();
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
 			$('#addkyakusaki-modal').fadeIn();
 		});
 		$('#close-modal2').click(function() {
@@ -703,6 +796,8 @@
 		// 新規社内登録モーダル
 		$('#create_shanai').click(function() {
 			$('#form_newshanai').children().children('input[name="shanai"]').parent().show();
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
 			$('#addshanai-modal').fadeIn();
 		});
 		$('#close-modal3').click(function(){
@@ -711,6 +806,8 @@
 
 		// 基本情報変更モーダル
 		$('#change_userinfo').click(function() {
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
 			$('#userinfo-modal').fadeIn();
 		});
 		$('#close-modal4').click(function(){
@@ -722,6 +819,8 @@
 		//部署管理モーダル
 		$('#create_department').click(function() {
 			$('#form_newdepartment').children().children('input[name="department"]').parent().show();
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
 			$('#adddepartment-modal').fadeIn();
 		});
 		$('#close-modal5').click(function() {
@@ -734,12 +833,21 @@
 			var mailName = $(this).parent().parent().children('.name').text();
 			var mailAdress = $(this).parent().children('p').text();
 			$('#mail-form').children('h2').text('"' + mailName + '" へメッセージ');
-			$('#mailTo').val('宛先：' + mailAdress);
+			$('#mailTo').val(mailAdress);
 			$('#mail-modal').fadeIn();
 		});
 		$('#close-modal7').click(function() {
 			$('#mail-modal').fadeOut();
 		});
+
+		$("#subject").keyup(function() {
+			if ($('#subject').val().length == 0) {
+				$('#subject_label').hide();
+			} else {
+				$('#subject_label').show();
+			}
+		});
+
 
 		// まとめ変更モーダル
 		//まとめ編集用
@@ -759,13 +867,13 @@
 					$('#time-edit').val('').hide();
 					break;
 				case '客先':
-					var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.attributes.kyakusaki %>"><%= element.attributes.kyakusaki %></option><%  }) %>';
+					var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.kyakusaki %>"><%= element.kyakusaki %></option><%  }) %>';
 					$('#ikisaki-edit').html(selectContent_kyakusaki);
 					$('#ikisaki-edit').show();
 					$('#time-edit').show();
 					break;
 				case '社内':
-					var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.attributes.shanai %>"><%= element.attributes.shanai %></option><%  }) %>';
+					var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.shanai %>"><%= element.shanai %></option><%  }) %>';
 					$('#ikisaki-edit').html(selectContent_shanai);
 					$('#ikisaki-edit').show();
 					$('#time-edit').show();
@@ -817,8 +925,7 @@
 			$('#editing-modal').fadeIn();
 			var editingNames = '';
 			$('.editing-group').each(function(){
-				$('#editing-form form').append('<div class="append_area"><input name="editing_name" type="hidden" value="' + $(this).children('.name').text() + '">' +
-					'<input name="editing_id" type="hidden" value="' + $(this).children('.id').text() + '"></div>');
+				$('#editing-form form').append('<div class="append_area"><input name="editing_name" type="hidden" value="' + $(this).children('.name').text() + '">' + '<input name="editing_id" type="hidden" value="' + $(this).children('.id').text() + '"></div>');
 				editingNames = editingNames + $(this).children('.name').text() + "，";
 			})
 			console.log(editingNames);

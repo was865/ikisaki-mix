@@ -135,32 +135,66 @@ router.get("/:id", isAuthenticated, function(req, res, next) {
   var login = req.session.login;
   var req_user = req.user;
 
-  new UserStatusData()
-    .where("user_id", "=", req.params.id)
-    .fetch({withRelated: ["user"]})
-    .then(collection => {
-      var d1 = moment(new Date(collection.attributes.updated_at));
-      d1.locale("ja");
-      d1.tz("Asia/Tokyo");
-      var dstr = d1.fromNow();
-      var data = {
-        title: "行先情報",
-        subtitle: "編集...",
-        greeting: "前回のアップデート: " + dstr,
-        content: collection,
-        datastatus: datastatus,
-        datakyakusaki: datakyakusaki,
-        datashanai: datashanai,
-        datadepartment: datadepartment,
-        login: login,
-        req_user: req_user,
-      };
-      res.render("edit", data);
-    })
-    .catch(err => {
-      res.status(500).json({ error: true, data: { message: err.message } });
-    });
+
+  if (req.params.id.slice(10) == ""){
+
+    new UserStatusData()
+      .where("user_id", "=", req.params.id)
+      .fetch({withRelated: ["user"]})
+      .then(collection => {
+        var d1 = moment(new Date(collection.attributes.updated_at));
+        d1.locale("ja");
+        d1.tz("Asia/Tokyo");
+        var dstr = d1.fromNow();
+        var data = {
+          title: "行先情報",
+          subtitle: "編集...",
+          greeting: "前回のアップデート: " + dstr,
+          content: collection,
+          content_user: collection.relations.user.attributes,
+          datastatus: datastatus,
+          datakyakusaki: datakyakusaki,
+          datashanai: datashanai,
+          datadepartment: datadepartment,
+          login: login,
+          req_user: req_user,
+        };
+        res.render("edit", data);
+      })
+      .catch(err => {
+        res.status(500).json({ error: true, data: { message: err.message } });
+      });
+
+  } else {
+    new UserStatusData()
+      .where("id", "=", req.params.id.slice(10))
+      .fetch()                      //userアカウント情報ターブルにデータがないので
+      .then(collection => {
+        var d1 = moment(new Date(collection.attributes.updated_at));
+        d1.locale("ja");
+        d1.tz("Asia/Tokyo");
+        var dstr = d1.fromNow();
+        var data = {
+          title: "行先情報",
+          subtitle: "編集...",
+          greeting: "前回のアップデート: " + dstr,
+          content: collection,
+          content_user: {admin:0, err_times:0},
+          datastatus: datastatus,
+          datakyakusaki: datakyakusaki,
+          datashanai: datashanai,
+          datadepartment: datadepartment,
+          login: login,
+          req_user: req_user,
+        };
+        res.render("edit", data);
+      })
+      .catch(err => {
+        res.status(500).json({ error: true, data: { message: err.message } });
+      });
+  }
 });
+
 
 router.post("/:id", isAuthenticated, function(req, res, next) {
 
@@ -172,6 +206,10 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
   var login = req.session.login;
   var req_user = req.user;
 
+  if (req.body.information == '' || req.body.information == null) {
+    req.body.information == '／';
+  }
+  
   if (
     req.body.status == "" ||
     req.body.status == "在席" ||
@@ -238,33 +276,59 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
     console.log("パスワードを変更しました。");
   }
 
-  new Userdata({ id: req.body.id })
-    .save(rec_Userdata, { patch: true })
-    .then(user => {
-      return new UserStatusData().where("user_id","=", user.id)
-        .save(rec_UserStatusData, { patch: true })
+  if (req.params.id.slice(10) == ""){
+
+    new Userdata({ id: req.body.id })
+      .save(rec_Userdata, { patch: true })
+      .then(user => {
+        return new UserStatusData().where("user_id","=", user.id)
+          .save(rec_UserStatusData, { patch: true })
+        })
+      .then(status => {
+        return new UserStatusData().where("user_id","=", req.body.id)
+          .fetch({withRelated: ["user"]})
+        })
+      .then(statusData => {
+        var d2 = new Date(statusData.attributes.updated_at);
+        var dstr = d2.toFormat("YYYY年M月D日 HH24時MI分SS秒");
+        var data = {
+          title: "行先情報",
+          subtitle: "編集済み。",
+          greeting: dstr + "に更新。",
+          content: statusData,
+          content_user: statusData.relations.user.attributes,
+          datastatus: datastatus,
+          datakyakusaki: datakyakusaki,
+          datashanai: datashanai,
+          datadepartment: datadepartment,
+          login: login,
+          req_user: req_user
+        };
+        res.render("edit", data);
+      });
+
+  } else {
+    new UserStatusData({ id: req.params.id.slice(10) })
+      .save(rec_UserStatusData, { patch: true })
+      .then(statusData => {
+        var d2 = new Date(statusData.attributes.updated_at);
+        var dstr = d2.toFormat("YYYY年M月D日 HH24時MI分SS秒");
+        var data = {
+          title: "行先情報",
+          subtitle: "編集済み。",
+          greeting: dstr + "に更新。",
+          content: statusData,
+          content_user: {admin:0, err_times:0},
+          datastatus: datastatus,
+          datakyakusaki: datakyakusaki,
+          datashanai: datashanai,
+          datadepartment: datadepartment,
+          login: login,
+          req_user: req_user
+        };
+        res.render("edit", data);
       })
-    .then(status => {
-      return new UserStatusData().where("user_id","=", req.body.id)
-        .fetch({withRelated: ["user"]})
-      })
-    .then(statusData => {
-      var d2 = new Date(statusData.attributes.updated_at);
-      var dstr = d2.toFormat("YYYY年M月D日 HH24時MI分SS秒");
-      var data = {
-        title: "行先情報",
-        subtitle: "編集済み。",
-        greeting: dstr + "に更新。",
-        content: statusData,
-        datastatus: datastatus,
-        datakyakusaki: datakyakusaki,
-        datashanai: datashanai,
-        datadepartment: datadepartment,
-        login: login,
-        req_user: req_user
-      };
-      res.render("edit", data);
-    });
+  }
 });
 
 router.post("/:id/delete", isAuthenticated, function(req, res, next) {
