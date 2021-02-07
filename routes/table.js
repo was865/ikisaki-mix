@@ -137,7 +137,7 @@ function isAuthenticated(req, res, next){
     var data = {
       title: "login",
       form: { name: "", password: "" },
-      content: "<p class='error login_info'>ログインし直てください。</p>"
+      content: "<p class='error login_info'>ログインする必要があります。</p>"
     };
     res.render("login", data);  // ログイン画面に遷移
   }

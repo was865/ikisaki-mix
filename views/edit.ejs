@@ -16,196 +16,18 @@
 		<div class="header-left">
 			<h1><span><i class="fa fa-bars" aria-hidden="true"></i></span><%- subtitle %></h1>
 			<ul class="downlist">
-				<li id="create_user" class="admin_only"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span><a href="#">社員新規登録</a></li>
-				<li id="create_kyakusaki" class="admin_only mobile-hide"><span><i class="fas fa-handshake"></i></span><a href="#">客先管理＆新規</a></li>
-				<li id="create_shanai" class="admin_only mobile-hide"><span><i class="fa fa-building" aria-hidden="true"></i></span><a href="#">社内管理＆新規</a></li>
+				<li id="create_user" class="admin_only"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span>社員新規登録</li>
+				<li id="create_kyakusaki" class="admin_only mobile-hide"><span><i class="fas fa-handshake"></i></span>客先管理＆新規</li>
+				<li id="create_shanai" class="admin_only mobile-hide"><span><i class="fa fa-building" aria-hidden="true"></i></span>社内管理＆新規</li>
 				<li id="create_department" class="admin_only mobile-hide"><span><i class="fas fa-users" aria-hidden="true"></i></span>部署管理＆新規</li>
-				<li id="change_userinfo"><span><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span><a href="#">基本情報変更</a></li>
-				<li id="logout"><span><i class="fas fa-sign-out-alt"></i></span><a href="/logout">ログアウト</a></li>
+				<!-- <li id="manage_users" class="admin_only mobile-hide"><span><i class="fas fa-key" aria-hidden="true"></i></span>ユーザー管理</li> -->
+				<li id="change_userinfo"><span><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>基本情報変更</li>
+				<li id="logout"><span><i class="fas fa-sign-out-alt"></i></span>ログアウト</li>
 			</ul>
 </div>
 	</header>
 
-	<!-- モーダル部分　社員新規登録 -->
-	<div class="signup-modal-wrapper admin_only" id="signup-modal">
-		<div class="modal">
-		  <div id="close-modal">
-			<i class="fa fa-2x fa-times"></i>
-		  </div>
-		  <div id="adduser-form">
-			<h2>社員新規登録</h2>
-			<form name="form_newuser" method="POST" action="/newuser">
-				<select name="department" class="form-control placeholder_select" id="select_create_department">
-					<option value='' disabled selected style='display:none;'>部署名</option>
-					<% datadepartment.forEach ( (element)=> {  %>
-						<option value="<%= element.attributes.department %>"><%= element.attributes.department %></option>
-					<% }); %>
-				</select>
-				<div class="div_create_name">
-					<input id="create_name" name="name" class="form-control" type="text" placeholder="名前"><a id="newadmin_check_btn"><i class="fas fa-user"></i></a>
-				</div>
-				<input type="hidden" id="newadmin_check_body" name="newadmin_check_body" value="0">
-				<input id="create_position" name="position" class="form-control" type="text" placeholder="社内ポジション（省略可）">
-				<input id="create_information" name="information" class="form-control" type="text" placeholder="内線番号（省略可）">
-				<input id="create_email" name="email" class="form-control" type="text" placeholder="メールアドレス（省略可）">
-				<input id="create_password" name="password" class="form-control" type="password" placeholder="パスワード">
-				<input id="tmp_password" class="form-control" type="password" placeholder="パスワードを確認">
-				<a href="javascript:form_newuser.submit()" id="btn_newuser">新規登録</a>
-				<p id="form_newuser_info" style="font-size: 0.8em;"><span style="color: red;">※</span>氏名欄のアイコンをクリックすると管理者を登録できます。</p>
-			</form>
-		  </div>
-		</div>
-	</div>
-	<!-- モーダルここまで　社員新規登録 -->
-		
-	<!-- モーダル部分 客先管理-->
-	<div class="signup-modal-wrapper admin_only" id="addkyakusaki-modal">
-		<div class="modal">
-			<div id="close-modal2">
-			<i class="fa fa-2x fa-times"></i>
-			</div>
-			<div id="addkyakusaki-form">
-			<h2>客先管理＆新規登録</h2>
-			<form id="form_newkyakusaki" name="form_newkyakusaki" method="POST" action="/newkyakusaki">
-				<% var i;for (i in datakyakusaki) {  %>
-					<div>
-						<input name="kyakusaki" type="text" value="<%= datakyakusaki[i].attributes.kyakusaki %>"><span><i class="far fa-trash-alt btn_kyakusaki_delete"></i></span>
-						<input type="hidden" name="id" value="<%= datakyakusaki[i].attributes.id %>">
-					</div>
-				<% } %>
-				<input name="cnt" value="<%= i %>" type="hidden">
-
-				<!-- クローン用区域 -->
-				<div id="clonearea_newkyakusaki">
-					
-				</div>
-				<!-- クローン用区域 ここまで　-->
-
-				<!-- クローン要素 -->
-				<div class="clone_newkyakusaki hide" id="clone_newkyakusaki">
-					<input class="form-control input_newkyakusaki" type="text" placeholder="新客先を追加"><span><i class="fa fa-minus btn_kyakusaki_minus" aria-hidden="true"></i></span>
-				</div>
-				<!-- クローン要素 ここまで-->
-
-				<span id="btn_kyakusaki_add">+</span>
-				
-				<a href="javascript:form_newkyakusaki.submit()" id="btn_newkyakusaki">登録</a>
-			</form>
-			</div>
-		</div>
-	</div>
-	<!-- モーダルここまで　客先管理 -->
-
-	<div class="signup-modal-wrapper admin_only" id="addshanai-modal">
-		<div class="modal">
-			<div id="close-modal3">
-			<i class="fa fa-2x fa-times"></i>
-			</div>
-			<div id="addshanai-form">
-			<h2>社内所在地管理＆新規登録</h2>
-			<form id="form_newshanai" name="form_newshanai" method="POST" action="/newshanai">
-				<% var n;for (n in datashanai) {  %>
-					<div>
-						<input name="shanai" type="text" value="<%= datashanai[n].attributes.shanai %>"><span><i class="far fa-trash-alt btn_shanai_delete"></i></span>
-						<input type="hidden" name="id" value="<%= datashanai[n].attributes.id %>">
-					</div>
-				<% } %>
-				<input name="cnt_shanai" value="<%= n %>" type="hidden">
-
-				<!-- クローン用区域 -->
-				<div id="clonearea_newshanai">
-					
-				</div>
-				<!-- クローン用区域 ここまで　-->
-
-				<!-- クローン要素 -->
-				<div class="clone_newshanai hide" id="clone_newshanai">
-					<input class="form-control input_newshanai" type="text" placeholder="新社内ポジションを追加"><span><i class="fa fa-minus btn_shanai_minus" aria-hidden="true"></i></span>
-				</div>
-				<!-- クローン要素 ここまで-->
-
-				<span id="btn_shanai_add">+</span>
-
-				<a href="javascript:form_newshanai.submit()" id="btn_newshanai">登録</a>
-			</form>
-			</div>
-		</div>
-	</div>
-	<!-- モーダルここまで -->
-
-<!-- モーダル部分　社員情報管理 -->
-<div class="signup-modal-wrapper" id="userinfo-modal">
-	<div class="modal">
-	  <div id="close-modal4">
-		<i class="fa fa-2x fa-times"></i>
-	  </div>
-	  <div id="userinfo-form">
-		<h2>基本情報変更</h2>
-		<form name="form_newuserinfo" method="POST" action="/newuserinfo">
-		  <input id="userinfo_name" name="userinfo_name" class="form-control" type="text" placeholder="名前" value="<%= login.name %>">
-		  <select name="userinfo_department" class="form-control" id="userinfo_department" value="<%= login.department %>">
-			<% datadepartment.forEach ( (element)=> {  %>
-				<option value="<%= element.department %>"
-					<% if (element.department == login.department) { %>
-						selected
-					<% } %> 
-					><%= element.department %></option>
-			<% }); %>
-			<% if (login.department == "社長") { %>
-				<option value="社長" selected>社長</option>
-			<% } %>
-		  </select>
-		  <input id="userinfo_position" name="userinfo_position" class="form-control admin_only" type="text" placeholder="社内ポジション（省略可）" value="<%= login.position %>">
-		  <input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
-		  <input id="userinfo_email" name="userinfo_email" class="form-control" type="text" placeholder="メールアドレス（省略可）" value="<%= login.email %>">
-		  <input type="hidden" name="original_email" value="<%= login.email %>">
-		  <input id="userinfo_newpassword" name="userinfo_newpassword" class="form-control" type="password" placeholder="新しいパスワード（入力しない場合無変更）">
-		  <input id="userinfo_newpassword_tmp" class="form-control" type="password" placeholder="新しいパスワードを確認">
-		  <a href="javascript:form_newuserinfo.submit()" id="btn_newuserinfo">変更</a>
-		  <p id="userinfo_position_info"><span style="color: red;">※</span>変更後自動的にログアウトされます。</p>
-		</form>
-	  </div>
-	</div>
-</div>
-<!-- モーダルここまで　社員情報管理 -->
-
-	<!-- モーダル部分 部署管理-->
-	<div class="signup-modal-wrapper admin_only" id="adddepartment-modal">
-		<div class="modal">
-		<div id="close-modal5">
-			<i class="fa fa-2x fa-times"></i>
-		</div>
-		<div id="adddepartment-form">
-			<h2>部署管理＆新規登録</h2>
-			<form id="form_newdepartment" name="form_newdepartment" method="POST" action="/newdepartment">
-				<% var i;for (i in datadepartment) {  %>
-					<div>
-						<input name="department" type="text" value="<%= datadepartment[i].attributes.department %>"><span><i class="far fa-trash-alt btn_department_delete"></i></span>
-						<input type="hidden" name="id" value="<%= datadepartment[i].attributes.id %>">
-					</div>
-				<% } %>
-				<input name="cnt" value="<%= i %>" type="hidden">
-
-				<!-- クローン用区域 -->
-				<div id="clonearea_newdepartment">
-					
-				</div>
-				<!-- クローン用区域 ここまで　-->
-
-				<!-- クローン要素 -->
-				<div class="clone_newdepartment hide" id="clone_newdepartment">
-					<input class="form-control input_newdepartment" type="text" placeholder="新部署を追加"><span><i class="fa fa-minus btn_department_minus" aria-hidden="true"></i></span>
-				</div>
-				<!-- クローン要素 ここまで-->
-
-				<span id="btn_department_add">+</span>
-			
-			<a href="javascript:form_newdepartment.submit()" id="btn_newdepartment">登録</a>
-			</form>
-		</div>
-		</div>
-	</div>
-	<!-- モーダルここまで　部署管理 -->
+	<%- include header_modal_item %>
 
 	<!-- 編集テーブル -->
 	<div role="main" class="main_edit">
@@ -229,11 +51,11 @@
 				<% } else if (req_user.id != content.attributes.user_id) { %>
 					<tr><td><select name="department" id="department" value="<%= content.attributes.department %>">
 						<% datadepartment.forEach ( (element)=> {  %>
-							<option value="<%= element.attributes.department %>"
-								<% if (element.attributes.department == content.attributes.department) { %>
+							<option value="<%= element.department %>"
+								<% if (element.department == content.attributes.department) { %>
 									selected
 								<% } %> 
-								><%= element.attributes.department %></option>
+								><%= element.department %></option>
 						<% }); %>
 						<% if (login.department == "社長") { %>
 							<option value="社長"
@@ -278,10 +100,10 @@
 				<tr><td><select name="status" id="status" >
 					<option value=""></option>
 					<% datastatus.forEach ( (element)=> { %>
-						<option value="<%= element.attributes.status %>" 
-							<% if (content.attributes.status == element.attributes.status){ %>
+						<option value="<%= element.status %>" 
+							<% if (content.attributes.status == element.status){ %>
 								selected
-							<% } %> ><%= element.attributes.status %>
+							<% } %> ><%= element.status %>
 						</option>
 					<% }); %></select>
 				</td></tr>
@@ -307,18 +129,18 @@
 					</option>
 				<% } else if (content.attributes.status == "客先"){ %>
 					<% datakyakusaki.forEach ( (element)=> { %>
-						<option value="<%= element.attributes.kyakusaki %>" 
-							<% if (content.attributes.ikisaki == element.attributes.kyakusaki){ %>
+						<option value="<%= element.kyakusaki %>" 
+							<% if (content.attributes.ikisaki == element.kyakusaki){ %>
 								selected
-							<% } %> ><%= element.attributes.kyakusaki %>
+							<% } %> ><%= element.kyakusaki %>
 						</option>
 					<% });  %>
 				<% } else if (content.attributes.status == "社内"){ %>
 					<% datashanai.forEach ( (element)=> { %>
-						<option value="<%= element.attributes.shanai %>" 
-							<% if (content.attributes.ikisaki == element.attributes.shanai){ %>
+						<option value="<%= element.shanai %>" 
+							<% if (content.attributes.ikisaki == element.shanai){ %>
 								selected
-							<% } %> ><%= element.attributes.shanai %>
+							<% } %> ><%= element.shanai %>
 						</option>
 					<% });  %>
 				<% } %></select>
@@ -512,15 +334,27 @@
 			<p class="space"><br></p>
 		<% } %>
 
-	<form method="POST" action="/edit/<%= content.attributes.user_id %>/delete" name="form_delete" id="scroll-form-delete" class="admin_only">
-		<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
-		<div id="delete_content">
-			<a href="javascript:form_delete.submit()" class="btn-massage faa-parent animated-hover" id="btn_delete"><i class="fas fa-user-times faa-flash"></i>
-			  DELETE
-			  <span>"<%= content.attributes.name %>"の情報が削除されます</span>
-			</a>
-		</div>
-	</form>
+		<% if (!content.attributes.user_id) { %>
+			<form method="POST" action="/edit/tableUser_<%= content.attributes.id %>/delete" name="form_delete" id="scroll-form-delete" class="admin_only">
+				<input type="hidden" name="id" value="tableUser_<%= content.attributes.id %>">
+				<div id="delete_content">
+					<a href="javascript:form_delete.submit()" class="btn-massage faa-parent animated-hover isTableUser" id="btn_delete"><i class="fas fa-user-times faa-flash"></i>
+					DELETE
+					<span>"<%= content.attributes.name %>"の情報が削除されます</span>
+					</a>
+				</div>
+			</form>
+		<% } else { %>
+			<form method="POST" action="/edit/<%= content.attributes.user_id %>/delete" name="form_delete" id="scroll-form-delete" class="admin_only">
+				<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
+				<div id="delete_content">
+					<a href="javascript:form_delete.submit()" class="btn-massage faa-parent animated-hover" id="btn_delete" style="background-color: #808080;"><i class="fas fa-user-slash faa-flash"></i>
+					INACTIVE
+					<span style="background-color: #535353;">"<%= content.attributes.name %>"が非表示になります</span>
+					</a>
+				</div>
+			</form>
+		<% } %>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
@@ -569,14 +403,14 @@
 						$('.table_yoteijikoku').addClass('hide');
 						break;
 					case '客先':
-						var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.attributes.kyakusaki %>"><%= element.attributes.kyakusaki %></option><%  }) %>';
+						var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.kyakusaki %>"><%= element.kyakusaki %></option><%  }) %>';
 						$('#ikisaki').html(selectContent_kyakusaki);
 						$('#th_ikisaki').text('行先');
 						$('.table_ikisaki').removeClass('hide');
 						$('.table_yoteijikoku').removeClass('hide');
 						break;
 					case '社内':
-						var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.attributes.shanai %>"><%= element.attributes.shanai %></option><%  }) %>';
+						var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.shanai %>"><%= element.shanai %></option><%  }) %>';
 						$('#ikisaki').html(selectContent_shanai);
 						$('#th_ikisaki').text('行先');
 						$('.table_ikisaki').removeClass('hide');
@@ -599,17 +433,26 @@
 
 
 			$('#btn_delete').click(function(){
-				if ('<%= content.attributes.name %>' == '<%= login.name %>'){
-					if (!confirm('\nあなたの関連データはすべて削除されます。\nよろしいですか？\n\n※アカウント削除後、ログアウトするまで操作可能です。')) {
-						return false;
-					} else {
-						return true;
-					}
-				} else {
+				if ($(this).hasClass('isTableUser')) {
 					if (!confirm('\n<%= content.attributes.department %>〝<%= content.attributes.name %>″の関連データはすべて削除されます。\n\nよろしいですか？')) {
 						return false;
 					} else {
 						return true;
+					}
+					
+				} else {
+					if ('<%= content.attributes.name %>' == '<%= login.name %>'){
+						if (!confirm('\nあなたの行先情報の関連データ（所属、内線番号、座席情報、行先情報）は削除され、一旦ログアウトされます。\nよろしいですか？\n\n※アカウントが削除されません。\nテーブルから表示されなくなります。')) {
+							return false;
+						} else {
+							return true;
+						}
+					} else {
+						if (!confirm('\n<%= content.attributes.department %>〝<%= content.attributes.name %>″の行先情報の関連データ（所属、内線番号、座席情報、行先情報）は削除されます。\n\nよろしいですか？\n\n※アカウントが削除されません。\nテーブルから表示されなくなります。')) {
+							return false;
+						} else {
+							return true;
+						}
 					}
 				}
 			});
@@ -774,6 +617,8 @@
 		// 新規客先登録モーダル
 		$('#create_kyakusaki').click(function() {
 			$('#form_newkyakusaki').children().children('input[name="kyakusaki"]').parent().show();
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
 			$('#addkyakusaki-modal').fadeIn();
 		});
 		$('#close-modal2').click(function() {
@@ -783,29 +628,35 @@
 		// 新規社内登録モーダル
 		$('#create_shanai').click(function() {
 			$('#form_newshanai').children().children('input[name="shanai"]').parent().show();
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
 			$('#addshanai-modal').fadeIn();
 		});
 		$('#close-modal3').click(function(){
 			$('#addshanai-modal').fadeOut();
 		});
 
-		//部署管理モーダル
-		$('#create_department').click(function() {
-			$('#form_newdepartment').children().children('input[name="department"]').parent().show();
-			$('#adddepartment-modal').fadeIn();
-		});
-		$('#close-modal5').click(function() {
-			$('#adddepartment-modal').fadeOut();
-		});
-
 		// 基本情報変更モーダル
 		$('#change_userinfo').click(function() {
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
 			$('#userinfo-modal').fadeIn();
 		});
 		$('#close-modal4').click(function(){
 			$('#userinfo-modal').fadeOut();
 			$('#userinfo_newpassword').val('').attr('placeholder','新しいパスワード（入力しない場合無変更）');
 			$('#userinfo_newpassword_tmp').val('').attr('placeholder','新しいパスワードを確認').hide();
+		});
+
+		//部署管理モーダル
+		$('#create_department').click(function() {
+			$('#form_newdepartment').children().children('input[name="department"]').parent().show();
+			$('ul').hide().removeClass('open');
+			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
+			$('#adddepartment-modal').fadeIn();
+		});
+		$('#close-modal5').click(function() {
+			$('#adddepartment-modal').fadeOut();
 		});
 
 
@@ -1103,9 +954,12 @@
 				// 	}
 				// });
 
+		//logout
+		$('#logout').click(function(){
+			window.location.href = '/logout';
+		});
+
 		}); 
-
-
 		
 
 	</script>

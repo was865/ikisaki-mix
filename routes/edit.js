@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+var sqlite3 = require("sqlite3");
 var moment = require("moment-timezone");
 var datautils = require("date-utils");
 const { response } = require("express");
@@ -7,6 +8,8 @@ const sendmail = require('sendmail')();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+
+var db = new sqlite3.Database("ikisaki.sqlite3");
 
 var knex = require("knex")({
   dialect: "sqlite3",
@@ -48,67 +51,122 @@ var departmentdata = Bookshelf.Model.extend({
 
 var datadepartment;
 function getDepartment() {
-  new departmentdata()
-    .fetchAll()
-    .then(collection => {
-      datadepartment = collection.toArray();
-    })
-    .catch(err => {
-      response
-        .status(500)
-        .json({ error: true, data: { message: err.message } });
+  db.serialize(() =>{
+    db.all("select * from department_list", (err, rows) =>{
+      if (!err) {
+        datadepartment = rows;
+      }
     });
-
-  return datadepartment;
+  });
 }
+getDepartment();
+
+// var datastatus;
+// function getStatus() {
+//   new statusdata()
+//     .fetchAll()
+//     .then(collection => {
+//       datastatus = collection.toArray();
+//     })
+//     .catch(err => {
+//       response
+//         .status(500)
+//         .json({ error: true, data: { message: err.message } });
+//     });
+
+//   return datastatus;
+// }
 
 var datastatus;
 function getStatus() {
-  new statusdata()
-    .fetchAll()
-    .then(collection => {
-      datastatus = collection.toArray();
-    })
-    .catch(err => {
-      response
-        .status(500)
-        .json({ error: true, data: { message: err.message } });
+  db.serialize(() =>{
+    db.all("select * from status_list", (err, rows) =>{
+      if (!err) {
+        datastatus = rows;
+      }
     });
-
-  return datastatus;
+  });
 }
+getStatus();
+
+// var datakyakusaki;
+// function getKyakusaki() {
+//   new kyakusakidata()
+//     .fetchAll()
+//     .then(collection => {
+//       datakyakusaki = collection.toArray();
+//     })
+//     .catch(err => {
+//       response
+//         .status(500)
+//         .json({ error: true, data: { message: err.message } });
+//     });
+
+//   return datakyakusaki;
+// }
 
 var datakyakusaki;
 function getKyakusaki() {
-  new kyakusakidata()
-    .fetchAll()
-    .then(collection => {
-      datakyakusaki = collection.toArray();
-    })
-    .catch(err => {
-      response
-        .status(500)
-        .json({ error: true, data: { message: err.message } });
+  db.serialize(() =>{
+    db.all("select * from kyakusaki_list", (err, rows) =>{
+      if (!err) {
+        datakyakusaki = rows;
+      }
     });
-
-  return datakyakusaki;
+  });
 }
+getKyakusaki();
+
+// var datashanai;
+// function getShanai() {
+//   new shanaidata()
+//     .fetchAll()
+//     .then(collection => {
+//       datashanai = collection.toArray();
+//     })
+//     .catch(err => {
+//       response
+//         .status(500)
+//         .json({ error: true, data: { message: err.message } });
+//     });
+
+//   return datashanai;
+// }
+
+// var datashanai;
+// function getShanai() {
+//   db.serialize(() =>{
+//     db.all("select * from shanai_list", (err, rows) =>{
+//       if (!err) {
+//         datashanai = rows;
+//       }
+//     });
+//   });
+// }
+// getShanai();
 
 var datashanai;
-function getShanai() {
-  new shanaidata()
-    .fetchAll()
-    .then(collection => {
-      datashanai = collection.toArray();
+function readShanai(){
+  return new Promise(resolve =>{
+    db.serialize(() => {
+      db.all("select * from shanai_list", (err, rows) =>{
+        if (!err) {
+          datashanai = rows;
+        }
+      });
+      db.run("COMMIT", () => {
+          resolve();
+      });
     })
-    .catch(err => {
-      response
-        .status(500)
-        .json({ error: true, data: { message: err.message } });
-    });
-
-  return datashanai;
+  })
 }
+
+async function getShanai(){
+  await readShanai();
+}
+
+getShanai();
+
 
 function isAuthenticated(req, res, next){
   if (req.isAuthenticated()) {  // 認証済
@@ -118,7 +176,7 @@ function isAuthenticated(req, res, next){
     var data = {
       title: "login",
       form: { name: "", password: "" },
-      content: "<p class='error login_info'>ログインし直てください。</p>"
+      content: "<p class='error login_info'>ログインする必要があります。</p>"
     };
     res.render("login", data);  // ログイン画面に遷移
   }
@@ -209,7 +267,7 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
   if (req.body.information == '' || req.body.information == null) {
     req.body.information == '／';
   }
-  
+
   if (
     req.body.status == "" ||
     req.body.status == "在席" ||
@@ -226,8 +284,6 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
   } else if (req.body.status == "休暇") {
     req.body.time = "／";
   }
-
-  console.log("req.body.admin：" + req.body.admin);
 
   if (req.body.password == undefined || req.body.password == '') {
     var rec_Userdata = {
@@ -277,6 +333,8 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
   }
 
   if (req.params.id.slice(10) == ""){
+
+    console.log("req.body.admin：" + req.body.admin);
 
     new Userdata({ id: req.body.id })
       .save(rec_Userdata, { patch: true })
@@ -333,20 +391,32 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
 
 router.post("/:id/delete", isAuthenticated, function(req, res, next) {
 
-  new Userdata()
-    .where("id", "=", req.body.id)
+  if (req.body.id.slice(10) == ""){ //アカウントを持っていれば
+
+    new UserStatusData().where("user_id","=", req.body.id)
     .fetch()
-    .then(record_user => {
-      record_user.destroy();
+    .then(record_status => {
+      record_status.attributes.information = null;
+      record_status.attributes.position = null;
+      record_status.attributes.status = null;
+      record_status.attributes.ikisaki = null;
+      record_status.attributes.time = null;
+      record_status.attributes.memo = null;
+      record_status.attributes.department = "*非表示*";
+      record_status.save();
+      res.redirect("/");
     })
-    .then(result => {
-      return new UserStatusData().where("user_id","=", req.body.id)
-      .fetch()
-      .then(record_status => {
-        record_status.destroy();
-        res.redirect("/");
-      })
-    });
+
+  } else { //アカウントを持たなければ
+    new UserStatusData().where("id", "=", req.body.id.slice(10))
+    .fetch()
+    .then(result =>{
+      result.destroy();
+      console.log("ユーザーが削除されました。");
+      res.redirect("/");
+    })
+  }
+  
 });
 
 router.post("/:id/unlock", isAuthenticated, function(req, res, next) {

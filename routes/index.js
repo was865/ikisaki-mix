@@ -248,7 +248,7 @@ function isAuthenticated(req, res, next){
     var data = {
       title: "login",
       form: { name: "", password: "" },
-      content: "<p class='error login_info'>ログインし直てください。</p>"
+      content: "<p class='error login_info'>ログインする必要があります。</p>"
     };
     res.render("login", data);  // ログイン画面に遷移
   }
@@ -284,7 +284,7 @@ router.get("/", isAuthenticated, function(req, res, next) {
     login.department +
     '" THEN "AA" ELSE department END as sort1, CASE WHEN name = "' +
     login.name +
-    '" THEN "00" ELSE name END as sort2 FROM users_status LEFT JOIN users ON users_status.user_id = users.id ORDER BY admin,sort2,sort1 DESC;';
+    '" THEN "00" ELSE name END as sort2 FROM users_status LEFT JOIN users ON users_status.user_id = users.id ORDER BY admin,sort1,sort2 DESC;';
 
   Bookshelf.knex.raw(sql).then(collection => {
     collection.forEach(element => {
@@ -355,8 +355,7 @@ router.get("/", isAuthenticated, function(req, res, next) {
       msg: datacontact,
       datadepartment: datadepartment
     };
-
-    console.log("IndexページGET：" + datacontact);
+    console.log("IndexページGET連絡：" + datacontact);
 
     res.render("index", data);
 
@@ -711,8 +710,14 @@ router.post("/newkyakusaki", isAuthenticated, (req, res, next) => {
 
   for (var i = 0; i <= cnt; i++) {
 
-    var kyakusaki = req.body.kyakusaki[i];
-    var id = req.body.id[i];
+    if (Array.isArray(req.body.kyakusaki)){
+      var kyakusaki = req.body.kyakusaki[i];
+      var id = req.body.id[i];
+    } else {
+      var kyakusaki = req.body.kyakusaki;
+      var id = req.body.id;
+    }
+    
     console.log("変更先ID: 「" + id + "」、変更後：「" + kyakusaki + "」");
 
     if (kyakusaki.length == 0) {
@@ -1474,7 +1479,26 @@ router.post("/contact", isAuthenticated, (req, res, next) => {
     res.redirect("/");
     });
     
-  });
+});
+
+router.post("/:id/delete_user", isAuthenticated, function(req, res, next) {
+
+  new UserStatusData().where("user_id","=", req.body.id)
+    .fetch()
+    .then(record_status => {
+      record_status.attributes.user_id = null;
+      record_status.save();
+    })
+    .then(result => {
+      return new Userdata().where("id", "=", req.body.id)
+      .fetch()
+      .then(record_user => {
+        record_user.destroy();
+        res.redirect("/");
+      })
+    });
+
+});
 
 
 router.get("/logout", function(req, res) {
