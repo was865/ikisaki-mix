@@ -39,7 +39,7 @@
         <p class="p_time"><%= data.time %></p>
         <p class="p_memo"><%= data.memo %></p>
         <p class="p_position"><%= data.position %></p>
-        <p class="p_id"><%= data.id %></p>
+        <p class="p_id"><% if (data.user_id == "" || data.user_id == undefined) { %>tableUser_<%= data.id %><% } else { %><%= data.id %><% } %></p>
     </div>
 
 <% } else { %>

@@ -284,7 +284,7 @@ router.get("/", isAuthenticated, function(req, res, next) {
     login.department +
     '" THEN "AA" ELSE department END as sort1, CASE WHEN name = "' +
     login.name +
-    '" THEN "00" ELSE name END as sort2 FROM users_status LEFT JOIN users ON users_status.user_id = users.id ORDER BY admin,sort1,sort2 DESC;';
+    '" THEN "00" ELSE name END as sort2 FROM users_status LEFT JOIN users ON users_status.user_id = users.id ORDER BY admin DESC ,sort1 ,sort2 DESC;';
 
   Bookshelf.knex.raw(sql).then(collection => {
     collection.forEach(element => {

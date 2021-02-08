@@ -172,6 +172,7 @@ router.get("/", isAuthenticated, function(req, res, next) {
 
       usertabledata.push({
         id: element.attributes.user_id,
+        table_id: element.attributes.id,
         name: element.attributes.name,
         information: element.attributes.information,
         department: element.attributes.department,
@@ -242,44 +243,104 @@ router.post("/update", isAuthenticated, function(req, res, next) {
     req.body.time = "／";
   }
 
+  var rec = {
+    status: req.body.status,
+    ikisaki: req.body.ikisaki,
+    time: req.body.time,
+    memo: req.body.memo
+  };
+
   if (Array.isArray(req.body.id)) {
-    console.log("req.body.id.length : " + req.body.id.length);
-    for (var i = 0; i < req.body.id.length; i++) {
 
-      console.log("更新開始しました。");
-      var rec = {
-        status: req.body.status,
-        ikisaki: req.body.ikisaki,
-        time: req.body.time,
-        memo: req.body.memo
-      };
-      
-      console.log("req.body.id[" + i + "] : " + req.body.id[i]);
+    var userId_filtered_array = new Array();
+    req.body.id.forEach(element => {
+      if (element.slice(10) == "") {
+        userId_filtered_array.push(element);
+     }
+    })
 
-      new UserStatusData().where("user_id","=", req.body.id[i])
-        .save(rec, { patch: true })
-        .then(result => {
-          console.log("Array更新完了しました。");
-        });
-    }
-    res.redirect("/table");
+    var tableId_sliced_array = new Array();
+    req.body.id.forEach(element => {
+      if (element.slice(10) != "") {
+        tableId_sliced_array.push(element.slice(10));
+     }
+    })
+    console.log(req.body.id);
+    console.log(tableId_sliced_array);
+
+    var userId_joined = userId_filtered_array.join();
+    var tableId_joined = tableId_sliced_array.join();
+
+    console.log("userId_joined: " + userId_joined + ", tableId_joined: " + tableId_joined);
+
+    var sql = "SELECT * FROM users_status WHERE user_id in (" + userId_joined + ") OR id in (" + tableId_joined + ");";
+
+    Bookshelf.knex.raw(sql).then(collection => {
+      collection.forEach(element => {
+        new UserStatusData({id:element.id}).save(rec, { patch: true });
+      })
+      console.log("まとめ編集POST：更新しました。");
+      res.redirect("/table");
+    })
+
   } else {
-    console.log("更新開始しました。");
-    var rec = {
-      status: req.body.status,
-      ikisaki: req.body.ikisaki,
-      time: req.body.time,
-      memo: req.body.memo
-    };
-    
-    console.log("req.body.id: " + req.body.id);
-    
-    new UserStatusData().where("user_id","=", req.body.id)
-        .save(rec, { patch: true })
-        .then(result => {
-          console.log("単項目更新完了しました。");
-        });
+    if (req.body.id.slice(10) == "") {
+      new UserStatusData().where("id","=", req.body.id)
+      .save(rec, { patch: true })
+      .then(status => {
+        console.log("単項目編集POST：更新しました。");
+        res.redirect("/table");
+      })
+    } else {
+      new UserStatusData().where("id","=", req.body.id.slice(10))
+      .save(rec, { patch: true })
+      .then(status => {
+        console.log("単項目編集POST：更新しました（テーブルユーザー）。");
+        res.redirect("/table");
+      })
+    }
   }
+
+
+  
+  // if (Array.isArray(req.body.id)) {
+  //   console.log("req.body.id.length : " + req.body.id.length);
+  //   for (var i = 0; i < req.body.id.length; i++) {
+
+  //     console.log("更新開始しました。");
+  //     var rec = {
+  //       status: req.body.status,
+  //       ikisaki: req.body.ikisaki,
+  //       time: req.body.time,
+  //       memo: req.body.memo
+  //     };
+      
+  //     console.log("req.body.id[" + i + "] : " + req.body.id[i]);
+
+  //     new UserStatusData().where("user_id","=", req.body.id[i])
+  //       .save(rec, { patch: true })
+  //       .then(result => {
+  //         console.log("Array更新完了しました。");
+  //       });
+  //   }
+  //   res.redirect("/table");
+  // } else {
+  //   console.log("更新開始しました。");
+  //   var rec = {
+  //     status: req.body.status,
+  //     ikisaki: req.body.ikisaki,
+  //     time: req.body.time,
+  //     memo: req.body.memo
+  //   };
+    
+  //   console.log("req.body.id: " + req.body.id);
+    
+  //   new UserStatusData().where("user_id","=", req.body.id)
+  //       .save(rec, { patch: true })
+  //       .then(result => {
+  //         console.log("単項目更新完了しました。");
+  //       });
+  // }
 
 });
 
@@ -291,7 +352,8 @@ router.post("/contact", isAuthenticated, (req, res, next) => {
     msg: req.body.msg
   };
   new contactdata({ id: 1 }).save(rec, { patch: true }).then(result => {
-    console.log("更新しました。");
+    getMsg();
+    console.log("MSG更新しました。");
   });
 
   res.redirect("/table");
