@@ -141,8 +141,8 @@ $(function() {
             $('#tmp_password').attr('placeholder','パスワードを確認してください。');
             return false;
         } else {
-            //正規表現パターン（半角英数４桁に一致）
-            var regex = new RegExp(/^([a-zA-Z0-9]{6,13})$/);
+            //正規表現パターン（半角英数......に一致）
+            var regex = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,20}$/i);
             
             //判定する文字列
             var str = $('#create_password').val();
@@ -151,7 +151,7 @@ $(function() {
             if (regex.test(str)) {
                 return true;
             } else {
-                alert("6文字以上13文字以内の半角英数字で設定してください。");
+                alert("6文字以上20文字以内の半角英数字混在のものを設定してください。");
                 $('#create_password').val('');
                 $('#tmp_password').val('');
                 return false;
@@ -184,18 +184,18 @@ $(function() {
             return false;
         } else {
 
-            //正規表現パターン（半角英数４桁に一致）
-            var regex = new RegExp(/^([a-zA-Z0-9]{6,13})$/);
-            
+            //正規表現パターン（半角英数......に一致）
+            var regex = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,20}$/i);
+                        
             //判定する文字列
             var str = $('#userinfo_newpassword').val();
-            
+
             //判定
             if (regex.test(str)) {
                 alert('\n情報変更できました！\n\nログインし直してください。');
                 return true;
             } else {
-                alert("6文字以上13文字以内の半角英数字で設定してください。");
+                alert("6文字以上20文字以内の半角英数字混在のものを設定してください。");
                 $('#userinfo_newpassword').val('');
                 $('#userinfo_newpassword_tmp').val('');
                 return false;

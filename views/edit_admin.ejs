@@ -504,8 +504,8 @@
 
 				function regex_check(){
 					if ($('#password').val().length) {
-						//正規表現パターン（半角英数４桁に一致）
-						var regex = new RegExp(/^([a-zA-Z0-9]{6,13})$/);
+						//正規表現パターン（半角英数......に一致）
+						var regex = new RegExp(/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{6,20}$/i);
 		
 						//判定する文字列
 						var str = $('#password').val();
@@ -514,7 +514,7 @@
 						if (regex.test(str)) {
 							return true;
 						} else {
-							alert("6文字以上13文字以内の半角英数字で設定してください。");
+							alert("6文字以上20文字以内の半角英数字混在のものを設定してください。");
 							$('#password').val('');
 							return false;
 						}
