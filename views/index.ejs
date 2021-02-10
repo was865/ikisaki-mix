@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.3.0/font-awesome-animation.min.css" integrity="sha512-Po8rrCwchD03Wo+2ibHFielZ8luDAVoCyE9i6iFMPyn9+V1tIhGk5wl8iKC9/JfDah5Oe9nV8QzE8HHgjgzp3g==" crossorigin="anonymous" />
 	</head>
 
-<body>
+<body background="https://msi-net.co.jp/main/wp-content/uploads/2020/01/image5.jpg">
 	<header>
 			<div class="header-right">
 				<a href="/"><img class="logo" src="https://msi-net.co.jp/main/wp-content/uploads/2020/01/logo.png"></a>
@@ -16,11 +16,6 @@
 			<div class="header-left">
 					<h1><span><i class="fa fa-bars" aria-hidden="true"></i></span><%= title %></h1>
 					<ul class="downlist">
-						<li id="create_user" class="admin_only"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span>社員新規登録</li>
-						<li id="create_kyakusaki" class="admin_only mobile-hide"><span><i class="fas fa-handshake"></i></span>客先管理＆新規</li>
-						<li id="create_shanai" class="admin_only mobile-hide"><span><i class="fa fa-building" aria-hidden="true"></i></span>社内管理＆新規</li>
-						<li id="create_department" class="admin_only mobile-hide"><span><i class="fas fa-users" aria-hidden="true"></i></span>部署管理＆新規</li>
-						<li id="manage_users" class="admin_only mobile-hide"><span><i class="fas fa-key" aria-hidden="true"></i></span>ユーザー管理</li>
 						<li id="change_userinfo"><span><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>基本情報変更</li>
 						<li id="logout"><span><i class="fas fa-sign-out-alt"></i></span>ログアウト</li>
 					</ul>
@@ -54,7 +49,45 @@
 		</form>
 	</div>
 
-	<%- include header_modal_item %>
+	<!-- モーダル部分　社員情報管理 -->
+	<div class="signup-modal-wrapper" id="userinfo-modal">
+	    <div class="modal">
+	      <div id="close-modal4">
+	        <i class="fa fa-2x fa-times"></i>
+	      </div>
+	      <div id="userinfo-form">
+	        <h2>基本情報変更</h2>
+	        <form name="form_newuserinfo" method="POST" action="/newuserinfo">
+	          <input id="userinfo_name" name="userinfo_name" class="form-control" type="text" placeholder="名前" value="<%= login.name %>">
+	          <select name="userinfo_department" class="form-control" id="userinfo_department" value="<%= login.department %>">
+	            <% datadepartment.forEach ( (element)=> {  %>
+	                <option value="<%= element.department %>"
+	                    <% if (element.department == login.department) { %>
+	                        selected
+	                    <% } %> 
+	                    ><%= element.department %></option>
+                <% }); %>
+                <% if (login.department == "社長") { %>
+                    <option value="社長" selected>社長</option>
+                <% } %>
+	            <option value="*非表示*" 
+	            <% if (login.department == "*非表示*") { %>
+	                selected
+	            <% } %>
+	            >*非表示*</option>
+	          </select>
+	          <input id="userinfo_information" name="userinfo_information" class="form-control" type="text" placeholder="内線番号（省略可）" value="<%= login.information %>">
+	          <input id="userinfo_email" name="userinfo_email" class="form-control" type="text" placeholder="メールアドレス（省略可）" value="<%= login.email %>">
+	          <input type="hidden" name="original_email" value="<%= login.email %>">
+	          <input id="userinfo_newpassword" name="userinfo_newpassword" class="form-control" type="password" placeholder="新しいパスワード（入力しない場合無変更）">
+	          <input id="userinfo_newpassword_tmp" class="form-control" type="password" placeholder="新しいパスワードを確認">
+	          <a href="javascript:form_newuserinfo.submit()" id="btn_newuserinfo">変更</a>
+	          <p id="userinfo_position_info"><span style="color: red;">※</span>変更後自動的にログアウトされます。</p>
+	        </form>
+	      </div>
+	    </div>
+	</div>
+	<!-- モーダルここまで　社員情報管理 -->
 
 	<!-- モーダル部分　メール編集用モダール -->
 	<div class="signup-modal-wrapper" id="mail-modal">
@@ -156,70 +189,6 @@
                     <%- include('data_item', {usertabledata:usertabledata[i]}) %>
 				<% } %>
 
-				<tr class="mobile-hide tr_add admin_only">
-					<td><select name="department" class="select_add placeholder_select" id="department" placeholder="部署">
-						<option value='' disabled selected style='display:none;'>部署名</option>
-						<% datadepartment.forEach ( (element)=> {  %>
-							<option value="<%= element.department %>">
-								<% if (element.department == "イノベーション事業本部") { %>
-									ｲﾉﾍﾞｰｼｮﾝ事業本部
-								<% } else { %>
-									<%= element.department %>
-								<% } %>
-							</option>
-						<% }); %>
-						</select>
-					</td>
-					<td><input type="text" class="text_add add_name" name="name" placeholder="名前"></td>
-					<td><input type="text" class="text_add" name="information" placeholder="内線"></td>
-					<td><select name="status" class="select_add" id="status">
-						<option value=""></option>
-						<% datastatus.forEach ( (element)=> {  %>
-							<option value="<%= element.status %>"><%= element.status %></option>
-						<% }); %>
-						</select>
-					</td>
-					<td><select class="select_add" name="ikisaki" id="ikisaki" style="display: none;"></select></td>
-					<td><select class="select_add" name="time" id="time" style="display: none;">
-						<option value="~ 8:30">~ 8:30</option>
-						<option value="~ 9:00">~ 9:00</option>
-						<option value="~ 9:30">~ 9:30</option>
-						<option value="~ 10:00">~ 10:00</option>
-						<option value="~ 10:30">~ 10:30</option>
-						<option value="~ 11:00">~ 11:00</option>
-						<option value="~ 11:30">~ 11:30</option>
-						<option value="~ 12:00">~ 12:00</option>
-						<option value="~ 12:30">~ 12:30</option>
-						<option value="~ 13:00">~ 13:00</option>
-						<option value="~ 13:30">~ 13:30</option>
-						<option value="~ 14:00">~ 14:00</option>
-						<option value="~ 14:30">~ 14:30</option>
-						<option value="~ 15:00">~ 15:00</option>
-						<option value="~ 15:30">~ 15:30</option>
-						<option value="~ 16:00">~ 16:00</option>
-						<option value="~ 16:30">~ 16:30</option>
-						<option value="~ 17:00">~ 17:00</option>
-						<option value="~ 17:30">~ 17:30</option>
-						<option value="~ 18:00">~ 18:00</option>
-						<option value="~ 18:30">~ 18:30</option>
-						<option value="~ 19:00">~ 19:00</option>
-						<option value="~ 19:30">~ 19:30</option>
-						<option value="~ 20:00">~ 20:00</option>
-						<option value="~ 20:30">~ 20:30</option>
-						<option value="~ 21:00">~ 21:00</option>
-						<option value="~ 21:30">~ 21:30</option>
-						<option value="~ 22:00">~ 22:00</option>
-						<option value="22:00 ~">22:00 ~</option>
-						<option value="不帰">不帰</option>
-					</select></td>
-					<td><textarea type="text" class="memo_add" name="memo" placeholder="メモ"></textarea></td>
-					<td>/</td>
-					<td>
-						<div class="btn-wrap">
-							<a href="javascript:form_table.submit()" class="btn btn-switch" id="btn_add"><span style="color: rgb(20, 16, 252);">新規</span></a>
-						</div>
-					</td>
-				</tr>
             </table>
           <p class="space"><br></p>
         </form>
@@ -227,84 +196,10 @@
 </div>	
 
 
-<div class="main_index admin_only" id="main_index_manage">
-	<div role="main" class="index-form">
-		<table class="table_index">
-			<thead>
-				<tr>
-					<th style="min-width: 100pt; background-color:#58687f;">ユーザー名</th>
-					<th style="min-width: 100pt; background-color:#58687f;">名前</th>
-					<th style="min-width: 100pt; background-color:#58687f;">ユーザー種類</th>
-					<th style="width: 20%; max-width: 100pt; background-color:#58687f;">ログイン失敗回数</th>
-					<th style="width: 12%; min-width: 75pt; background-color:#58687f;">変更</th>
-					<th style="width: 8%; min-width: 50pt; background-color:#58687f;">削除</th>
-				</tr>
-			</thead>
-			
-			<% for(var i in usertabledata_manage) { %>
-				<tr class="data_item_tr">
-					<td><% if(usertabledata_manage[i].user_admin == 1 || usertabledata_manage[i].user_admin == 0) { %>
-						<%= usertabledata_manage[i].username %>
-					<% } else { %>
-						/
-					<% } %></td>
-					<td><%= usertabledata_manage[i].name %></td>
-					<td><% if (usertabledata_manage[i].user_admin == 1) { %>
-							<% if (usertabledata_manage[i].department != "*非表示*") { %>
-								管理者
-							<% } else { %>
-								管理者（非表示）
-							<% } %>
-					<% } else if (usertabledata_manage[i].user_admin == 0){ %>
-						<% if (usertabledata_manage[i].department != "*非表示*") { %>
-							一般ユーザー
-						<% } else { %>
-							一般ユーザー（非表示）
-						<% } %>
-					<% } else { %>
-						テーブルのみ
-					<% } %></td>
-					<td><% if(usertabledata_manage[i].user_admin == 1 || usertabledata_manage[i].user_admin == 0) { %>
-						<%= usertabledata_manage[i].err_times %>回
-					<% } else { %>
-						/
-					<% } %></td>
-				  	<td>
-						<div class="btn-wrap">
-							<% if (usertabledata_manage[i].id == "" || usertabledata_manage[i].id == undefined) { %>
-								<a href="/edit/tableUser_<%=  usertabledata_manage[i].table_id  %>/" class="btn btn-switch"><span>編集</span></a>
-							<% } else { %>
-								<a href="/edit/<%=  usertabledata_manage[i].id  %>/" class="btn btn-switch"><span>編集</span></a>
-							<% } %>
-						</div>
-					</td>
-					<td>
-						<% if (usertabledata_manage[i].id == "" || usertabledata_manage[i].id == undefined) { %>
-							<a href="#" class="btn btn-switch" style="pointer-events: none;"><span><i class="far fa-trash-alt"></i></span></a>
-						<% } else { %>
-							<input style="display: none;" name="id" value="<%= usertabledata_manage[i].id %>">
-							<input style="display: none;" class="delete_user_name" value="<%= usertabledata_manage[i].username %>">
-							<a href="javascript:form_delete_user.submit()" class="btn btn-switch btn_delete_user"><span><i class="far fa-trash-alt" style="color: red;"></i></span></a>
-						<% } %></td>
-					</tr>
-
-			<% } %>
-
-			<!-- アカウント削除用フォームエリア -->
-			<div id="form_delete_user_appendArea"></div>
-			<!-- ここまで -->
-
-		</table>
-		<p class="space"><br></p>
-	</div>
-</div>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="/javascripts/headerModal.js"></script>
 <script>
-	$(function() {
-		$("#sortableArea").sortable();
-	});
 	//スマホhover無効処理
 	var touch = 'ontouchstart' in document.documentElement || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 	
@@ -330,38 +225,19 @@
 	
 	$(function() {
 
-		console.log('管理者権限: <%= req_user.admin %>');
-		if ('<%= req_user.admin %>' != 1){
-			$('body').css('background-image','url(https://msi-net.co.jp/main/wp-content/uploads/2020/01/image5.jpg)');
-			$('.admin_only').remove();
-		} else {
-			$('body').css('background-image','url(https://recruit.msi-net.co.jp/main/wp-content/uploads/2019/12/mainvisual-002.jpg)');
-			$('.color_example').css('background-color', 'rgba(83, 85, 85, 0.486)');
-		}
+		// $('body').css('background-image','url(https://msi-net.co.jp/main/wp-content/uploads/2020/01/image5.jpg)');
 
 		var ua = navigator.userAgent;
 			if ((ua.indexOf('iPhone') >  0 || ua.indexOf('Android') >  0) && ua.indexOf('Mobile') >  0) {
 				// スマートフォン用処理
 				console.log('スマートフォン用処理開始');
 				$('.mobile-hide').hide();
-				$('.admin_only').remove();
 				$('.lengthCheck_memo').each(function(){
 					if ($(this).text().length > 8){
 						$(this).css('font-size','33px');
 					}
 				});
 				$('#contact_text').attr('placeholder','改行キーで送信；');
-				$('.header-left h1 span').click(function(){
-					if ($('ul').hasClass('open')) {
-						$(this).html('<i class="fa fa-bars" aria-hidden="true"></i>');
-						$('ul').slideUp().removeClass('open');
-						// $('#searchbox').slideDown();
-					} else {
-						$('ul').slideDown().addClass('open');
-						$(this).html('<i class="fa fa-chevron-down" aria-hidden="true"></i>');
-						// $('#searchbox').slideUp();
-					}
-				});
 				//スクロールが100に達したらボタン表示
 				$(window).scroll(function() {
 					if ($(this).scrollTop() > 116){
@@ -374,54 +250,11 @@
 			else {
 				// PC用処理
 				$('.mobile-hide').show();
-				// Downlistメニュー
-				$('.header-left h1 span').click(function(){
-					if ($('ul').hasClass('open')) {
-						$(this).html('<i class="fa fa-bars" aria-hidden="true"></i>');
-						$('ul').slideUp().removeClass('open');
-					} else {
-						$('ul').slideDown().addClass('open');
-						$(this).html('<i class="fa fa-chevron-down" aria-hidden="true"></i>');
-					}
-				});
 			}
 
 			// $.getJSON("/ajax", function(json){
 			// 	$('#contact_text').val(json.msg);
 			// });
-			
-		$('#main_index_manage').hide();
-		$('#manage_users').click(function() {
-			$('body').css('background-image','url(https://msi-net.co.jp/main/wp-content/uploads/2020/01/computer-1591018_1920-1024x669.jpg)');
-			$('#main_index_display').hide();
-			$('.color_example').hide();
-			$('#contact_wrap').hide();
-			$('ul').hide().removeClass('open');
-			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
-			$('.index-form').css('transform','translate(-50%)');
-			$('#main_index_manage').show();
-		});
-
-		$('.btn_edit').hover(function(){
-			$(this).animate({opacity: 1},150)
-		},function(){
-			$(this).animate({opacity: 0.6}, 400)
-		});
-
-		$('#btn_add').click(function(){
-			if ($('.add_name').val() == ''){
-				alert('\n名前は必ず入力してください！');
-				return false;
-			} else if ($('#status').val() == ''){
-				$('#time').val('');
-				alert('\nパスワードは＂1＂;\n管理者権限は＂無＂；\nとして設定されています。');
-				return true;
-			}
-		});
-
-		$('.placeholder_select').change(function() {
-			$(this).css('color','black');
-		})
 
 		$('#status').change(function() {
 
@@ -542,119 +375,7 @@
 			
 		})
 
-		// 新規登録モーダル
-		$('#create_user').click(function() {
-			$('#signup-modal').fadeIn();
-			$('ul').hide().removeClass('open');
-			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
-		});
-		$('#close-modal').click(function() {
-			$('#signup-modal').fadeOut();
-		});
-		// admin登録判定
-		$('#newadmin_check_btn').click(function(){
-			if ($(this).hasClass('Isadmin')){
-				$(this).removeClass('Isadmin').children('i').attr('class','fas fa-user');
-				$('#adduser-form h2').text('社員新規登録');
-				$('#create_name').attr('placeholder','名前');
-				$('#btn_newuser').css({
-					'background-color': '#56bed8'
-				});
-				$('#form_newuser_info').html('<span style="color: red;">※</span>氏名欄のアイコンをクリックすると管理者を登録できます。');
-				
-				$('#newadmin_check_body').val('0');
-				console.log('新規管理者判定: ' + $('#newadmin_check_body').val());
-			} else {
-				$(this).addClass('Isadmin').children('i').attr('class','fas fa-user-shield');
-				$('#adduser-form h2').text('管理者新規登録');
-				$('#create_name').attr('placeholder','名前 (admin)')
-				$('#btn_newuser').css({
-					'background-color': '#ff9f4f'
-				});
-				$('#form_newuser_info').html('<span style="color: red;">※</span>再度アイコンをクリックすると社員登録に戻ります。');
-
-				$('#newadmin_check_body').val('1');
-				console.log('新規管理者判定: ' + $('#newadmin_check_body').val());
-			}
-		});
-
-		$('#newadmin_check_btn i').hover(function(){
-			if ($('#newadmin_check_btn').hasClass('Isadmin')){
-				$(this).css('color', '#e7853e');
-			}else {
-				$(this).css('color', '#33b4d4');
-			}
-		},function(){
-			if ($('#newadmin_check_btn').hasClass('Isadmin')){
-				$(this).css('color', '#ff9f4f');
-			}else {
-				$(this).css('color', '');
-			}
-		});
-
-
-		$('#btn_newuser').hover(function(){
-			if ($('#newadmin_check_btn').hasClass('Isadmin')){
-				$(this).css('background-color', '#e7853e');
-			}else {
-				$(this).css('background-color', '#33b4d4');
-			}
-		},function(){
-			if ($('#newadmin_check_btn').hasClass('Isadmin')){
-				$(this).css('background-color', '#ff9f4f');
-			}else {
-				$(this).css('background-color', '');
-			}
-		});
-
-
-		// 新規客先登録モーダル
-		$('#create_kyakusaki').click(function() {
-			$('#form_newkyakusaki').children().children('input[name="kyakusaki"]').parent().show();
-			$('ul').hide().removeClass('open');
-			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
-			$('#addkyakusaki-modal').fadeIn();
-		});
-		$('#close-modal2').click(function() {
-			$('#addkyakusaki-modal').fadeOut();
-		});
-
-		// 新規社内登録モーダル
-		$('#create_shanai').click(function() {
-			$('#form_newshanai').children().children('input[name="shanai"]').parent().show();
-			$('ul').hide().removeClass('open');
-			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
-			$('#addshanai-modal').fadeIn();
-		});
-		$('#close-modal3').click(function(){
-			$('#addshanai-modal').fadeOut();
-		});
-
-		// 基本情報変更モーダル
-		$('#change_userinfo').click(function() {
-			$('ul').hide().removeClass('open');
-			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
-			$('#userinfo-modal').fadeIn();
-		});
-		$('#close-modal4').click(function(){
-			$('#userinfo-modal').fadeOut();
-			$('#userinfo_newpassword').val('').attr('placeholder','新しいパスワード（入力しない場合無変更）');
-			$('#userinfo_newpassword_tmp').val('').attr('placeholder','新しいパスワードを確認').hide();
-		});
-
-		//部署管理モーダル
-		$('#create_department').click(function() {
-			$('#form_newdepartment').children().children('input[name="department"]').parent().show();
-			$('ul').hide().removeClass('open');
-			$('.header-left h1 span').html('<i class="fa fa-bars" aria-hidden="true"></i>');
-			$('#adddepartment-modal').fadeIn();
-		});
-		$('#close-modal5').click(function() {
-			$('#adddepartment-modal').fadeOut();
-		});
-
 		//sentMail用モダール
-		
 		$('.sentMail').click(function() {
 			var mailName = $(this).parent().parent().children('.name').text();
 			var mailAdress = $(this).parent().children('p').text();
@@ -762,219 +483,7 @@
 			$('.append_area').remove();
 		});　
 
-		//logout
-		$('#logout').click(function(){
-			window.location.href = '/logout';
-		});
 
-
-
-		// 社員新規入力passwordチェック
-		$('#btn_newuser').click(function(){
-			if ($('#create_name').val() == '' || $('#select_create_department').val() == '' || $('#create_password').val() == '' || $('#tmp_password').val() == '') {
-				alert('\n名前、所属、パスワードは必ず入力してください！');
-				return false;
-			} else if ($('#create_password').val() != $('#tmp_password').val()) {
-				$('#create_password').val('');
-				$('#tmp_password').val('');
-				$('#create_password').attr('placeholder','入力が一致しません。');
-				$('#tmp_password').attr('placeholder','パスワードを確認してください。');
-				return false;
-			} else {
-				return true;
-			}
-		});
-
-		// 基本情報変更passwordチェック
-		$('#userinfo_newpassword_tmp').hide();
-		$('#userinfo_newpassword').keypress(function(){
-			$('#userinfo_newpassword_tmp').show();
-		});
-		$('#btn_newuserinfo').click(function(){
-			if ($('#userinfo_name').val() == '' || $('#userinfo_department').val() == '') {
-				alert('\n名前と所属は必ず入力してください！');
-				return false;
-			} else if ($('#userinfo_newpassword').val() == '' && $('#userinfo_newpassword_tmp').val() == '') {
-				alert('\n情報変更できました！\n\nログインし直してください。');
-				return true;
-			} else if ($('#userinfo_newpassword').val() != $('#userinfo_newpassword_tmp').val()) {
-				$('#userinfo_newpassword').val('');
-				$('#userinfo_newpassword_tmp').val('');
-				$('#userinfo_newpassword').attr('placeholder','入力が一致しません。');
-				$('#userinfo_newpassword_tmp').attr('placeholder','パスワードを確認してください。');
-				return false;
-			} else {
-				alert('\n情報変更できました！\n\nログインし直してください。');
-				return true;
-			}
-		});
-
-		//客先追加INPUTBOXをclone
-		var minCount = 1;
-		var maxCount = 7;
-
-		$('#btn_kyakusaki_add').on('click', function(){
-			var inputCount = $('div.clone_newkyakusaki').length;
-			if (inputCount < maxCount){
-				$('div#clone_newkyakusaki')
-				.clone(true)
-				.removeAttr('id')
-				.removeClass('hide')
-				.children('input').attr('name','newkyakusaki')
-				.end()
-				.appendTo('#clonearea_newkyakusaki')
-			}
-		});
-		$('#btn_kyakusaki_add').hover(function(){
-			$(this).animate({fontSize: '25px'},0);
-		},function(){
-			$(this).animate({fontSize: '15px'},100);
-		});
-
-		$('.btn_kyakusaki_minus').on('click', function(){
-
-			var inputCount = $('div.clone_newkyakusaki').length;
-			if (inputCount > minCount){
-				$(this).parent('span').parent('div').remove();
-			}
-			
-		});
-
-		$('.btn_kyakusaki_delete').on('click', function(){
-			$(this).parent().parent().children('input[name="kyakusaki"]').end().slideUp();
-		});
-		$('.btn_kyakusaki_delete').hover(function(){
-			$(this).animate({fontSize: '15px'},0);
-		},function(){
-			$(this).animate({fontSize: '15px'},100);
-		});
-
-		$('#btn_newkyakusaki').on('click', function(){
-			var data = '';
-			$('#form_newkyakusaki').children().children('input[name="kyakusaki"]').parent().each(function(){
-				if ($(this).is(':hidden')){
-					data += $(this).children('input[name="kyakusaki"]').val() + '，';
-					$(this).children('input[name="kyakusaki"]').val('');
-				}
-			})
-			if (data != ''){
-				if(!confirm('\n"' + data.slice(0,-1) + '"は削除されます。\nよろしいですか？')){
-					window.location.href = '/';
-					return false;
-				} else {
-					return true;
-				}
-			}
-		})
-
-		//社内追加INPUTBOXをclone
-		var minCount_shanai = 1;
-		var maxCount_shanai = 5;
-
-		$('#btn_shanai_add').on('click', function(){
-			var inputCount = $('div.clone_newshanai').length;
-			if (inputCount <= maxCount_shanai){
-				$('div#clone_newshanai')
-				.clone(true)
-				.removeAttr('id')
-				.removeClass('hide')
-				.children('input').attr('name','newshanai')
-				.end()
-				.appendTo('#clonearea_newshanai')
-			}
-		});
-		$('#btn_shanai_add').hover(function(){
-			$(this).animate({fontSize: '25px'},0);
-		},function(){
-			$(this).animate({fontSize: '15px'},100);
-		});
-
-		$('.btn_shanai_minus').on('click', function(){
-			var inputCount = $('div.clone_newshanai').length;
-			if (inputCount > minCount_shanai){
-				$(this).parent('span').parent('div').remove();
-			}
-		});
-
-		$('.btn_shanai_delete').on('click', function(){
-			$(this).parent().parent().children('input[name="shanai"]').end().slideUp();
-		});
-		$('#btn_newshanai').on('click', function(){
-			var data = '';
-			$('#form_newshanai').children().children('input[name="shanai"]').parent().each(function(){
-				if ($(this).is(':hidden')){
-					data += $(this).children('input[name="shanai"]').val() + '，';
-					$(this).children('input[name="shanai"]').val('');
-				}
-			})
-			if (data != ''){
-				if(!confirm('\n"' + data.slice(0,-1) + '"は削除されます。\nよろしいですか？')){
-					window.location.href = '/';
-					return false;
-				} else {
-					return true;
-				}
-			}
-		})
-
-		//部署追加INPUTBOXをclone
-		var minCount = 1;
-		var maxCount = 7;
-
-		$('#btn_department_add').on('click', function(){
-			var inputCount = $('div.clone_newdepartment').length;
-			if (inputCount < maxCount){
-				$('div#clone_newdepartment')
-				.clone(true)
-				.removeAttr('id')
-				.removeClass('hide')
-				.children('input').attr('name','newdepartment')
-				.end()
-				.appendTo('#clonearea_newdepartment')
-			}
-		});
-		$('#btn_department_add').hover(function(){
-			$(this).animate({fontSize: '25px'},0);
-		},function(){
-			$(this).animate({fontSize: '15px'},100);
-		});
-
-		$('.btn_department_minus').on('click', function(){
-
-			var inputCount = $('div.clone_newdepartment').length;
-			if (inputCount > minCount){
-				$(this).parent('span').parent('div').remove();
-			}
-			
-		});
-
-		$('.btn_department_delete').on('click', function(){
-			$(this).parent().parent().children('input[name="department"]').end().slideUp();
-		});
-		$('.btn_department_delete').hover(function(){
-			$(this).animate({fontSize: '15px'},0);
-		},function(){
-			$(this).animate({fontSize: '15px'},100);
-		});
-
-		$('#btn_newdepartment').on('click', function(){
-			var data = '';
-			$('#form_newdepartment').children().children('input[name="department"]').parent().each(function(){
-				if ($(this).is(':hidden')){
-					data += $(this).children('input[name="department"]').val() + '，';
-					$(this).children('input[name="department"]').val('');
-				}
-			})
-			if (data != ''){
-				if(!confirm('\n"' + data.slice(0,-1) + '"は削除されます。\nよろしいですか？')){
-					window.location.href = '/';
-					return false;
-				} else {
-					return true;
-				}
-			}
-		});
-	
 		//tr td hover　色変化
 		$('.table_index tbody tr').hover(function(){
 		$('.icon').not($(this).children().children()).stop().hide();
@@ -1045,27 +554,6 @@
 		  }
 		});
 
-		$('.btn_delete_user').click(function(){
-			var body_id = $(this).parent('td').children('input[name="id"]').val();
-			var delete_user_name = $(this).parent('td').children('.delete_user_name').val();
-			$('#form_delete_user_appendArea').append('<div id="appendedArea"><form method="POST" action="' + body_id + '/delete_user" name="form_delete_user" class="admin_only"><input style="display: none;" name="id" value="' + body_id + '"></form></div>');
-			if ('<%= login.name %>' != delete_user_name) {
-				if(!confirm('\nユーザー名："' + delete_user_name + '" のアカウントが削除されます。\nよろしいですか？\n\n※行先に関する情報が削除されません。')){
-					$('#appendedArea').remove;
-					return false;
-				} else {
-					return true;
-				}
-			} else {
-				if(!confirm('\nあなたのアカウントが削除され、ログアウトされます。\nよろしいですか？\n\n※行先に関する情報が削除されません。')){
-					$('#appendedArea').remove;
-					return false;
-				} else {
-					return true;
-					window.location.href = '/logout';
-				}
-			}
-		});
 		
 	});
 </script>

@@ -6,7 +6,7 @@
       </div>
       <div id="adduser-form">
         <h2>社員新規登録</h2>
-        <form name="form_newuser" method="POST" action="/newuser">
+        <form name="form_newuser" method="POST" action="/admin/newuser">
             <select name="department" class="form-control placeholder_select" id="select_create_department">
                 <option value='' disabled selected style='display:none;'>部署名</option>
                 <% datadepartment.forEach ( (element)=> {  %>
@@ -18,7 +18,7 @@
                 <option value="*非表示*">*非表示*</option>
             </select>
             <div class="div_create_name">
-                <input id="create_name" name="name" class="form-control" type="text" placeholder="名前"><a id="newadmin_check_btn"><i class="fas fa-user"></i></a>
+              <input id="create_name" name="name" class="form-control" type="text" placeholder="名前"><a id="newadmin_check_btn"><i class="fas fa-user"></i></a>
             </div>
             <input type="hidden" id="newadmin_check_body" name="newadmin_check_body" value="0">
             <input id="create_position" name="position" class="form-control" type="text" placeholder="社内ポジション（省略可）">
@@ -42,7 +42,7 @@
       </div>
       <div id="addkyakusaki-form">
         <h2>客先管理＆新規登録</h2>
-        <form id="form_newkyakusaki" name="form_newkyakusaki" method="POST" action="/newkyakusaki">
+        <form id="form_newkyakusaki" name="form_newkyakusaki" method="POST" action="/admin/newkyakusaki">
             <% var i;for (i in datakyakusaki) {  %>
                 <div>
                     <input name="kyakusaki" type="text" value="<%= datakyakusaki[i].kyakusaki %>"><span><i class="far fa-trash-alt btn_kyakusaki_delete"></i></span>
@@ -79,7 +79,7 @@
       </div>
       <div id="addshanai-form">
         <h2>社内所在地管理＆新規登録</h2>
-        <form id="form_newshanai" name="form_newshanai" method="POST" action="/newshanai">
+        <form id="form_newshanai" name="form_newshanai" method="POST" action="/admin/newshanai">
             <% var n;for (n in datashanai) {  %>
                 <div>
                     <input name="shanai" type="text" value="<%= datashanai[n].shanai %>"><span><i class="far fa-trash-alt btn_shanai_delete"></i></span>
@@ -117,7 +117,7 @@
       </div>
       <div id="adddepartment-form">
         <h2>部署管理＆新規登録</h2>
-        <form id="form_newdepartment" name="form_newdepartment" method="POST" action="/newdepartment">
+        <form id="form_newdepartment" name="form_newdepartment" method="POST" action="/admin/newdepartment">
             <% var i;for (i in datadepartment) {  %>
                 <div>
                     <input name="department" type="text" value="<%= datadepartment[i].department %>"><span><i class="far fa-trash-alt btn_department_delete"></i></span>
@@ -155,7 +155,7 @@
       </div>
       <div id="userinfo-form">
         <h2>基本情報変更</h2>
-        <form name="form_newuserinfo" method="POST" action="/newuserinfo">
+        <form name="form_newuserinfo" method="POST" action="/admin/newuserinfo">
           <input id="userinfo_name" name="userinfo_name" class="form-control" type="text" placeholder="名前" value="<%= login.name %>">
           <select name="userinfo_department" class="form-control" id="userinfo_department" value="<%= login.department %>">
             <% datadepartment.forEach ( (element)=> {  %>

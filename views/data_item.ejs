@@ -10,9 +10,9 @@
           </td>
           <td class="table_name" style="font-family: ＭＳ 明朝;"><span class="name"
                <% if (req_user.admin == 1 && usertabledata.err_times >= 5) { %> style="color: red;" <% } %>><%= usertabledata.name %></span>
-            <% if (usertabledata.email != null && usertabledata.email != "" && usertabledata.name != login.name){ %>
-                <span class="mailto"><a class="sentMail"><i class="far fa-envelope"></i></a><p style="display: none;"><%= usertabledata.email %></p></span><p class="tooltip">送信先：<br><%= usertabledata.email %></p>
-            <% } %><span style="display: none;" class="id"><% if (usertabledata.id == "" || usertabledata.id == undefined) { %>tableUser_<%= usertabledata.table_id %><% } else { %><%= usertabledata.id %><% } %></span>
+               <% if (usertabledata.email != null && usertabledata.email != "" && usertabledata.name != login.name){ %>
+                    <span class="mailto"><a class="sentMail"><i class="far fa-envelope"></i></a><p style="display: none;"><%= usertabledata.email %></p></span><p class="tooltip">送信先：<br><%= usertabledata.email %></p>
+               <% } %><span style="display: none;" class="id"><% if (usertabledata.id == "" || usertabledata.id == undefined) { %>tableUser_<%= usertabledata.table_id %><% } else { %><%= usertabledata.id %><% } %></span>
           </td>
         <td class="mobile-hide"><%= usertabledata.information %></td>
         <% switch (usertabledata.status) {
@@ -63,10 +63,18 @@
         <td class="mobile-hide"><%= usertabledata.updateTime %></td>
         <td>
             <div class="btn-wrap">
-               <% if (usertabledata.id == "" || usertabledata.id == undefined) { %>
-                   <a href="/edit/tableUser_<%=  usertabledata.table_id  %>/" class="btn btn-switch"><span>編集</span></a>
+               <% if (req_user.admin != 1) { %>
+                    <% if (usertabledata.id == "" || usertabledata.id == undefined) { %>
+                    <a href="/edit/tableUser_<%=  usertabledata.table_id  %>/" class="btn btn-switch"><span>編集</span></a>
+                    <% } else { %>
+                    <a href="/edit/<%=  usertabledata.id  %>/" class="btn btn-switch"><span>編集</span></a>
+                    <% } %>
                <% } else { %>
-                   <a href="/edit/<%=  usertabledata.id  %>/" class="btn btn-switch"><span>編集</span></a>
+                    <% if (usertabledata.id == "" || usertabledata.id == undefined) { %>
+                    <a href="/edit_admin/tableUser_<%=  usertabledata.table_id  %>/" class="btn btn-switch"><span>編集</span></a>
+                    <% } else { %>
+                    <a href="/edit_admin/<%=  usertabledata.id  %>/" class="btn btn-switch"><span>編集</span></a>
+                    <% } %>
                <% } %>
             </div>
         </td>

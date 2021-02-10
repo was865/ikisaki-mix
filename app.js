@@ -13,10 +13,13 @@ var passport = require('passport');
 var ajax = require('./routes/ajax')
 
 var index = require('./routes/index');
+var index_admin = require('./routes/index_admin');
+var manage = require('./routes/manage');
 var table = require('./routes/table');
 var login = require('./routes/login');
 var users = require('./routes/users');
 var edit = require('./routes/edit');
+var edit_admin = require('./routes/edit_admin');
 
 var app = express();
 
@@ -58,8 +61,11 @@ app.use(passport.session());
 //   next();  //. 個別処理へ
 // });
 app.use('/edit', edit);
+app.use('/edit_admin',edit_admin);
 app.use('/login', login);
 app.use('/', index);
+app.use('/admin', index_admin);
+app.use('/manage', manage);
 app.use('/table', table);
 app.use('/users', users);
 app.use('/ajax', ajax);

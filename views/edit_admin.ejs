@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title><%= title %></title>
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.3.0/font-awesome-animation.min.css" integrity="sha512-Po8rrCwchD03Wo+2ibHFielZ8luDAVoCyE9i6iFMPyn9+V1tIhGk5wl8iKC9/JfDah5Oe9nV8QzE8HHgjgzp3g==" crossorigin="anonymous" />
+	</head>
+
+<body background="https://recruit.msi-net.co.jp/main/wp-content/uploads/2019/12/mainvisual-002.jpg">
+	<header>
+		<div class="header-right">
+			<a href="/admin"><img class="logo" src="https://msi-net.co.jp/main/wp-content/uploads/2020/01/logo.png"></a>
+		</div>
+		<div class="header-left">
+			<h1><span><i class="fa fa-bars" aria-hidden="true"></i></span><%- subtitle %></h1>
+			<ul class="downlist">
+				<li id="create_user" class="admin_only"><span><i class="fa fa-user-plus" aria-hidden="true"></i></span>社員新規登録</li>
+				<li id="create_kyakusaki" class="admin_only mobile-hide"><span><i class="fas fa-handshake"></i></span>客先管理＆新規</li>
+				<li id="create_shanai" class="admin_only mobile-hide"><span><i class="fa fa-building" aria-hidden="true"></i></span>社内管理＆新規</li>
+				<li id="create_department" class="admin_only mobile-hide"><span><i class="fas fa-users" aria-hidden="true"></i></span>部署管理＆新規</li>
+				<li id="manage_users" class="admin_only mobile-hide"><span><i class="fas fa-key" aria-hidden="true"></i></span>ユーザー管理</li>
+				<li id="change_userinfo"><span><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>基本情報変更</li>
+				<li id="logout"><span><i class="fas fa-sign-out-alt"></i></span>ログアウト</li>
+			</ul>
+</div>
+	</header>
+
+	<%- include header_modal_item %>
+
+	<!-- 編集テーブル -->
+	<div role="main" class="main_edit">
+		<% if (!content.attributes.user_id) { %>
+			<form name="form_edit" method="POST" action="/edit_admin/tableUser_<%= content.attributes.id %>">
+		<% } else { %>
+			<form name="form_edit" method="POST" action="/edit_admin/<%= content.attributes.user_id %>">
+		<% } %>
+			<table class="table_edit">
+				<p class="editing_name"><span>ログイン中のユーザー：<span><%= req_user.username %><i class="fas fa-user-shield admin_only" style="margin-left: 5px;"></i></span></span><br><%- greeting %></p>
+				<tr id="name_tr"><th style="background-color: #286bcf; border: none;">名前</th></tr>
+				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.attributes.name %>"><%= content.attributes.name %><span><i class="fas fa-ellipsis-h"></i></span>
+				<% if (content_user.err_times >= 5) { %>
+					<a class="admin_only" href="javascript:form_unlock.submit()" id="unlock_a"><i class="fas fa-lock"></i></a><p class="admin_only" style="margin-top: 10px;font-size: 0.8em; color: rgb(255, 0, 0);">※ログインが制限されています。<br><br>制限を解除するには名前の右側にあるロックアイコンをクリックしてください。</p>
+				<% } %>
+				</td></tr>
+				<tr id="department_tr"><th style="background-color: #286bcf; border: none;">部署</th></tr>
+				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
+					<tr><td><input type="hidden" name="department" id="department" value="<%= content.attributes.department %>" >
+						<%= content.attributes.department %></td></tr>
+				<% } else if (req_user.id != content.attributes.user_id) { %>
+					<tr><td><select name="department" id="department" value="<%= content.attributes.department %>">
+						<% datadepartment.forEach ( (element)=> {  %>
+							<option value="<%= element.department %>"
+								<% if (element.department == content.attributes.department) { %>
+									selected
+								<% } %> 
+								><%= element.department %></option>
+						<% }); %>
+						<% if (login.department == "社長") { %>
+							<option value="社長"
+								<% if (content.attributes.department == "社長") { %>
+									selected
+								<% } %> 
+								>社長</option>
+						<% } %>
+						<option value="*非表示*" 
+							<% if (content.attributes.department == "*非表示*") { %>
+								selected
+							<% } %>
+							>*非表示*</option>
+					</select></td></tr>
+				<% } %>
+				<tr id="position_tr"><th style="background-color:#286bcf; border: none;">配置</th></tr>
+				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
+					<tr><td><input type="hidden" name="position" id="position" value="<%= content.attributes.position %>">
+						<%= content.attributes.position %></td></tr>
+				<% } else if (req_user.id != content.attributes.user_id) { %>
+				<tr><td><input name="position" id="position" value="<%= content.attributes.position %>" placeholder="例:f_1_1（省略可）"></td></tr>
+				<% } %>
+				<tr id="information_tr"><th style="background-color:#286bcf; border: none;">情報</th></tr>
+				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
+					<tr><td><input type="hidden" name="information" id="information" value="<%= content.attributes.information %>" >
+						<%= content.attributes.information %></td></tr>
+				<% } else if (req_user.id != content.attributes.user_id) { %>
+				<tr><td><input name="information" id="information" value="<%= content.attributes.information %>" placeholder="内線番号（省略可）"></td></tr>
+				<% } %>
+				<tr id="email_tr"><th style="background-color: #286bcf; border: none;">メールアドレス</th></tr>
+				<% if (req_user.admin != 1 || req_user.id == content.attributes.user_id ){ %>
+					<tr><td><input type="hidden" name="email" id="email" value="<%= content.attributes.email %>" >
+						<%= content.attributes.email %></td></tr>
+				<% } else if (req_user.id != content.attributes.user_id) { %>
+				<tr><td><input name="email" id="email" value="<%= content.attributes.email %>" placeholder="メールアドレス（省略可）"></td></tr>
+				<% } %>
+				<% if (req_user.admin == 1 && req_user.id != content.attributes.user_id && content.attributes.user_id != undefined){ %>
+				<tr id="password_tr"><th style="background-color: #286bcf; border: none;">パスワードを変更</th></tr>
+				<tr><td><input name="password" id="password" value="" placeholder="入力しない場合無変更"></td></tr>
+				<% } %>
+				<tr class="ikisaki_tr"><th>状態</th></tr>
+				<tr class="ikisaki_tr"><td><select name="status" id="status" >
+					<option value=""></option>
+					<% datastatus.forEach ( (element)=> { %>
+						<option value="<%= element.status %>" 
+							<% if (content.attributes.status == element.status){ %>
+								selected
+							<% } %> ><%= element.status %>
+						</option>
+					<% }); %></select>
+				</td></tr>
+
+				<tr class="table_ikisaki ikisaki_tr"><th id="th_ikisaki">行先</th></tr>
+				<tr class="table_ikisaki ikisaki_tr"><td><select name="ikisaki" id="ikisaki">
+
+				<% if (content.attributes.status == "休暇") { %>
+					<option value="全休" 
+						<% if (content.attributes.ikisaki == "全休"){ %>
+							selected
+						<% } %>>全休
+					</option>
+					<option value="ＡＭ半休" 
+						<% if (content.attributes.ikisaki == "ＡＭ半休"){ %>
+							selected 
+						<% } %>>ＡＭ半休
+					</option>
+					<option value="ＰＭ半休"
+						<% if (content.attributes.ikisaki == "ＰＭ半休"){ %>
+							selected 
+						<% } %>>ＰＭ半休
+					</option>
+				<% } else if (content.attributes.status == "客先"){ %>
+					<% datakyakusaki.forEach ( (element)=> { %>
+						<option value="<%= element.kyakusaki %>" 
+							<% if (content.attributes.ikisaki == element.kyakusaki){ %>
+								selected
+							<% } %> ><%= element.kyakusaki %>
+						</option>
+					<% });  %>
+				<% } else if (content.attributes.status == "社内"){ %>
+					<% datashanai.forEach ( (element)=> { %>
+						<option value="<%= element.shanai %>" 
+							<% if (content.attributes.ikisaki == element.shanai){ %>
+								selected
+							<% } %> ><%= element.shanai %>
+						</option>
+					<% });  %>
+				<% } %></select>
+			</td></tr>
+				
+
+			<tr class="table_yoteijikoku ikisaki_tr"><th>予定時刻</th></tr>
+				<tr class="table_yoteijikoku ikisaki_tr"><td><select type="text" name="time">
+					<option value="~ 8:30"
+						<% if (content.attributes.time == "~ 8:30"){ %>
+							selected 
+						<% } %> >~ 8:30
+					</option>
+					<option value="~ 9:00"
+						<% if (content.attributes.time == "~ 9:00"){ %>
+							selected 
+						<% } %> >~ 9:00
+					</option>
+					<option value="~ 9:30"
+						<% if (content.attributes.time == "~ 9:30"){ %>
+							selected 
+						<% } %> >~ 9:30
+					</option>
+					<option value="~ 10:00"
+						<% if (content.attributes.time == "~ 10:00"){ %>
+							selected 
+						<% } %> >~ 10:00
+					</option>
+					<option value="~ 10:30"
+						<% if (content.attributes.time == "~ 10:30"){ %>
+							selected 
+						<% } %> >~ 10:30
+					</option>
+					<option value="~ 11:00"
+						<% if (content.attributes.time == "~ 11:00"){ %>
+							selected 
+						<% } %> >~ 11:00
+					</option>
+					<option value="~ 11:30"
+						<% if (content.attributes.time == "~ 11:30"){ %>
+							selected 
+						<% } %> >~ 11:30
+					</option>
+					<option value="~ 12:00"
+						<% if (content.attributes.time == "~ 12:00"){ %>
+							selected 
+						<% } %> >~ 12:00
+					</option>
+					<option value="~ 12:30"
+						<% if (content.attributes.time == "~ 12:30"){ %>
+							selected 
+						<% } %> >~ 12:30
+					</option>
+					<option value="~ 13:00"
+						<% if (content.attributes.time == "~ 13:00"){ %>
+							selected 
+						<% } %> >~ 13:00
+					</option>
+					<option value="~ 13:30"
+						<% if (content.attributes.time == "~ 13:30"){ %>
+							selected 
+						<% } %> >~ 13:30
+					</option>
+					<option value="~ 14:00"
+						<% if (content.attributes.time == "~ 14:00"){ %>
+							selected 
+						<% } %> >~ 14:00
+					</option>
+					<option value="~ 14:30"
+						<% if (content.attributes.time == "~ 14:30"){ %>
+							selected 
+						<% } %> >~ 14:30
+					</option>
+					<option value="~ 15:00"
+						<% if (content.attributes.time == "~ 15:00"){ %>
+							selected 
+						<% } %> >~ 15:00
+					</option>
+					<option value="~ 15:30"
+						<% if (content.attributes.time == "~ 15:30"){ %>
+							selected 
+						<% } %> >~ 15:30
+					</option>
+					<option value="~ 16:00"
+						<% if (content.attributes.time == "~ 16:00"){ %>
+							selected 
+						<% } %> >~ 16:00
+					</option>
+					<option value="~ 16:30"
+						<% if (content.attributes.time == "~ 16:30"){ %>
+							selected 
+						<% } %> >~ 16:30
+					</option>
+					<option value="~ 17:00"
+						<% if (content.attributes.time == "~ 17:00"){ %>
+							selected 
+						<% } %> >~ 17:00
+					</option>
+					<option value="~ 17:30"
+						<% if (content.attributes.time == "~ 17:30"){ %>
+							selected 
+						<% } %> >~ 17:30
+					</option>
+					<option value="~ 18:00"
+						<% if (content.attributes.time == "~ 18:00"){ %>
+							selected 
+						<% } %> >~ 18:00
+					</option>
+					<option value="~ 18:30"
+						<% if (content.attributes.time == "~ 18:30"){ %>
+							selected 
+						<% } %> >~ 18:30
+					</option>
+					<option value="~ 19:00"
+						<% if (content.attributes.time == "~ 19:00"){ %>
+							selected 
+						<% } %> >~ 19:00
+					</option>
+					<option value="~ 19:30"
+						<% if (content.attributes.time == "~ 19:30"){ %>
+							selected 
+						<% } %> >~ 19:30
+					</option>
+					<option value="~ 20:00"
+						<% if (content.attributes.time == "~ 20:00"){ %>
+							selected 
+						<% } %> >~ 20:00
+					</option>
+					<option value="~ 20:30"
+						<% if (content.attributes.time == "~ 20:30"){ %>
+							selected 
+						<% } %> >~ 20:30
+					</option>
+					<option value="~ 21:00"
+						<% if (content.attributes.time == "~ 21:00"){ %>
+							selected 
+						<% } %> >~ 21:00
+					</option>
+					<option value="~ 21:30"
+						<% if (content.attributes.time == "~ 21:30"){ %>
+							selected 
+						<% } %> >~ 21:30
+					</option>
+					<option value="~ 22:00"
+						<% if (content.attributes.time == "~ 22:00"){ %>
+							selected 
+						<% } %> >~ 22:00
+					</option>
+					<option value="22:00 ~"
+						<% if (content.attributes.time == "22:00 ~"){ %>
+							selected 
+						<% } %> >22:00 ~
+					</option>
+					<option value="不帰"
+						<% if (content.attributes.time == "不帰"){ %>
+							selected 
+						<% } %> >不帰
+					</option></select>
+
+				</td></tr>
+				<tr class="ikisaki_tr"><th>メモ</th></tr>
+				<tr class="ikisaki_tr"><td><textarea name="memo"><%= content.attributes.memo %></textarea></td></tr>
+				<% if (content_user.username != undefined) { %>
+				<tr class="admin_only admin_tr"><th style="background-color: #286bcf; border: none;">
+					管理者権限
+					<input type="checkbox" class="c-switch-check" id="check">
+					<label class="c-switch-label" for="check"></label>
+					<input type="hidden" name="admin" id="admin" value="<%= content_user.admin %>">
+				</th></tr>
+				<% } %>
+				<tr><td>
+					<a href="javascript:form_edit.submit()" id="btn_post" class="faa-parent animated-hover"><i class="fas fa-pencil-alt"></i>更新</a>
+				</td></tr>
+				<% if (!content.attributes.user_id) { %>
+					<input type="hidden" name="id" value="tableUser_<%= content.attributes.id %>">
+				<% } else { %>
+					<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
+				<% } %>
+			</table>
+		</form>
+		<p><a href="/admin" class="backhome faa-parent animated-hover"><i class="fas fa-angle-double-right faa-passing"></i> 一覧に戻る</a></p>
+
+		<!-- unlock用フォーム -->
+		<form method="POST" action="/edit_admin/<%= content.attributes.user_id %>/unlock" name="form_unlock" class="admin_only">
+			<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
+		</form>
+
+		<% if (req_user.admin == 1){ %>
+			<p></p>
+		<% } else { %>
+			<p class="space"><br></p>
+		<% } %>
+
+		<% if (!content.attributes.user_id) { %>
+			<form method="POST" action="/edit_admin/tableUser_<%= content.attributes.id %>/delete" name="form_delete" id="scroll-form-delete" class="admin_only">
+				<input type="hidden" name="id" value="tableUser_<%= content.attributes.id %>">
+				<div id="delete_content">
+					<a href="javascript:form_delete.submit()" class="btn-massage faa-parent animated-hover isTableUser" id="btn_delete"><i class="fas fa-user-times faa-flash"></i>
+					DELETE
+					<span>"<%= content.attributes.name %>"の情報が削除されます</span>
+					</a>
+				</div>
+			</form>
+		<% } else { %>
+			<form method="POST" action="/edit_admin/<%= content.attributes.user_id %>/delete" name="form_delete" id="scroll-form-delete" class="admin_only">
+				<input type="hidden" name="id" value="<%= content.attributes.user_id %>">
+				<div id="delete_content">
+					<a href="javascript:form_delete.submit()" class="btn-massage faa-parent animated-hover" id="btn_delete" style="background-color: #808080;"><i class="fas fa-user-slash faa-flash"></i>
+					INACTIVE
+					<span style="background-color: #535353;">"<%= content.attributes.name %>"が非表示になります</span>
+					</a>
+				</div>
+			</form>
+		<% } %>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="/javascripts/headerModal.js"></script>
+	<script>
+		$(function() {
+
+			console.log('使用中ユーザー管理者権限: <%= req_user.admin %>');
+			// if ('<%= req_user.admin %>' != 1){
+			// 	$('body').css('background-image','url(https://msi-net.co.jp/main/wp-content/uploads/2020/01/image5.jpg)');
+			// 	$('.admin_only').remove();
+			// 	$('.main_edit').height('100%');
+			// }else {
+			// 	$('body').css('background-image','url(https://recruit.msi-net.co.jp/main/wp-content/uploads/2019/12/mainvisual-002.jpg)');
+			// }
+
+			//管理者権限BOXチェック
+			console.log('編集するユーザー管理者権限: <%= content_user.admin %>');
+			if ('<%= content_user.admin %>' == 1){
+				$('#check').prop('checked', true);
+			} else {
+				$('#check').prop('checked', false);
+			}
+
+
+			if ($('#status').val() == '' || $('#status').val() == '在席' || $('#status').val() == '帰宅') {
+				$('.table_ikisaki').addClass('hide');
+				$('.table_yoteijikoku').addClass('hide');
+			} else if ($('#status').val() == '出張' ||　$('#status').val() == '研修' ||　$('#status').val() == 'その他') {
+				$('.table_ikisaki').addClass('hide');
+			} else if ($('#status').val() == '休暇') {
+				$('.table_yoteijikoku').addClass('hide');
+				$('#th_ikisaki').text('期間');
+			}
+
+			$('#status').change(function() {
+
+				var val = $(this).val();
+
+				switch (val) {
+					case '休暇':
+						var selectContent_kyuuka = '<option value="全休">全休</option>' +
+								'<option value="ＡＭ半休">ＡＭ半休</option>' + 
+								'<option value="ＰＭ半休">ＰＭ半休</option>';
+						$('#ikisaki').html(selectContent_kyuuka);
+						$('#th_ikisaki').text('期間');
+						$('.table_ikisaki').removeClass('hide');
+						$('.table_yoteijikoku').addClass('hide');
+						break;
+					case '客先':
+						var selectContent_kyakusaki = '<% datakyakusaki.forEach ( (element)=> { %><option value="<%= element.kyakusaki %>"><%= element.kyakusaki %></option><%  }) %>';
+						$('#ikisaki').html(selectContent_kyakusaki);
+						$('#th_ikisaki').text('行先');
+						$('.table_ikisaki').removeClass('hide');
+						$('.table_yoteijikoku').removeClass('hide');
+						break;
+					case '社内':
+						var selectContent_shanai = '<% datashanai.forEach ( (element)=> { %><option value="<%= element.shanai %>"><%= element.shanai %></option><%  }) %>';
+						$('#ikisaki').html(selectContent_shanai);
+						$('#th_ikisaki').text('行先');
+						$('.table_ikisaki').removeClass('hide');
+						$('.table_yoteijikoku').removeClass('hide');
+						break;
+					case '':
+					case '在席':
+					case '帰宅':
+						$('.table_ikisaki').addClass('hide');
+						$('.table_yoteijikoku').addClass('hide');
+						break;
+					default:
+						$('#th_ikisaki').text('行先');
+						$('.table_ikisaki').addClass('hide');
+						$('.table_yoteijikoku').removeClass('hide');
+						break;
+				}
+
+			})
+
+
+			$('#btn_delete').click(function(){
+				if ($(this).hasClass('isTableUser')) {
+					if (!confirm('\n<%= content.attributes.department %>〝<%= content.attributes.name %>″の関連データはすべて削除されます。\n\nよろしいですか？')) {
+						return false;
+					} else {
+						return true;
+					}
+					
+				} else {
+					if ('<%= content.attributes.name %>' == '<%= login.name %>'){
+						if (!confirm('\nあなたの行先情報の関連データ（所属、内線番号、座席情報、行先情報）は削除され、一旦ログアウトされます。\nよろしいですか？\n\n※アカウントが削除されません。\nテーブルから表示されなくなります。')) {
+							return false;
+						} else {
+							return true;
+						}
+					} else {
+						if (!confirm('\n<%= content.attributes.department %>〝<%= content.attributes.name %>″の行先情報の関連データ（所属、内線番号、座席情報、行先情報）は削除されます。\n\nよろしいですか？\n\n※アカウントが削除されません。\nテーブルから表示されなくなります。')) {
+							return false;
+						} else {
+							return true;
+						}
+					}
+				}
+			});
+
+			var deleteBtn = $('#delete_content');    
+				deleteBtn.hide();
+      
+			var ua = navigator.userAgent;
+			if ((ua.indexOf('iPhone') >  0 || ua.indexOf('Android') >  0) && ua.indexOf('Mobile') >  0) {
+				// スマートフォン用処理
+				$('#scroll-form-delete').hide();
+				$('.admin_only').remove();
+
+			} 
+			// else if (ua.indexOf('ipad') > 0 || ua.indexOf('macintosh') > 0 || ua.indexOf('Android') >  0) {
+            //   // タブレット用処理(効かない)
+            // $('#scroll-form-delete').hide();
+            // $(window).on('scroll', function () {
+            //     var doch = $(document).innerHeight(); //ページ全体の高さ
+            //     var winh = $(window).innerHeight(); //ウィンドウの高さ
+            //     var bottom = doch - winh; //ページ全体の高さ - ウィンドウの高さ = ページの最下部位置
+            //     if (bottom -200 <= $(window).scrollTop()) {
+            //       console.log(doch);
+            //       console.log(winh);
+            //     //一番下までスクロールした時に実行
+            //       deleteBtn.fadeIn();
+            //     } else {
+            //       deleteBtn.fadeOut();
+            //     }
+            //   });
+            // } 
+			else {
+				// PC用処理
+				$(window).on('scroll', function() {
+					var doch = $(document).innerHeight(); //ページ全体の高さ
+					var winh = $(window).innerHeight(); //ウィンドウの高さ
+					var bottom = doch - winh; //ページ全体の高さ - ウィンドウの高さ = ページの最下部位置
+					if (bottom -50 <= $(window).scrollTop()) {
+					console.log(doch);
+					console.log(winh);
+					//一番下までスクロールした時に実行
+					deleteBtn.fadeIn();
+					} else {
+					deleteBtn.fadeOut();
+					}
+
+				});
+
+				function regex_check(){
+					if ($('#password').val().length) {
+						//正規表現パターン（半角英数４桁に一致）
+						var regex = new RegExp(/^([a-zA-Z0-9]{6,13})$/);
+		
+						//判定する文字列
+						var str = $('#password').val();
+						
+						//判定
+						if (regex.test(str)) {
+							return true;
+						} else {
+							alert("6文字以上13文字以内の半角英数字で設定してください。");
+							$('#password').val('');
+							return false;
+						}
+					}
+				}
+
+				if ($('#admin').length > 0) { 　//もしadminのチェックボックスが存在していれば
+					$('#btn_post').click(function(){
+						if ($('#check').prop('checked') == true){
+							$('#admin').val('1');
+						} else if ($('#check').prop('checked') == false) {
+							$('#admin').val('0');
+						}
+						console.log("$('#admin').val()は：" + $('#admin').val());
+
+						if ($('#admin').val() != '<%= content_user.admin %>'){
+							if ($('#admin').val() == 1){
+								if ('<%= content.attributes.name %>' == '<%= login.name %>'){
+									if(!confirm('\n管理者権限を回収します。\nよろしいですか？')){
+										$('#check').prop('checked', false);
+										return false;
+									} else {
+										regex_check();
+										return true;
+									}
+								} else {
+									if(!confirm('\n<%= content.attributes.department %>＂<%= content.attributes.name %>＂に管理者権限を付与します。\n\nよろしいですか？')){
+										$('#check').prop('checked', false);
+										return false;
+									} else {
+										regex_check();
+										return true;
+									}
+								}
+							} else {
+								if ('<%= content.attributes.name %>' == '<%= login.name %>'){
+									if(!confirm('\nあなたは管理者権限を失います。\nよろしいですか？\n\n※管理者権限はログアウトするまで有効です。')){
+										$('#check').prop('checked', true);
+										return false;
+									} else {
+										regex_check();
+										return true;
+									}
+								} else if('<%= content.attributes.name %>' != '<%= login.name %>') {
+									if(!confirm('\n<%= content.attributes.department %>＂<%= content.attributes.name %>＂は管理者権限を失います。\nよろしいですか？')){
+										$('#check').prop('checked', true);
+										return false;
+									} else {
+										regex_check();
+										return true;
+									}
+								}
+							}
+						}
+						regex_check();
+						return true;
+					});
+				}
+				
+			}
+
+
+			//編集tr td整理
+			$('.ikisaki_tr').addClass('hide');
+
+			$('#edit_name span').click(function(){
+				if (!$(this).hasClass('clicked')) {
+					$(this).addClass('clicked');
+					$('.ikisaki_tr').removeClass('hide');
+					if ($('#status').val() == '' || $('#status').val() == '在席' || $('#status').val() == '帰宅') {  //行先欄の読み込み初期処理
+						$('.table_ikisaki').addClass('hide');
+						$('.table_yoteijikoku').addClass('hide');
+					} else if ($('#status').val() == '出張' ||　$('#status').val() == '研修' ||　$('#status').val() == 'その他') {
+						$('.table_ikisaki').addClass('hide');
+					} else if ($('#status').val() == '休暇') {
+						$('.table_yoteijikoku').addClass('hide');
+						$('#th_ikisaki').text('期間');
+					}
+
+					$(this).css('color','#3a67a0');
+					$('#name_tr').children('th').css('background-color','#268eca');
+
+					$('#department').parent().parent('tr').hide().addClass('hidden');
+					$('#department_tr').hide().addClass('hidden');
+					$('#position').parent().parent('tr').hide().addClass('hidden');
+					$('#position_tr').hide().addClass('hidden');
+					$('#information').parent().parent('tr').hide().addClass('hidden');
+					$('#information_tr').hide().addClass('hidden');
+					$('#email').parent().parent('tr').hide().addClass('hidden');
+					$('#email_tr').hide().addClass('hidden');
+					$('#password').parent().parent('tr').hide().addClass('hidden');
+					$('#password_tr').hide().addClass('hidden');
+					$('.admin_tr').hide().addClass('hidden');
+
+				} else {
+					$('.ikisaki_tr').addClass('hide');
+					$('.hidden').show().removeClass('hidden');
+					$('#name_tr').children('th').css('background-color','#286bcf');
+					$(this).css('color','');
+					$(this).removeClass('clicked');
+				}
+			})
+
+			// $('#unlock_a').hover(function(){
+			// 	$(this).html('<i class="fas fa-unlock"></i>');
+			// },function(){
+			// 	$(this).html('<i class="fas fa-lock"></i>');
+			// });
+
+			$('#unlock_a').hover(function(){
+				$(this).children('i').attr('class','fas fa-unlock');
+			},function(){
+				$(this).children('i').attr('class','fas fa-lock');
+			});
+
+			$('#unlock_a').click(function(){
+				alert('<%= content.attributes.name %>のアカウントロックが解除されました！')
+			});
+		
+
+			// var deleteBtn = $('#delete_content');    
+			// deleteBtn.hide();
+			// //スクロールが100に達したらボタン表示
+			// $(window).scroll(function () {
+			// 	if ($(this).scrollTop() > 100) {
+			// 		deleteBtn.fadeIn();
+			// 	} else {
+			// 		deleteBtn.fadeOut();
+			// 	}
+			// });
+
+		}); 
+		
+	</script>
+</body>
+</html>

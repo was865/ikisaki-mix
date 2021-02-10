@@ -72,16 +72,16 @@ var departmentdata = Bookshelf.Model.extend({
 // }
 
 var datadepartment;
-function getDepartment() {
-  db.serialize(() =>{
-    db.all("select * from department_list", (err, rows) =>{
-      if (!err) {
-        datadepartment = rows;
-      }
-    });
-  });
-}
-getDepartment();
+// function getDepartment() {
+//   db.serialize(() =>{
+//     db.all("select * from department_list", (err, rows) =>{
+//       if (!err) {
+//         datadepartment = rows;
+//       }
+//     });
+//   });
+// }
+// getDepartment();
 
 // var datastatus;
 // function getStatus() {
@@ -100,16 +100,16 @@ getDepartment();
 // }
 
 var datastatus;
-function getStatus() {
-  db.serialize(() =>{
-    db.all("select * from status_list", (err, rows) =>{
-      if (!err) {
-        datastatus = rows;
-      }
-    });
-  });
-}
-getStatus();
+// function getStatus() {
+//   db.serialize(() =>{
+//     db.all("select * from status_list", (err, rows) =>{
+//       if (!err) {
+//         datastatus = rows;
+//       }
+//     });
+//   });
+// }
+// getStatus();
 
 // var datakyakusaki;
 // function getKyakusaki() {
@@ -128,16 +128,16 @@ getStatus();
 // }
 
 var datakyakusaki;
-function getKyakusaki() {
-  db.serialize(() =>{
-    db.all("select * from kyakusaki_list", (err, rows) =>{
-      if (!err) {
-        datakyakusaki = rows;
-      }
-    });
-  });
-}
-getKyakusaki();
+// function getKyakusaki() {
+//   db.serialize(() =>{
+//     db.all("select * from kyakusaki_list", (err, rows) =>{
+//       if (!err) {
+//         datakyakusaki = rows;
+//       }
+//     });
+//   });
+// }
+// getKyakusaki();
 
 // var datashanai;
 // function getShanai() {
@@ -155,7 +155,7 @@ getKyakusaki();
 //   return datashanai;
 // }
 
-// var datashanai;
+var datashanai;
 // function getShanai() {
 //   db.serialize(() =>{
 //     db.all("select * from shanai_list", (err, rows) =>{
@@ -166,28 +166,6 @@ getKyakusaki();
 //   });
 // }
 // getShanai();
-
-var datashanai;
-function readShanai(){
-  return new Promise(resolve =>{
-    db.serialize(() => {
-      db.all("select * from shanai_list", (err, rows) =>{
-        if (!err) {
-          datashanai = rows;
-        }
-      });
-      db.run("COMMIT", () => {
-          resolve();
-      });
-    })
-  })
-}
-
-async function getShanai(){
-  await readShanai();
-}
-
-getShanai();
 
 
 // var datacontact;
@@ -201,19 +179,18 @@ getShanai();
 // }
 
 var datacontact;
-function getMsg() {
-  db.serialize(() =>{
-    db.all("select * from contact where id = 1", (err, rows) =>{
-      if (!err) {
-        rows.forEach(element => {
-          datacontact = element.msg;
-          console.log("GET中：" + element.msg + "代入：" + datacontact);
-        });
-      }
-    });
-  });
-}
-getMsg();
+// function getMsg() {
+//   db.serialize(() =>{
+//     db.all("select * from contact where id = 1", (err, rows) =>{
+//       if (!err) {
+//         rows.forEach(element => {
+//           datacontact = element.msg;
+//         });
+//       }
+//     });
+//   });
+// }
+// getMsg();
 
 // var datacontact;
 // function readMsg(){
@@ -225,7 +202,7 @@ getMsg();
 //         datacontact = rows[0].msg;
 //       }
 //       });
-//       db.run("COMMIT", () => {
+//       db.run("SELECT 0", () => {
 //           resolve();
 //       });
 //     })
@@ -267,67 +244,36 @@ function sleep(waitMsec) {
 //SQL router.GETはここから
 router.get("/", isAuthenticated, function(req, res, next) {
 
-  var usertabledata = new Array();
-  var usertabledata_manage = new Array();
-  var login = req.session.login;
-  var req_user = req.user;
+  function Callback(){ //callback start
+  
+    console.log("Callback開始......");
+    console.log("public page accessed.");
 
-  var sql =
-    'SELECT users_status.id,users_status.name,users_status.user_id,users_status.email,users_status.department,users_status.information,users_status.position,users_status.status,users_status.ikisaki,time,users_status.memo,users_status.updated_at,users_status.created_at,users.admin,users.username,users.password,users.err_times,users.locked_at , CASE WHEN department = "' +
-    login.department +
-    '" THEN "AA" ELSE department END as sort1, CASE WHEN name = "' +
-    login.name +
-    '" THEN "00" ELSE name END as sort2 FROM users_status LEFT JOIN users ON users_status.user_id = users.id ORDER BY sort1,sort2 ASC;';
-
-  var sql2 = 
-    'SELECT users_status.id,users_status.name,users_status.user_id,users_status.email,users_status.department,users_status.information,users_status.position,users_status.status,users_status.ikisaki,time,users_status.memo,users_status.updated_at,users_status.created_at,users.admin,users.username,users.password,users.err_times,users.locked_at , CASE WHEN department = "' +
-    login.department +
-    '" THEN "AA" ELSE department END as sort1, CASE WHEN name = "' +
-    login.name +
-    '" THEN "00" ELSE name END as sort2 FROM users_status LEFT JOIN users ON users_status.user_id = users.id ORDER BY admin DESC ,sort1 ,sort2 DESC;';
-
-  Bookshelf.knex.raw(sql).then(collection => {
-    collection.forEach(element => {
-      var d1 = moment(new Date(element.updated_at));
-      d1.locale("ja");
-      d1.tz("Asia/Tokyo");
-      var dstr = d1.fromNow();
-
-      usertabledata.push({
-        id: element.user_id,
-        table_id: element.id,
-        username: element.username,
-        user_admin: element.admin,
-        name: element.name,
-        err_times: element.err_times,
-        information: element.information,
-        department: element.department,
-        status: element.status,
-        ikisaki: element.ikisaki,
-        time: element.time,
-        memo: element.memo,
-        email: element.email,
-        updateTime: dstr
-      });
-
-    });
-
-  }).then(result => {
-   
-    Bookshelf.knex.raw(sql2).then(collection => {
+    var usertabledata = new Array();
+    var usertabledata_manage = new Array();
+    var login = req.session.login;
+    var req_user = req.user;
+  
+    var sql =
+      'SELECT users_status.id,users_status.name,users_status.user_id,users_status.email,users_status.department,users_status.information,users_status.position,users_status.status,users_status.ikisaki,time,users_status.memo,users_status.updated_at,users_status.created_at,users.admin,users.username,users.password,users.err_times,users.locked_at , CASE WHEN department = "' +
+      login.department +
+      '" THEN "AA" ELSE department END as sort1, CASE WHEN name = "' +
+      login.name +
+      '" THEN "00" ELSE name END as sort2 FROM users_status LEFT JOIN users ON users_status.user_id = users.id ORDER BY sort1,sort2 ASC;';
+  
+    Bookshelf.knex.raw(sql).then(collection => {
       collection.forEach(element => {
         var d1 = moment(new Date(element.updated_at));
         d1.locale("ja");
         d1.tz("Asia/Tokyo");
         var dstr = d1.fromNow();
   
-        usertabledata_manage.push({
+        usertabledata.push({
           id: element.user_id,
           table_id: element.id,
           username: element.username,
           user_admin: element.admin,
           name: element.name,
-          err_times: element.err_times,
           information: element.information,
           department: element.department,
           status: element.status,
@@ -339,86 +285,72 @@ router.get("/", isAuthenticated, function(req, res, next) {
         });
   
       });
-
-    }).then(result => {
-
-    var data = {
-      title: "行先情報一覧",
-      finding: "名前または部署名などを入力",
-      login: login,
-      req_user: req_user,
-      usertabledata: usertabledata,
-      usertabledata_manage: usertabledata_manage,
-      datastatus: datastatus,
-      datakyakusaki: datakyakusaki,
-      datashanai: datashanai,
-      msg: datacontact,
-      datadepartment: datadepartment
-    };
-    console.log("IndexページGET連絡：" + datacontact);
-
-    res.render("index", data);
-
-    });
-  });
-
   
+    }).then(result => {
+     
+      var data = {
+        title: "行先情報一覧",
+        finding: "名前または部署名などを入力",
+        login: login,
+        req_user: req_user,
+        usertabledata: usertabledata,
+        usertabledata_manage: usertabledata_manage,
+        datastatus: datastatus,
+        datakyakusaki: datakyakusaki,
+        datashanai: datashanai,
+        msg: datacontact,
+        datadepartment: datadepartment
+      };
+      console.log("IndexページGET連絡：" + datacontact);
+  
+      res.render("index", data);
+  
+    });
 
-  // new Userdata().where({id: 0})
-  //   .fetch()
-  //   .then((collection) => {
+  } //callback end
 
-  //     db.serialize(()=> {
+  function getDatas(){
+    return new Promise(resolve =>{
+      db.serialize(() => {
+        db.all("select * from department_list", (err, rows) =>{
+          if (!err) {
+            datadepartment = rows;
+          }
+        });
+        db.all("select * from status_list", (err, rows) =>{
+          if (!err) {
+            datastatus = rows;
+          }
+        });
+        db.all("select * from kyakusaki_list", (err, rows) =>{
+          if (!err) {
+            datakyakusaki = rows;
+          }
+        });
+        db.all("select * from shanai_list", (err, rows) =>{
+          if (!err) {
+            datashanai = rows;
+          }
+        });
+        db.all("select * from contact where id = 1", (err, rows) =>{
+          if (!err) {
+            rows.forEach(element => {
+              datacontact = element.msg;
+            });
+          }
+        });
+        db.run("SELECT 0", () => resolve());
+      });
+    });
+  }
+  async function doGetDatas(){
+    await getDatas();
+    console.log("【index】DATA取り込み完了。Callback処理を呼び出す......");
+    Callback();
+  }
 
-  //       var sql = 'SELECT * , CASE WHEN department = "' + login.department + '" THEN "AA" ELSE department END as sort1, CASE WHEN name = "' + login.name + '" THEN "00" ELSE name END as sort2 FROM users ORDER BY sort1,sort2 ASC;';
+  doGetDatas();
 
-  //       db.all(sql, [], (err, rows)=> {
-  //         console.log('db.all(sql, [], (err, rows)開始');
-  //         console.log("sql: " + sql);
-  //         if (!err) {
-
-  //           rows.forEach(element => {
-
-  //               var d1 = moment(new Date(element.updated_at));
-  //                   d1.locale('ja');
-  //                   d1.tz('Asia/Tokyo');
-  //               var dstr = d1.fromNow();
-
-  //               usertabledata.push({
-  //                 id: element.id,
-  //                 name: element.name,
-  //                 information: element.information,
-  //                 department: element.department,
-  //                 status: element.status,
-  //                 ikisaki: element.ikisaki,
-  //                 time: element.time,
-  //                 memo: element.memo,
-  //                 email: element.email,
-  //                 updateTime : dstr
-  //               });
-
-  //           });
-
-  //           var data = {
-  //             title: '行先情報一覧',
-  //             finding : '名前または部署名などを入力',
-  //             login: req.user,
-  //             usertabledata: usertabledata,
-  //             datastatus: datastatus,
-  //             datakyakusaki: datakyakusaki,
-  //             datashanai: datashanai,
-  //             msg: datacontact,
-  //             datadepartment: datadepartment
-  //           };
-
-  //           res.render('index', data);
-
-  //         }
-
-  //       })
-  //     });
-
-  //   });
   
 });
 
@@ -560,669 +492,6 @@ router.post("/", isAuthenticated, (req, res, next) => {
     });
 });
 
-//テーブル社員新規
-router.post("/add", isAuthenticated, (req, res, next) => {
-
-  if (req.body.information == '' || req.body.information == null) {
-    req.body.information == '／';
-  }
-
-  var rec = {
-    department: req.body.department,
-    name: req.body.name,
-    information: req.body.information,
-    status: req.body.status,
-    ikisaki: req.body.ikisaki,
-    time: req.body.time,
-    memo: req.body.memo
-  };
-
-  console.log("新規登録レコード(未登録ユーザー)" + rec);
-
-  new UserStatusData(rec).save().then(model => {
-    res.redirect("/");
-  });
-});
-
-//モーダル社員新規
-router.post("/newuser", isAuthenticated, (req, res, next) => {
-
-  if (req.body.information == '' || req.body.information == null) {
-    req.body.information == '／';
-  }
-
-  let hashed_password_new = bcrypt.hashSync(req.body.password, 10);
-  if (req.body.position.length) {
-    var rec_Userdata = {
-      username: req.body.name,
-      admin: req.body.newadmin_check_body,
-      password: hashed_password_new,
-      err_times: 0
-    };
-    var rec_UserStatusData = {
-      name: req.body.name,
-      department: req.body.department,
-      position: req.body.position,
-      information: req.body.information,
-      email: req.body.email
-    }
-  } else {
-    var rec_Userdata = {
-      username: req.body.name,
-      admin: req.body.newadmin_check_body,
-      password: hashed_password_new,
-      err_times: 0
-    };
-    var rec_UserStatusData = {
-      name: req.body.name,
-      department: req.body.department,
-      information: req.body.information,
-      email: req.body.email
-    }
-  }
-
-  new Userdata(rec_Userdata).save().then(user => {
-    rec_UserStatusData.user_id = user.id;
-    return new UserStatusData(rec_UserStatusData).save()
-    .then(status => {
-      res.redirect("/");
-    })
-  });
-});
-
-// test SQL
-//客先変更
-router.post("/newkyakusaki", isAuthenticated, (req, res, next) => {
-
-  function checkNewkyakusaki_Callback(){
-    if (req.body.newkyakusaki == undefined || req.body.newkyakusaki.length == 0) {
-      getKyakusaki();
-      console.log("追加項目無し、リダイレクト。");
-      res.redirect("/");
-      return false;
-    }
-    // 客先新規
-    console.log("新項目数は：「" + req.body.newkyakusaki.length + "」");
-
-    function checkIsdoneInsertKyakusakiGroup_Callback(){
-      getKyakusaki();
-      console.log("配列追加完了したのでリダイレクト。");
-      res.redirect("/");
-      return false;
-    }
-
-    if (Array.isArray(req.body.newkyakusaki)) {
-      for (var n = 0; n < req.body.newkyakusaki.length; n++) {
-        var newkyakusaki = req.body.newkyakusaki[n];
-        console.log(
-          "req.body.newkyakusaki[" + n + "]：" + req.body.newkyakusaki[n]
-        );
-        if (newkyakusaki.length == 0) {
-          console.log("該当項目は空であるため、追加しません。");
-        } else {
-          function insertKyakusaki(){
-            return new Promise(resolve =>{
-              db.serialize(() => {
-                db.run("INSERT INTO kyakusaki_list (kyakusaki) values (?)", newkyakusaki);
-                console.log("追加した項目：" + newkyakusaki);
-                db.run("COMMIT", () => resolve());
-              });
-            });
-          }
-          var doInsertKyakusakiGroup_count = 0;
-          async function doInsertKyakusakiGroup(){
-            await insertKyakusaki();
-            doInsertKyakusakiGroup_count++;
-            console.log("doInsertKyakusakiGroup_count: " + doInsertKyakusakiGroup_count + " ,req.body.newkyakusaki.length: " + req.body.newkyakusaki.length);
-            if (doInsertKyakusakiGroup_count == req.body.newkyakusaki.length) {
-              checkIsdoneInsertKyakusakiGroup_Callback();
-            }
-          }
-          doInsertKyakusakiGroup();
-        }
-      }
-
-    } else {
-      var newkyakusaki = req.body.newkyakusaki;
-      function insertKyakusaki(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            db.run("INSERT INTO kyakusaki_list (kyakusaki) values (?)", newkyakusaki);
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-      async function doInsertKyakusakiSingle(){
-        await insertKyakusaki();
-        console.log("追加した項目：" + newkyakusaki);
-        console.log("単項目：「" + newkyakusaki + "」の追加完了したのでリダイレクト。");
-        getKyakusaki();
-        res.redirect("/");
-        return false;
-      }
-      doInsertKyakusakiSingle();
-    }
-  } //callback over
-
-
-  var cnt = req.body.cnt;   //POST処理開始
-  console.log("更新回数は：「 " + cnt + "+1 」回");
-
-  for (var i = 0; i <= cnt; i++) {
-
-    if (Array.isArray(req.body.kyakusaki)){
-      var kyakusaki = req.body.kyakusaki[i];
-      var id = req.body.id[i];
-    } else {
-      var kyakusaki = req.body.kyakusaki;
-      var id = req.body.id;
-    }
-    
-    console.log("変更先ID: 「" + id + "」、変更後：「" + kyakusaki + "」");
-
-    if (kyakusaki.length == 0) {
-      function existingKyakusaki(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            db.run("DELETE FROM kyakusaki_list WHERE id = " + id);
-            console.log("インデックス「" + i + "」の項目削除実行しました。");
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-    } else {
-      function existingKyakusaki(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            var q = "UPDATE kyakusaki_list SET kyakusaki = ?  WHERE id = ?";
-            db.run(q, kyakusaki, id);
-            console.log("インデックス:「" + i + "」の項目を更新しました。");
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-    }
-
-    var doExistingKyakusaki_count = 0;
-    async function doExistingKyakusaki(){
-      await existingKyakusaki();
-      doExistingKyakusaki_count++;
-      console.log("doExistingKyakusaki_count: " + doExistingKyakusaki_count + ", i: " + i);
-      if (doExistingKyakusaki_count == i) {
-        checkNewkyakusaki_Callback();
-      }
-    }
-    doExistingKyakusaki();
-
-  }  //for over
-
-  
-
-
-
-  // db.serialize(() => {
-  //   var cnt = req.body.cnt;
-  //   console.log("更新回数は：「 " + cnt + "+1 」回");
-
-  //   for (var i = 0; i <= cnt; i++) {
-  //     var kyakusaki = req.body.kyakusaki[i];
-  //     var id = req.body.id[i];
-  //     console.log("変更先ID: 「" + id + "」、変更後：「" + kyakusaki + "」");
-
-  //     if (kyakusaki.length == 0) {
-  //       db.run("DELETE FROM kyakusaki_list WHERE id = " + id);
-  //       console.log("インデックス「" + i + "」の項目削除実行しました。");
-  //     } else {
-  //       var q = "UPDATE kyakusaki_list SET kyakusaki = ?  WHERE id = ?";
-  //       db.run(q, kyakusaki, id);
-  //       console.log("インデックス:「" + i + "」の項目を更新しました。");
-  //     }
-  //   }
-  //   // 客先新規
-  //   if (
-  //     req.body.newkyakusaki == undefined ||
-  //     req.body.newkyakusaki.length == 0
-  //   ) {
-  //     getKyakusaki();
-  //     res.redirect("/");
-  //     console.log("追加項目無し、リダイレクト。");
-  //     return false;
-  //   }
-
-  //   console.log("新項目数は：「" + req.body.newkyakusaki.length + "」");
-  //   if (Array.isArray(req.body.newkyakusaki)) {
-  //     for (var n = 0; n < req.body.newkyakusaki.length; n++) {
-  //       var newkyakusaki = req.body.newkyakusaki[n];
-  //       console.log(
-  //         "req.body.newkyakusaki[" + n + "]：" + req.body.newkyakusaki[n]
-  //       );
-  //       if (newkyakusaki.length == 0) {
-  //         console.log("該当項目は空であるため、追加しません。");
-  //       } else {
-  //         db.run(
-  //           "INSERT INTO kyakusaki_list (kyakusaki) values (?)",
-  //           newkyakusaki
-  //         );
-  //         console.log("追加した項目：" + newkyakusaki);
-  //       }
-  //     }
-  //     console.log("配列追加完了したのでリダイレクト。");
-  //     getKyakusaki();
-  //     res.redirect("/");
-  //     return false;
-  //   } else {
-  //     var newkyakusaki = req.body.newkyakusaki;
-  //     db.run("INSERT INTO kyakusaki_list (kyakusaki) values (?)", newkyakusaki);
-  //     console.log(
-  //       "単項目：「" + newkyakusaki + "」の追加完了したのでリダイレクト。"
-  //     );
-  //     getKyakusaki();
-  //     res.redirect("/");
-  //     return false;
-  //   }
-  // });
-});
-
-//部署変更
-router.post("/newdepartment", isAuthenticated, (req, res, next) => {
-
-  function checkNewDepartment_Callback(){
-    if (req.body.newdepartment == undefined || req.body.newdepartment.length == 0) {
-      getDepartment();
-      console.log("追加項目無し、リダイレクト。");
-      res.redirect("/");
-      return false;
-    }
-    // 部署新規
-    console.log("新項目数は：「" + req.body.newdepartment.length + "」");
-
-    function checkIsdoneInsertDepartmentGroup_Callback(){
-      getDepartment();
-      console.log("配列追加完了したのでリダイレクト。");
-      res.redirect("/");
-      return false;
-    }
-
-    if (Array.isArray(req.body.newdepartment)) {
-      for (var n = 0; n < req.body.newdepartment.length; n++) {
-        var newdepartment = req.body.newdepartment[n];
-        console.log(
-          "req.body.newdepartment[" + n + "]：" + req.body.newdepartment[n]
-        );
-        if (newdepartment.length == 0) {
-          console.log("該当項目は空であるため、追加しません。");
-        } else {
-          function insertDepartment(){
-            return new Promise(resolve =>{
-              db.serialize(() => {
-                db.run("INSERT INTO department_list (department) values (?)", newdepartment);
-                console.log("追加した項目：" + newdepartment);
-                db.run("COMMIT", () => resolve());
-              });
-            });
-          }
-          var doInsertDepartmentGroup_count = 0;
-          async function doInsertDepartmentGroup(){
-            await insertDepartment();
-            doInsertDepartmentGroup_count++;
-            console.log("doInsertDepartmentGroup_count: " + doInsertDepartmentGroup_count + " ,req.body.newdepartment.length: " + req.body.newdepartment.length);
-            if (doInsertDepartmentGroup_count == req.body.newdepartment.length) {
-              checkIsdoneInsertDepartmentGroup_Callback();
-            }
-          }
-          doInsertDepartmentGroup();
-        }
-      }
-
-    } else {
-      var newdepartment = req.body.newdepartment;
-      function insertDepartment(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            db.run("INSERT INTO department_list (department) values (?)", newdepartment);
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-      async function doInsertDepartmentSingle(){
-        await insertDepartment();
-        console.log("追加した項目：" + newdepartment);
-        console.log("単項目：「" + newdepartment + "」の追加完了したのでリダイレクト。");
-        getDepartment();
-        res.redirect("/");
-        return false;
-      }
-      doInsertDepartmentSingle();
-    }
-  } //callback over
-
-  var cnt = req.body.cnt;   //POST処理開始
-  console.log("更新回数は：「 " + cnt + "+1 」回");
-
-  for (var i = 0; i <= cnt; i++) {
-
-    var department = req.body.department[i];
-      var id = req.body.id[i];
-      console.log("変更先ID: 「" + id + "」、変更後：「" + department + "」");
-
-    if (department.length == 0) {
-      function existingDepartment(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            db.run("DELETE FROM department_list WHERE id = " + id);
-            console.log("インデックス「" + i + "」の項目削除実行しました。");
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-    } else {
-      function existingDepartment(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            var q = "UPDATE department_list SET department = ?  WHERE id = ?";
-            db.run(q, department, id);
-            console.log("インデックス:「" + i + "」の項目を更新しました。");
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-    }
-
-    var doExistingDepartment_count = 0;
-    async function doExistingDepartment(){
-      await existingDepartment();
-      doExistingDepartment_count++;
-      console.log("doExistingDepartment_count: " + doExistingDepartment_count + ", i: " + i);
-      if (doExistingDepartment_count == i) {
-        checkNewDepartment_Callback();
-      }
-    }
-    doExistingDepartment();
-
-  }  //for over
-
-//   db.serialize(() => {
-//     var cnt = req.body.cnt;
-//     console.log("更新回数は：「 " + cnt + "+1 」回");
-
-//     for (var i = 0; i <= cnt; i++) {
-//       var department = req.body.department[i];
-//       var id = req.body.id[i];
-//       console.log("変更先ID: 「" + id + "」、変更後：「" + department + "」");
-
-//       if (department.length == 0) {
-//         db.run("DELETE FROM department_list WHERE id = " + id);
-//         console.log("インデックス「" + i + "」の項目削除実行しました。");
-//       } else {
-//         var q = "UPDATE department_list SET department = ?  WHERE id = ?";
-//         db.run(q, department, id);
-//         console.log("インデックス:「" + i + "」の項目を更新しました。");
-//       }
-//     }
-//     // 部署新規
-//     if (
-//       req.body.newdepartment == undefined ||
-//       req.body.newdepartment.length == 0
-//     ) {
-//       getDepartment();
-//       res.redirect("/");
-//       console.log("追加項目無し、リダイレクト。");
-//       return false;
-//     }
-
-//     console.log("新項目数は：「" + req.body.newdepartment.length + "」");
-//     if (Array.isArray(req.body.newdepartment)) {
-//       for (var n = 0; n < req.body.newdepartment.length; n++) {
-//         var newdepartment = req.body.newdepartment[n];
-//         console.log(
-//           "req.body.newdepartment[" + n + "]：" + req.body.newdepartment[n]
-//         );
-//         if (newdepartment.length == 0) {
-//           console.log("該当項目は空であるため、追加しません。");
-//         } else {
-//           db.run(
-//             "INSERT INTO department_list (department) values (?)",
-//             newdepartment
-//           );
-//           console.log("追加した項目：" + newdepartment);
-//         }
-//       }
-//       console.log("配列追加完了したのでリダイレクト。");
-//       getDepartment();
-//       res.redirect("/");
-//       return false;
-//     } else {
-//       var newdepartment = req.body.newdepartment;
-//       db.run(
-//         "INSERT INTO department_list (department) values (?)",
-//         newdepartment
-//       );
-//       console.log(
-//         "単項目：「" + newdepartment + "」の追加完了したのでリダイレクト。"
-//       );
-//       getDepartment();
-//       res.redirect("/");
-//       return false;
-//     }
-//   });
-});
-
-//社内ポジション変更
-router.post("/newshanai", isAuthenticated, (req, res, next) => {
-
-  function checkNewShanai_Callback(){
-    if (req.body.newshanai == undefined || req.body.newshanai.length == 0) {
-      getShanai();
-      console.log("追加項目無し、リダイレクト。");
-      res.redirect("/");
-      return false;
-    }
-    // 社内ポジション新規
-    console.log("新項目数は：「" + req.body.newshanai.length + "」");
-
-    function checkIsdoneInsertShanaiGroup_Callback(){
-      getShanai();
-      console.log("配列追加完了したのでリダイレクト。");
-      res.redirect("/");
-      return false;
-    }
-
-    if (Array.isArray(req.body.newshanai)) {
-      for (var n = 0; n < req.body.newshanai.length; n++) {
-        var newshanai = req.body.newshanai[n];
-        console.log(
-          "req.body.newshanai[" + n + "]：" + req.body.newshanai[n]
-        );
-        if (newshanai.length == 0) {
-          console.log("該当項目は空であるため、追加しません。");
-        } else {
-          function insertShanai(){
-            return new Promise(resolve =>{
-              db.serialize(() => {
-                db.run("INSERT INTO shanai_list (shanai) values (?)", newshanai);
-                console.log("追加した項目：" + newshanai);
-                db.run("COMMIT", () => resolve());
-              });
-            });
-          }
-          var doInsertShanaiGroup_count = 0;
-          async function doInsertShanaiGroup(){
-            await insertShanai();
-            doInsertShanaiGroup_count++;
-            console.log("doInsertShanaiGroup_count: " + doInsertShanaiGroup_count + " ,req.body.newshanai.length: " + req.body.newshanai.length);
-            if (doInsertShanaiGroup_count == req.body.newshanai.length) {
-              checkIsdoneInsertShanaiGroup_Callback();
-            }
-          }
-          doInsertShanaiGroup();
-        }
-      }
-
-    } else {
-      var newshanai = req.body.newshanai;
-      function insertShanai(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            db.run("INSERT INTO shanai_list (shanai) values (?)", newshanai);
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-      async function doInsertShanaiSingle(){
-        await insertShanai();
-        console.log("追加した項目：" + newshanai);
-        console.log("単項目：「" + newshanai + "」の追加完了したのでリダイレクト。");
-        getShanai();
-        res.redirect("/");
-        return false;
-      }
-      doInsertShanaiSingle();
-    }
-  } //callback over
-
-  var cnt_shanai = req.body.cnt_shanai;   //POST処理開始
-  console.log("更新回数は：「" + cnt_shanai + "+1」");
-
-  for (var i = 0; i <= cnt_shanai; i++) {
-
-    var shanai = req.body.shanai[i];
-      var id = req.body.id[i];
-      console.log("変更先ID: 「" + id + "」、変更後：「" + shanai + "」");
-
-    if (shanai.length == 0) {
-      function existingShanai(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            db.run("DELETE FROM shanai_list WHERE id = " + id);
-            console.log("インデックス「" + i + "」の項目削除実行しました。");
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-    } else {
-      function existingShanai(){
-        return new Promise(resolve =>{
-          db.serialize(() => {
-            var q = "UPDATE shanai_list SET shanai = ?  WHERE id = ?";
-            db.run(q, shanai, id);
-            console.log("インデックス:「" + i + "」の項目を更新しました。");
-            db.run("COMMIT", () => resolve());
-          });
-        });
-      }
-    }
-
-    var doExistingShanai_count = 0;
-    async function doExistingShanai(){
-      await existingShanai();
-      doExistingShanai_count++;
-      console.log("doExistingShanai_count: " + doExistingShanai_count + ", i: " + i);
-      if (doExistingShanai_count == i) {
-        checkNewShanai_Callback();
-      }
-    }
-    doExistingShanai();
-
-  }  //for over
-
-  // db.serialize(() => {
-  //   var cnt_shanai = req.body.cnt_shanai;
-  //   console.log("更新回数は：「" + cnt_shanai + "+1」");
-
-  //   for (var i = 0; i <= cnt_shanai; i++) {
-  //     var shanai = req.body.shanai[i];
-  //     var id = req.body.id[i];
-  //     console.log("変更先ID: 「" + id + "」、変更後：「" + shanai + "」");
-
-  //     if (shanai.length == 0) {
-  //       db.run("DELETE FROM shanai_list WHERE id = " + id);
-  //       console.log("インデックス「" + i + "」の項目削除実行しました。");
-  //     } else {
-  //       var q = "UPDATE shanai_list SET shanai = ?  WHERE id = ?";
-  //       db.run(q, shanai, id);
-  //       console.log("インデックス:「" + i + "」の項目を更新しました。");
-  //     }
-  //   }
-  //   // 社内ポジション新規
-  //   if (req.body.newshanai == undefined || req.body.newshanai.length == 0) {
-  //     console.log("追加項目無し、リダイレクトする。");
-  //     getShanai();
-  //     res.redirect("/");
-  //     return false;
-  //   }
-  //   console.log("新項目数は：「" + req.body.newshanai.length + "」");
-  //   if (Array.isArray(req.body.newshanai)) {
-  //     for (var n = 0; n < req.body.newshanai.length; n++) {
-  //       var newshanai = req.body.newshanai[n];
-  //       console.log("req.body.newshanai[" + n + "]：" + req.body.newshanai[n]);
-  //       if (newshanai.length == 0) {
-  //         console.log("該当項目は空であるため、追加しません。");
-  //       } else {
-  //         db.run("INSERT INTO shanai_list (shanai) values (?)", newshanai);
-  //         console.log("追加した項目：" + newshanai);
-  //       }
-  //     }
-  //     console.log("配列追加完了したのでリダイレクト。");
-  //     getShanai();
-  //     res.redirect("/");
-  //     return false;
-  //   } else {
-  //     var newshanai = req.body.newshanai;
-  //     db.run("INSERT INTO shanai_list (shanai) values (?)", newshanai);
-  //     console.log(
-  //       "単項目：「" + newshanai + "」の追加完了したのでリダイレクト。"
-  //     );
-  //     getShanai();
-  //     res.redirect("/");
-  //     return false;
-  //   }
-  // });
-});
-// test over
-
-//BUGあり　不採用
-// router.post('/newkyakusaki', (req,res,next) => {
-
-//   console.log(req.body);
-
-//   var cnt = req.body.cnt;
-//   console.log("インデックスは" + cnt);
-//   for (var i=0; i<=cnt; i++) {
-//     if (("" + req.body.kyakusaki[i]).length == 0) {
-//       new kyakusakidata().where('id','=', req.body.id[i])
-//       .fetch()
-//       .then((record)=>{
-//         record.destroy();
-//         console.log(i + "の項目削除実行しました。");
-//         res.datakyakusaki = getKyakusaki();
-//       });
-//     } else {
-//       var update = {
-//         kyakusaki: req.body.kyakusaki[i]
-//       }
-//       new kyakusakidata({id: req.body.id[i]})
-//         .save(update ,{patch: true})
-//         .then((result) => {
-//           console.log(i + "の項目を更新しました。");
-
-//       });
-//     }
-//   }
-
-//   if ( ("" + req.body.newkyakusaki).length == 0 ) {
-//     res.redirect('/');
-//     console.log("追加項目は空なのでリダイレクトしました。");
-//   } else {
-//     var rec = {
-//       kyakusaki: req.body.newkyakusaki
-//     }
-//     new kyakusakidata(rec).save().then((model) => {
-//       res.redirect('/');
-//       console.log("追加項目を追加し、リダイレクトしました。");
-//     });
-//   }
-
-// });
 
 //基本情報変更
 router.post("/newuserinfo", isAuthenticated, (req, res, next) => {
@@ -1479,25 +748,6 @@ router.post("/contact", isAuthenticated, (req, res, next) => {
     res.redirect("/");
     });
     
-});
-
-router.post("/:id/delete_user", isAuthenticated, function(req, res, next) {
-
-  new UserStatusData().where("user_id","=", req.body.id)
-    .fetch()
-    .then(record_status => {
-      record_status.attributes.user_id = null;
-      record_status.save();
-    })
-    .then(result => {
-      return new Userdata().where("id", "=", req.body.id)
-      .fetch()
-      .then(record_user => {
-        record_user.destroy();
-        res.redirect("/");
-      })
-    });
-
 });
 
 

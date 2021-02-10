@@ -50,16 +50,16 @@ var departmentdata = Bookshelf.Model.extend({
 });
 
 var datadepartment;
-function getDepartment() {
-  db.serialize(() =>{
-    db.all("select * from department_list", (err, rows) =>{
-      if (!err) {
-        datadepartment = rows;
-      }
-    });
-  });
-}
-getDepartment();
+// function getDepartment() {
+//   db.serialize(() =>{
+//     db.all("select * from department_list", (err, rows) =>{
+//       if (!err) {
+//         datadepartment = rows;
+//       }
+//     });
+//   });
+// }
+// getDepartment();
 
 // var datastatus;
 // function getStatus() {
@@ -78,16 +78,16 @@ getDepartment();
 // }
 
 var datastatus;
-function getStatus() {
-  db.serialize(() =>{
-    db.all("select * from status_list", (err, rows) =>{
-      if (!err) {
-        datastatus = rows;
-      }
-    });
-  });
-}
-getStatus();
+// function getStatus() {
+//   db.serialize(() =>{
+//     db.all("select * from status_list", (err, rows) =>{
+//       if (!err) {
+//         datastatus = rows;
+//       }
+//     });
+//   });
+// }
+// getStatus();
 
 // var datakyakusaki;
 // function getKyakusaki() {
@@ -106,16 +106,16 @@ getStatus();
 // }
 
 var datakyakusaki;
-function getKyakusaki() {
-  db.serialize(() =>{
-    db.all("select * from kyakusaki_list", (err, rows) =>{
-      if (!err) {
-        datakyakusaki = rows;
-      }
-    });
-  });
-}
-getKyakusaki();
+// function getKyakusaki() {
+//   db.serialize(() =>{
+//     db.all("select * from kyakusaki_list", (err, rows) =>{
+//       if (!err) {
+//         datakyakusaki = rows;
+//       }
+//     });
+//   });
+// }
+// getKyakusaki();
 
 // var datashanai;
 // function getShanai() {
@@ -133,7 +133,7 @@ getKyakusaki();
 //   return datashanai;
 // }
 
-// var datashanai;
+var datashanai;
 // function getShanai() {
 //   db.serialize(() =>{
 //     db.all("select * from shanai_list", (err, rows) =>{
@@ -145,27 +145,27 @@ getKyakusaki();
 // }
 // getShanai();
 
-var datashanai;
-function readShanai(){
-  return new Promise(resolve =>{
-    db.serialize(() => {
-      db.all("select * from shanai_list", (err, rows) =>{
-        if (!err) {
-          datashanai = rows;
-        }
-      });
-      db.run("COMMIT", () => {
-          resolve();
-      });
-    })
-  })
-}
+// var datashanai;
+// function readShanai(){
+//   return new Promise(resolve =>{
+//     db.serialize(() => {
+//       db.all("select * from shanai_list", (err, rows) =>{
+//         if (!err) {
+//           datashanai = rows;
+//         }
+//       });
+//       db.run("SELECT 0", () => {
+//           resolve();
+//       });
+//     })
+//   })
+// }
 
-async function getShanai(){
-  await readShanai();
-}
+// async function getShanai(){
+//   await readShanai();
+// }
 
-getShanai();
+// getShanai();
 
 
 function isAuthenticated(req, res, next){
@@ -185,49 +185,50 @@ function isAuthenticated(req, res, next){
 /* GET page. */
 router.get("/:id", isAuthenticated, function(req, res, next) {
 
-  getStatus();
-  getKyakusaki();
-  getShanai();
-  getDepartment();
 
-  var login = req.session.login;
-  var req_user = req.user;
+  function Callback(){ //Callback start
+
+    console.log("Callback開始......");
+    console.log("edit public page accessed.");
+
+    var login = req.session.login;
+    var req_user = req.user;
 
 
-  if (req.params.id.slice(10) == ""){
+    if (req.params.id.slice(10) == ""){
 
-    new UserStatusData()
-      .where("user_id", "=", req.params.id)
-      .fetch({withRelated: ["user"]})
-      .then(collection => {
-        var d1 = moment(new Date(collection.attributes.updated_at));
-        d1.locale("ja");
-        d1.tz("Asia/Tokyo");
-        var dstr = d1.fromNow();
-        var data = {
-          title: "行先情報",
-          subtitle: "編集...",
-          greeting: "前回のアップデート: " + dstr,
-          content: collection,
-          content_user: collection.relations.user.attributes,
-          datastatus: datastatus,
-          datakyakusaki: datakyakusaki,
-          datashanai: datashanai,
-          datadepartment: datadepartment,
-          login: login,
-          req_user: req_user,
-        };
-        res.render("edit", data);
-      })
-      .catch(err => {
-        res.status(500).json({ error: true, data: { message: err.message } });
-      });
+      new UserStatusData()
+        .where("user_id", "=", req.params.id)
+        .fetch({withRelated: ["user"]})
+        .then(collection => {
+          var d1 = moment(new Date(collection.attributes.updated_at));
+          d1.locale("ja");
+          d1.tz("Asia/Tokyo");
+          var dstr = d1.fromNow();
+          var data = {
+            title: "行先情報",
+            subtitle: "編集...",
+            greeting: "前回のアップデート: " + dstr,
+            content: collection,
+            content_user: collection.relations.user.attributes,
+            datastatus: datastatus,
+            datakyakusaki: datakyakusaki,
+            datashanai: datashanai,
+            datadepartment: datadepartment,
+            login: login,
+            req_user: req_user,
+          };
+          res.render("edit", data);
+        })
+        .catch(err => {
+          res.status(500).json({ error: true, data: { message: err.message } });
+        });
 
-  } else {
-    new UserStatusData()
-      .where("id", "=", req.params.id.slice(10))
-      .fetch()                      //userアカウント情報ターブルにデータがないので
-      .then(collection => {
+    } else {
+      new UserStatusData()
+        .where("id", "=", req.params.id.slice(10))
+        .fetch()                      //userアカウント情報ターブルにデータがないので
+        .then(collection => {
         var d1 = moment(new Date(collection.attributes.updated_at));
         d1.locale("ja");
         d1.tz("Asia/Tokyo");
@@ -250,16 +251,49 @@ router.get("/:id", isAuthenticated, function(req, res, next) {
       .catch(err => {
         res.status(500).json({ error: true, data: { message: err.message } });
       });
+    }
+
+  } //callback end
+
+  function getSelects(){
+    return new Promise(resolve =>{
+      db.serialize(() => {
+        db.all("select * from department_list", (err, rows) =>{
+          if (!err) {
+            datadepartment = rows;
+          }
+        });
+        db.all("select * from status_list", (err, rows) =>{
+          if (!err) {
+            datastatus = rows;
+          }
+        });
+        db.all("select * from kyakusaki_list", (err, rows) =>{
+          if (!err) {
+            datakyakusaki = rows;
+          }
+        });
+        db.all("select * from shanai_list", (err, rows) =>{
+          if (!err) {
+            datashanai = rows;
+          }
+        });
+        db.run("SELECT 0", () => resolve());
+      });
+    });
   }
+  async function doGetSelects(){
+    await getSelects();
+    console.log("【edit】SELECTS取り込み完了。Callback処理を呼び出す......");
+    Callback();
+  }
+
+  doGetSelects();
+
 });
 
 
 router.post("/:id", isAuthenticated, function(req, res, next) {
-
-  getStatus();
-  getKyakusaki();
-  getShanai();
-  getDepartment();
 
   var login = req.session.login;
   var req_user = req.user;
@@ -389,44 +423,5 @@ router.post("/:id", isAuthenticated, function(req, res, next) {
   }
 });
 
-router.post("/:id/delete", isAuthenticated, function(req, res, next) {
-
-  if (req.body.id.slice(10) == ""){ //アカウントを持っていれば
-
-    new UserStatusData().where("user_id","=", req.body.id)
-    .fetch()
-    .then(record_status => {
-      record_status.attributes.information = null;
-      record_status.attributes.position = null;
-      record_status.attributes.status = null;
-      record_status.attributes.ikisaki = null;
-      record_status.attributes.time = null;
-      record_status.attributes.memo = null;
-      record_status.attributes.department = "*非表示*";
-      record_status.save();
-      res.redirect("/");
-    })
-
-  } else { //アカウントを持たなければ
-    new UserStatusData().where("id", "=", req.body.id.slice(10))
-    .fetch()
-    .then(result =>{
-      result.destroy();
-      console.log("ユーザーが削除されました。");
-      res.redirect("/");
-    })
-  }
-  
-});
-
-router.post("/:id/unlock", isAuthenticated, function(req, res, next) {
-
-  new Userdata()
-    .where("id", "=", req.body.id)
-    .save({err_times: 0, locked_at: null},{patch:true})
-    .then(result => {
-      res.redirect("/");
-    });
-});
 
 module.exports = router;

@@ -188,8 +188,12 @@ router.post('/',
       .fetch()
       .then((result) => {
         req.session.login = result.attributes;
-        res.redirect("/");
-        });
+        if (req.user.admin == 1) {
+          res.redirect("/admin");
+        } else {
+          res.redirect("/");
+        }
+      });
       }
 );
 
