@@ -9,6 +9,17 @@
 	</head>
 
 <body background="https://msi-net.co.jp/main/wp-content/uploads/2020/01/image5.jpg">
+
+	<!-- loading 画面 -->
+	<div id="loader">
+		<div class="sk-folding-cube">
+			<div class="sk-cube1 sk-cube"></div>
+			<div class="sk-cube2 sk-cube"></div>
+			<div class="sk-cube4 sk-cube"></div>
+			<div class="sk-cube3 sk-cube"></div>
+		</div>
+	</div>
+
 	<header>
 			<div class="header-right">
 				<a href="/"><img class="logo" src="https://msi-net.co.jp/main/wp-content/uploads/2020/01/logo.png"></a>
@@ -200,6 +211,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="/javascripts/headerModal.js"></script>
 <script>
+	window.onload = ()=>{
+		const loader = document.getElementById('loader');
+		loader.classList.add('loaded');
+	}
 	//スマホhover無効処理
 	var touch = 'ontouchstart' in document.documentElement || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 	

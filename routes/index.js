@@ -247,7 +247,6 @@ router.get("/", isAuthenticated, function(req, res, next) {
   function Callback(){ //callback start
   
     console.log("Callback開始......");
-    console.log("public page accessed.");
 
     var usertabledata = new Array();
     var usertabledata_manage = new Array();
@@ -349,6 +348,7 @@ router.get("/", isAuthenticated, function(req, res, next) {
     Callback();
   }
 
+  console.log("public page accessed.");
   doGetDatas();
 
   
@@ -744,7 +744,6 @@ router.post("/contact", isAuthenticated, (req, res, next) => {
   };
   new contactdata({ id: 1 }).save(rec, { patch: true }).then(result => {
     console.log("連絡事項更新：更新しました。" + "result:"+ result.attributes.msg);
-    getMsg();
     res.redirect("/");
     });
     

@@ -9,6 +9,17 @@
 	</head>
 
 <body background="https://recruit.msi-net.co.jp/main/wp-content/uploads/2019/12/mainvisual-002.jpg">
+
+	<!-- loading 画面 -->
+	<div id="loader">
+		<div class="sk-folding-cube">
+			<div class="sk-cube1 sk-cube"></div>
+			<div class="sk-cube2 sk-cube"></div>
+			<div class="sk-cube4 sk-cube"></div>
+			<div class="sk-cube3 sk-cube"></div>
+		</div>
+	</div>
+	
 	<header>
 			<div class="header-right">
 				<a href="/admin"><img class="logo" src="https://msi-net.co.jp/main/wp-content/uploads/2020/01/logo.png"></a>
@@ -135,102 +146,108 @@
 	</div>
 	<!-- モーダルここまで　まとめ編集 -->
 
-<div class="main_index" id="main_index_display">
-	<div role="main" class="index-form">
-        <form name="form_table" method="POST" action="/admin/add">
-            <table class="table_index">
-				<thead>
-					<tr>
-						<th class="mobile-hide" style="min-width: 100pt;">所属</th>
-						<th style="min-width: 90pt;">名前</th>
-						<th class="mobile-hide" style="min-width: 80pt;">情報</th>
-						<th style="min-width: 80pt;">状態</th>
-						<th style="min-width: 120pt;">行先</th>
-						<th style="min-width: 80pt;">予定時刻</th>
-						<th style="width: 18%; min-width: 120px;">メモ</th>
-						<th class="mobile-hide" style="min-width: 90pt;">前回更新</th>
-						<th style="width: 12%; min-width: 75pt;">変更</th>
+	<div class="main_index" id="main_index_display">
+		<div role="main" class="index-form">
+			<form name="form_table" method="POST" action="/admin/add">
+				<table class="table_index">
+					<thead>
+						<tr>
+							<th class="mobile-hide" style="min-width: 100pt;">所属</th>
+							<th style="min-width: 90pt;">名前</th>
+							<th class="mobile-hide" style="min-width: 80pt;">情報</th>
+							<th style="min-width: 80pt;">状態</th>
+							<th style="min-width: 120pt;">行先</th>
+							<th style="min-width: 80pt;">予定時刻</th>
+							<th style="width: 18%; min-width: 120px;">メモ</th>
+							<th class="mobile-hide" style="min-width: 90pt;">前回更新</th>
+							<th style="width: 12%; min-width: 75pt;">変更</th>
+						</tr>
+					</thead>
+					<% for(var i in usertabledata) { %>
+						<%- include('data_item', {usertabledata:usertabledata[i]}) %>
+					<% } %>
+
+					<tr class="mobile-hide tr_add admin_only">
+						<td><select name="department" class="select_add add_department placeholder_select" id="department" placeholder="部署">
+							<option value='' disabled selected style='display:none;'>部署名</option>
+							<% datadepartment.forEach ( (element)=> {  %>
+								<option value="<%= element.department %>">
+									<% if (element.department == "イノベーション事業本部") { %>
+										ｲﾉﾍﾞｰｼｮﾝ事業本部
+									<% } else { %>
+										<%= element.department %>
+									<% } %>
+								</option>
+							<% }); %>
+							</select>
+						</td>
+						<td><input type="text" class="text_add add_name" name="name" placeholder="名前"></td>
+						<td><input type="text" class="text_add" name="information" placeholder="内線"></td>
+						<td><select name="status" class="select_add" id="status">
+							<option value=""></option>
+							<% datastatus.forEach ( (element)=> {  %>
+								<option value="<%= element.status %>"><%= element.status %></option>
+							<% }); %>
+							</select>
+						</td>
+						<td><select class="select_add" name="ikisaki" id="ikisaki" style="display: none;"></select></td>
+						<td><select class="select_add" name="time" id="time" style="display: none;">
+							<option value="~ 8:30">~ 8:30</option>
+							<option value="~ 9:00">~ 9:00</option>
+							<option value="~ 9:30">~ 9:30</option>
+							<option value="~ 10:00">~ 10:00</option>
+							<option value="~ 10:30">~ 10:30</option>
+							<option value="~ 11:00">~ 11:00</option>
+							<option value="~ 11:30">~ 11:30</option>
+							<option value="~ 12:00">~ 12:00</option>
+							<option value="~ 12:30">~ 12:30</option>
+							<option value="~ 13:00">~ 13:00</option>
+							<option value="~ 13:30">~ 13:30</option>
+							<option value="~ 14:00">~ 14:00</option>
+							<option value="~ 14:30">~ 14:30</option>
+							<option value="~ 15:00">~ 15:00</option>
+							<option value="~ 15:30">~ 15:30</option>
+							<option value="~ 16:00">~ 16:00</option>
+							<option value="~ 16:30">~ 16:30</option>
+							<option value="~ 17:00">~ 17:00</option>
+							<option value="~ 17:30">~ 17:30</option>
+							<option value="~ 18:00">~ 18:00</option>
+							<option value="~ 18:30">~ 18:30</option>
+							<option value="~ 19:00">~ 19:00</option>
+							<option value="~ 19:30">~ 19:30</option>
+							<option value="~ 20:00">~ 20:00</option>
+							<option value="~ 20:30">~ 20:30</option>
+							<option value="~ 21:00">~ 21:00</option>
+							<option value="~ 21:30">~ 21:30</option>
+							<option value="~ 22:00">~ 22:00</option>
+							<option value="22:00 ~">22:00 ~</option>
+							<option value="不帰">不帰</option>
+						</select></td>
+						<td><textarea type="text" class="memo_add" name="memo" placeholder="メモ"></textarea></td>
+						<td>/</td>
+						<td>
+							<div class="btn-wrap">
+								<a href="javascript:form_table.submit()" class="btn btn-switch" id="btn_add"><span style="color: rgb(20, 16, 252);">新規</span></a>
+							</div>
+						</td>
 					</tr>
-				</thead>
-                <% for(var i in usertabledata) { %>
-                    <%- include('data_item', {usertabledata:usertabledata[i]}) %>
-				<% } %>
-
-				<tr class="mobile-hide tr_add admin_only">
-					<td><select name="department" class="select_add add_department placeholder_select" id="department" placeholder="部署">
-						<option value='' disabled selected style='display:none;'>部署名</option>
-						<% datadepartment.forEach ( (element)=> {  %>
-							<option value="<%= element.department %>">
-								<% if (element.department == "イノベーション事業本部") { %>
-									ｲﾉﾍﾞｰｼｮﾝ事業本部
-								<% } else { %>
-									<%= element.department %>
-								<% } %>
-							</option>
-						<% }); %>
-						</select>
-					</td>
-					<td><input type="text" class="text_add add_name" name="name" placeholder="名前"></td>
-					<td><input type="text" class="text_add" name="information" placeholder="内線"></td>
-					<td><select name="status" class="select_add" id="status">
-						<option value=""></option>
-						<% datastatus.forEach ( (element)=> {  %>
-							<option value="<%= element.status %>"><%= element.status %></option>
-						<% }); %>
-						</select>
-					</td>
-					<td><select class="select_add" name="ikisaki" id="ikisaki" style="display: none;"></select></td>
-					<td><select class="select_add" name="time" id="time" style="display: none;">
-						<option value="~ 8:30">~ 8:30</option>
-						<option value="~ 9:00">~ 9:00</option>
-						<option value="~ 9:30">~ 9:30</option>
-						<option value="~ 10:00">~ 10:00</option>
-						<option value="~ 10:30">~ 10:30</option>
-						<option value="~ 11:00">~ 11:00</option>
-						<option value="~ 11:30">~ 11:30</option>
-						<option value="~ 12:00">~ 12:00</option>
-						<option value="~ 12:30">~ 12:30</option>
-						<option value="~ 13:00">~ 13:00</option>
-						<option value="~ 13:30">~ 13:30</option>
-						<option value="~ 14:00">~ 14:00</option>
-						<option value="~ 14:30">~ 14:30</option>
-						<option value="~ 15:00">~ 15:00</option>
-						<option value="~ 15:30">~ 15:30</option>
-						<option value="~ 16:00">~ 16:00</option>
-						<option value="~ 16:30">~ 16:30</option>
-						<option value="~ 17:00">~ 17:00</option>
-						<option value="~ 17:30">~ 17:30</option>
-						<option value="~ 18:00">~ 18:00</option>
-						<option value="~ 18:30">~ 18:30</option>
-						<option value="~ 19:00">~ 19:00</option>
-						<option value="~ 19:30">~ 19:30</option>
-						<option value="~ 20:00">~ 20:00</option>
-						<option value="~ 20:30">~ 20:30</option>
-						<option value="~ 21:00">~ 21:00</option>
-						<option value="~ 21:30">~ 21:30</option>
-						<option value="~ 22:00">~ 22:00</option>
-						<option value="22:00 ~">22:00 ~</option>
-						<option value="不帰">不帰</option>
-					</select></td>
-					<td><textarea type="text" class="memo_add" name="memo" placeholder="メモ"></textarea></td>
-					<td>/</td>
-					<td>
-						<div class="btn-wrap">
-							<a href="javascript:form_table.submit()" class="btn btn-switch" id="btn_add"><span style="color: rgb(20, 16, 252);">新規</span></a>
-						</div>
-					</td>
-				</tr>
-            </table>
-          <p class="space"><br></p>
-        </form>
-	</div>
-</div>	
-
+				</table>
+			<p class="space"><br></p>
+			</form>
+		</div>
+	</div>	
+	 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="/javascripts/headerModal.js"></script>
 <script>
+
+	window.onload = ()=>{
+		const loader = document.getElementById('loader');
+		loader.classList.add('loaded');
+	}
+
 	$(function() {
 		$("#sortableArea").sortable();
 	});

@@ -8,6 +8,7 @@ const sendmail = require('sendmail')();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+const MobileDetect = require('mobile-detect');
 
 var db = new sqlite3.Database("ikisaki.sqlite3");
 
@@ -74,14 +75,6 @@ router.get("/:id", isAuthenticated, function(req, res, next) {
   function Callback(){ //Callback start
 
     console.log("Callback開始......");
-    console.log("admin page accessing......");
-
-    if (req.user.admin != 1){
-      console.log("edit admin page access failed.");
-      res.redirect("/");
-      return false;
-    }
-    console.log("edit admin page success!!!!!!!!");
     
     var login = req.session.login;
     var req_user = req.user;
@@ -179,6 +172,23 @@ router.get("/:id", isAuthenticated, function(req, res, next) {
     Callback();
   }
 
+
+  //処理開始.......
+  console.log("admin page accessing......");
+
+  var md = new MobileDetect(req.headers['user-agent']);
+  const resp = {
+      agent: md.userAgent() // モバイルからだと'Safari'などのブラウザ名を返す
+  };
+  // PCだとnullを返す
+  console.log(resp);
+
+  if (req.user.admin != 1 || resp.agent != null){
+    console.log("edit admin page access failed.");
+    res.redirect("/edit/" + req.params.id);
+    return false;
+  }
+  console.log("edit admin page success!!!!!!!!");
   doGetSelects();
 
 });
