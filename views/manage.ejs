@@ -10,7 +10,13 @@
 
 <body background="https://msi-net.co.jp/main/wp-content/uploads/2020/01/computer-1591018_1920-1024x669.jpg">
 
-	<%- include loading_item %>
+	<!-- loading 画面 -->
+	<div id="loader_manage">
+		<div class="spinner">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
+	</div>
 
 	<header>
 			<div class="header-right">
@@ -114,9 +120,8 @@
 
 <script>
 
-	$('#loader').css('background-color','#58687f');
 	window.onload = ()=>{
-		const loader = document.getElementById('loader');
+		const loader = document.getElementById('loader_manage');
 		loader.classList.add('loaded');
 	}
 	
@@ -159,7 +164,7 @@
 				} else {
 					console.log(text);
 					$('.btn-edit').each(function(){
-						if ( ~$(this).prevAll().text().indexOf(text)){ //~ work -1 become 0
+						if ( ~$(this).prevAll().text().indexOf(text)){ //~ : -1 to 0 (false to true)
 							$(this).parent('tr').show();
 						} else {
 							$(this).parent('tr').hide();

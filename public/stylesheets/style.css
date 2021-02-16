@@ -976,6 +976,19 @@ margin-top:100px;
   animation: fadeOut 0.8s forwards;
 }
 
+#loader_manage {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #58687f;
+  z-index: 999999;
+  /* 環境によって「z-index」追加 */
+}
+/* 読み込み完了後に「loaded」を付与する */
+#loader_manage.loaded {
+  animation: fadeOut 0.8s forwards;
+}
+
 /* loading 画面 */
 .spinner {
   width: 40px;
@@ -989,7 +1002,7 @@ margin-top:100px;
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: #333;
+  background-color: #e9e9ea;
   opacity: 0.6;
   position: absolute;
   top: 0;
