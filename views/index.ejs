@@ -4,21 +4,14 @@
 		<meta charset="utf-8">
 		<title><%= title %></title>
 		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<link rel="stylesheet" href="/stylesheets/index_hover.css" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.3.0/font-awesome-animation.min.css" integrity="sha512-Po8rrCwchD03Wo+2ibHFielZ8luDAVoCyE9i6iFMPyn9+V1tIhGk5wl8iKC9/JfDah5Oe9nV8QzE8HHgjgzp3g==" crossorigin="anonymous" />
 	</head>
 
 <body background="https://msi-net.co.jp/main/wp-content/uploads/2020/01/image5.jpg">
 
-	<!-- loading 画面 -->
-	<div id="loader">
-		<div class="sk-folding-cube">
-			<div class="sk-cube1 sk-cube"></div>
-			<div class="sk-cube2 sk-cube"></div>
-			<div class="sk-cube4 sk-cube"></div>
-			<div class="sk-cube3 sk-cube"></div>
-		</div>
-	</div>
+	<%- include loading_item %>
 
 	<header>
 			<div class="header-right">
@@ -210,6 +203,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="/javascripts/headerModal.js"></script>
+<script src="/javascripts/hoverSwitch.js"></script>
 <script>
 	window.onload = ()=>{
 		const loader = document.getElementById('loader');

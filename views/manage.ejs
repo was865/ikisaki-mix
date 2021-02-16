@@ -48,7 +48,7 @@
 				<% for(var i in usertabledata_manage) { %>
 					<tr class="data_item_tr">
 						<td class="find-users"><% if(usertabledata_manage[i].user_admin == 1 || usertabledata_manage[i].user_admin == 0) { %><%= usertabledata_manage[i].username %><% } else { %>/<% } %></td>
-						<td class="find-names"><%= usertabledata_manage[i].name %></td>
+						<td class="find-names table_name" class="table_name" style="font-family: ＭＳ 明朝;"><%= usertabledata_manage[i].name %></td>
 						<td class="find-admins"><% if (usertabledata_manage[i].user_admin == 1) { %><% if (usertabledata_manage[i].department != "*非表示*") { %>管理者<% } else { %>管理者（非表示）<% } %><% } else if (usertabledata_manage[i].user_admin == 0){ %><% if (usertabledata_manage[i].department != "*非表示*") { %>一般ユーザー<% } else { %>一般ユーザー（非表示）<% } %><% } else { %>テーブルのみ<% } %></td>
 						<td class="find-errtimes"><% if(usertabledata_manage[i].user_admin == 1 || usertabledata_manage[i].user_admin == 0) { %><%= usertabledata_manage[i].err_times %>回<% if (usertabledata_manage[i].err_times >= 5){ %> (ロック中)<% }} else { %>/<% } %></td>
 						<td class="btn-edit">
