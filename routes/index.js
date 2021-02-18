@@ -249,7 +249,6 @@ router.get("/", isAuthenticated, function(req, res, next) {
     console.log("Callback開始......");
 
     var usertabledata = new Array();
-    var usertabledata_manage = new Array();
     var login = req.session.login;
     var req_user = req.user;
   
@@ -293,7 +292,6 @@ router.get("/", isAuthenticated, function(req, res, next) {
         login: login,
         req_user: req_user,
         usertabledata: usertabledata,
-        usertabledata_manage: usertabledata_manage,
         datastatus: datastatus,
         datakyakusaki: datakyakusaki,
         datashanai: datashanai,

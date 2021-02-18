@@ -174,28 +174,26 @@
 
 <div class="main_index" id="main_index_display">
 	<div role="main" class="index-form">
-        <form name="form_table" method="POST" action="/add">
-            <table class="table_index">
-				<thead>
-					<tr>
-						<th class="mobile-hide" style="min-width: 100pt;">所属</th>
-						<th style="min-width: 90pt;">名前</th>
-						<th class="mobile-hide" style="min-width: 80pt;">情報</th>
-						<th style="min-width: 80pt;">状態</th>
-						<th style="min-width: 120pt;">行先</th>
-						<th style="min-width: 80pt;">予定時刻</th>
-						<th style="width: 18%; min-width: 120px;">メモ</th>
-						<th class="mobile-hide" style="min-width: 90pt;">前回更新</th>
-						<th style="width: 12%; min-width: 75pt;">変更</th>
-					</tr>
-				</thead>
-                <% for(var i in usertabledata) { %>
-                    <%- include('data_item', {usertabledata:usertabledata[i]}) %>
-				<% } %>
+        <table class="table_index">
+			<thead>
+				<tr>
+					<th class="mobile-hide" style="min-width: 100pt;">所属</th>
+					<th style="min-width: 90pt;">名前</th>
+					<th class="mobile-hide" style="min-width: 80pt;">情報</th>
+					<th style="min-width: 80pt;">状態</th>
+					<th style="min-width: 120pt;">行先</th>
+					<th style="min-width: 80pt;">予定時刻</th>
+					<th style="width: 18%; min-width: 120px;">メモ</th>
+					<th class="mobile-hide" style="min-width: 90pt;">前回更新</th>
+					<th style="width: 12%; min-width: 75pt;">変更</th>
+				</tr>
+			</thead>
+            <% for(var i in usertabledata) { %>
+                <%- include('data_item', {usertabledata:usertabledata[i]}) %>
+			<% } %>
 
-            </table>
-          <p class="space"><br></p>
-        </form>
+        </table>
+         <p class="space"><br></p>
 	</div>
 </div>	
 
