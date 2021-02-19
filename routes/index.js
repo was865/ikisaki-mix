@@ -9,6 +9,7 @@ const sendmail = require('sendmail')();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+const MobileDetect = require('mobile-detect');
 
 var db = new sqlite3.Database("ikisaki.sqlite3");
 
@@ -285,6 +286,13 @@ router.get("/", isAuthenticated, function(req, res, next) {
       });
   
     }).then(result => {
+
+      var md = new MobileDetect(req.headers['user-agent']);
+      const resp = {
+        agent: md.userAgent() // モバイルからだと'Safari'などのブラウザ名を返す
+      };
+      // PCだとnullを返す
+      console.log(resp);
      
       var data = {
         title: "行先情報一覧",
@@ -296,7 +304,8 @@ router.get("/", isAuthenticated, function(req, res, next) {
         datakyakusaki: datakyakusaki,
         datashanai: datashanai,
         msg: datacontact,
-        datadepartment: datadepartment
+        datadepartment: datadepartment,
+        device: resp.agent
       };
       console.log("IndexページGET連絡：" + datacontact);
   

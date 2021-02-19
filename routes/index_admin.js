@@ -309,6 +309,10 @@ router.get("/", isAuthenticated, function(req, res, next) {
       });
   
     }).then(result => {
+      var md = new MobileDetect(req.headers['user-agent']);
+      const resp = {
+          agent: md.userAgent() // モバイルからだと'Safari'などのブラウザ名を返す
+      };
   
       var data = {
         title: "行先情報一覧",
@@ -320,7 +324,8 @@ router.get("/", isAuthenticated, function(req, res, next) {
         datakyakusaki: datakyakusaki,
         datashanai: datashanai,
         msg: datacontact,
-        datadepartment: datadepartment
+        datadepartment: datadepartment,
+        device: resp.agent
       };
   
       res.render("index_admin", data);
