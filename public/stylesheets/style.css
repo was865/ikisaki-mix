@@ -91,10 +91,10 @@ header {
 #searchbox-input-wrapper {
   text-align: center;
   width: 100%;
+  line-height: 65px;
 }
 #searchbox {
   font-family: ヒラギノ角ゴ Pro W3,FontAwesome;
-  margin-top: 13.5px;
   margin-left: 250px;
   height: 38px;
   width: 28%;
@@ -106,11 +106,17 @@ header {
   padding: 0 10px;
   display: inline-block;
 }
+
+#pageChange-wrapper {
+  display: inline-block;
+  position: absolute;
+}
 #pageChange {
-  font-size: 20px;
-	cursor: pointer;	
+  font-size: 25px;
+	cursor: pointer;
 }
 #pageChange i {
+  line-height: 65px;
 	padding-left: 15px;
 	padding-right: 15px;
 	color: #e8e9ea;
@@ -518,6 +524,8 @@ header {
 }
 #edit_name span {
   position: absolute;
+  font-size: 0.8em;
+  line-height: 19px;
   right: 10px;
   cursor: pointer;
 }

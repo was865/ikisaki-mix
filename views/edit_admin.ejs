@@ -39,7 +39,7 @@
 			<table class="table_edit">
 				<p class="editing_name"><span>ログイン中のユーザー：<span><%= req_user.username %><i class="fas fa-user-shield admin_only" style="margin-left: 5px;"></i></span></span><br><%- greeting %></p>
 				<tr id="name_tr"><th style="background-color: #286bcf; border: none;">名前</th></tr>
-				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.attributes.name %>"><%= content.attributes.name %><span><i class="fas fa-ellipsis-h"></i></span>
+				<tr><td id="edit_name"><input type="hidden" name="name" id="name" value="<%= content.attributes.name %>"><%= content.attributes.name %><span><i class="fas fa-user-cog"></i></span>
 				<% if (content_user.err_times >= 5) { %>
 					<a class="admin_only" href="javascript:form_unlock.submit()" id="unlock_a"><i class="fas fa-lock"></i></a><p class="admin_only" style="margin-top: 10px;font-size: 0.8em; color: rgb(255, 0, 0);">※ログインが制限されています。<br><br>制限を解除するには名前の右側にあるロックアイコンをクリックしてください。</p>
 				<% } %>
@@ -518,59 +518,63 @@
 							$('#password').val('');
 							return false;
 						}
+					} else {
+						return true;
 					}
 				}
 
 				if ($('#admin').length > 0) { 　//もしadminのチェックボックスが存在していれば
 					$('#btn_post').click(function(){
-						if ($('#check').prop('checked') == true){
-							$('#admin').val('1');
-						} else if ($('#check').prop('checked') == false) {
-							$('#admin').val('0');
-						}
-						console.log("$('#admin').val()は：" + $('#admin').val());
+						// console.log(regex_check());
+						console.log($('#password').val() == '');
+						if (regex_check()) {
+							console.log("entered");
+							if ($('#check').prop('checked') == true){
+								$('#admin').val('1');
+							} else if ($('#check').prop('checked') == false) {
+								$('#admin').val('0');
+							}
+							console.log("$('#admin').val()は：" + $('#admin').val());
 
-						if ($('#admin').val() != '<%= content_user.admin %>'){
-							if ($('#admin').val() == 1){
-								if ('<%= content.attributes.name %>' == '<%= login.name %>'){
-									if(!confirm('\n管理者権限を回収します。\nよろしいですか？')){
-										$('#check').prop('checked', false);
-										return false;
+							if ($('#admin').val() != '<%= content_user.admin %>'){
+								if ($('#admin').val() == 1){
+									if ('<%= content.attributes.name %>' == '<%= login.name %>'){
+										if(!confirm('\n管理者権限を回収します。\nよろしいですか？')){
+											$('#check').prop('checked', false);
+											return false;
+										} else {
+											return true;
+										}
 									} else {
-										regex_check();
-										return true;
+										if(!confirm('\n<%= content.attributes.department %>＂<%= content.attributes.name %>＂に管理者権限を付与します。\n\nよろしいですか？')){
+											$('#check').prop('checked', false);
+											return false;
+										} else {
+											return true;
+										}
 									}
 								} else {
-									if(!confirm('\n<%= content.attributes.department %>＂<%= content.attributes.name %>＂に管理者権限を付与します。\n\nよろしいですか？')){
-										$('#check').prop('checked', false);
-										return false;
-									} else {
-										regex_check();
-										return true;
-									}
-								}
-							} else {
-								if ('<%= content.attributes.name %>' == '<%= login.name %>'){
-									if(!confirm('\nあなたは管理者権限を失います。\nよろしいですか？\n\n※管理者権限はログアウトするまで有効です。')){
-										$('#check').prop('checked', true);
-										return false;
-									} else {
-										regex_check();
-										return true;
-									}
-								} else if('<%= content.attributes.name %>' != '<%= login.name %>') {
-									if(!confirm('\n<%= content.attributes.department %>＂<%= content.attributes.name %>＂は管理者権限を失います。\nよろしいですか？')){
-										$('#check').prop('checked', true);
-										return false;
-									} else {
-										regex_check();
-										return true;
+									if ('<%= content.attributes.name %>' == '<%= login.name %>'){
+										if(!confirm('\nあなたは管理者権限を失います。\nよろしいですか？\n\n※管理者権限はログアウトするまで有効です。')){
+											$('#check').prop('checked', true);
+											return false;
+										} else {
+											return true;
+										}
+									} else if('<%= content.attributes.name %>' != '<%= login.name %>') {
+										if(!confirm('\n<%= content.attributes.department %>＂<%= content.attributes.name %>＂は管理者権限を失います。\nよろしいですか？')){
+											$('#check').prop('checked', true);
+											return false;
+										} else {
+											return true;
+										}
 									}
 								}
 							}
+							return true;
 						}
-						regex_check();
-						return true;
+						return false;
+	
 					});
 				}
 				
@@ -594,7 +598,7 @@
 						$('#th_ikisaki').text('期間');
 					}
 
-					$(this).css('color','#3a67a0');
+					$(this).children('i').attr('class','fas fa-user-tag');
 					$('#name_tr').children('th').css('background-color','#268eca');
 
 					$('#department').parent().parent('tr').hide().addClass('hidden');
@@ -613,7 +617,7 @@
 					$('.ikisaki_tr').addClass('hide');
 					$('.hidden').show().removeClass('hidden');
 					$('#name_tr').children('th').css('background-color','#286bcf');
-					$(this).css('color','');
+					$(this).children('i').attr('class','fas fa-user-cog');
 					$(this).removeClass('clicked');
 				}
 			})

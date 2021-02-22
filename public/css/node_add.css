@@ -111,12 +111,18 @@ background: linear-gradient(to top, #fdfbfb 0%, #ebedee 100%);
 
 #pageChange {
 	position: absolute;
-	font-size: 22px;
+	font-size: 14px;
 	cursor: pointer;
-	top: 50px;
-	right: -110px;
+	top: 76px;
+	right: -55px;
+	color: #ffffff;
+	text-decoration: none;
 }
-#pageChange i {
+#pageChange:hover {
+	opacity: 0.9;
+	text-decoration: underline;
+}
+/* #pageChange i {
 	padding-left: 15px;
 	padding-right: 15px;
 	color: #7f7f7f;
@@ -124,7 +130,7 @@ background: linear-gradient(to top, #fdfbfb 0%, #ebedee 100%);
 }
 #pageChange i:hover {
 	opacity: 0.8;
-}
+} */
 
 .room {
 	cursor: default;
@@ -276,6 +282,11 @@ body {
 	z-index: 100000;
 }
 
+#page {
+	padding-top: 20px;
+	padding-bottom: 30px;
+}
+
 /* loading 画面用 */
 @keyframes fadeOut {
 	from {
@@ -291,7 +302,7 @@ body {
 #loader {
 	position: fixed;
 	width: 100%;
-	height: 100%;
+	height: 100vh;
 	background-color: #e5e5e5;
 	z-index: 999999;
 	/* 環境によって「z-index」追加 */
