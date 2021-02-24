@@ -109,7 +109,7 @@ background: linear-gradient(to top, #fdfbfb 0%, #ebedee 100%);
 	z-index: 999;
 }
 
-#pageChange {
+/* #pageChange {
 	position: absolute;
 	font-size: 14px;
 	cursor: pointer;
@@ -117,20 +117,8 @@ background: linear-gradient(to top, #fdfbfb 0%, #ebedee 100%);
 	right: -55px;
 	color: #ffffff;
 	text-decoration: none;
-}
-#pageChange:hover {
-	opacity: 0.9;
-	text-decoration: underline;
-}
-/* #pageChange i {
-	padding-left: 15px;
-	padding-right: 15px;
-	color: #7f7f7f;
-	transition: .3s;
-}
-#pageChange i:hover {
-	opacity: 0.8;
 } */
+
 
 .room {
 	cursor: default;
@@ -141,12 +129,27 @@ span div p {
 	font-weight: 1000;
 }
 
+#pageChange {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	font-size: 18px;
+	color: #8f8f8f;
+	transition: 0.5s;
+	cursor: pointer;
+	text-decoration: none;
+}
+#pageChange:hover {
+	opacity: 0.8;
+	text-decoration: underline;
+}
+
 #cog {
 	position: fixed;
 	top: 20px;
 	right: 20px;
 	font-size: 22px;
-	color: #8f8f8f;
+	color: #7f7f7f;
 	transition: 0.5s;
 	cursor: pointer;
 }

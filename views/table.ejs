@@ -61,6 +61,12 @@
 	<span id="soumu_3_2"></span>
 
 	<span id="cog"><i class="fas fa-cog admin_only"></i></span>
+	<a id="pageChange" class="faa-parent animated-hover"
+	<% if (req_user.admin == 1) { %>
+		href="/admin"
+	<% } else { %>
+		href="/"
+	<% } %>><i class="fas fa-angle-double-left faa-passing-reverse"></i>一覧へ戻る</a>
 	<!--  <span id="yonezawa_1_1"></span> -->
 	<span id="yonezawa_3_3"></span>
 
@@ -1158,12 +1164,6 @@
 					<!-- simple frame -->
 					<textarea type="text" name="msg" id="msg" style="margin: 2px auto auto 5px; width: 157px; height: 63px;"><%= msg %></textarea>
 					<a href="javascript:form_contact.submit()" class="btn btn-radius-solid" id="btn_contact">更新<i class="fas fa-angle-right fa-position-right"></i></a>
-					<a id="pageChange" class="faa-parent animated-hover"
-					<% if (req_user.admin == 1) { %>
-						href="/admin"
-					<% } else { %>
-						href="/"
-					<% } %>><i class="fas fa-angle-double-right faa-passing"></i>一覧画面へ</a>
 				</div>
 				<div class="grpelem" id="u829">
 					<!-- simple frame -->
