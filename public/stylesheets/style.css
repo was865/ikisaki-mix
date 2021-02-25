@@ -117,8 +117,8 @@ header {
 }
 #pageChange i {
   line-height: 65px;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
 	color: #e8e9ea;
 	transition: .3s;
 }
@@ -482,7 +482,7 @@ header {
   position: relative;
   width: 85%;
   left:50%;
-  transform: translate(-53%);
+  transform: translate(-52.5%);
   min-height: 400px;
   transition: .4s;
 }
@@ -767,7 +767,7 @@ button.btn {
 
 /*背景*/
 .btn-wrap {
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 a.btn-switch {
